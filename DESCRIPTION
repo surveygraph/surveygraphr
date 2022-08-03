@@ -1,0 +1,15 @@
+Package: surveygraph
+Title: Simple R package illustrating bindings to C++ surveygraph library
+Version: 0.1.9.2
+Date: 2022-07-13
+Author: Samuel Unicomb
+Maintainer: Samuel Unicomb <samuelunicomb@gmail.com>
+Description: R package containing bindings for C++ surveygraph library
+  The package rsgraph is a development module, designed to test R
+  bindings for the core C++ routines in the surveygraph library.
+Depends: R (>= 2.15.1)
+Imports: Rcpp
+LinkingTo: Rcpp
+URL: https://surveygraph.ie, not yet built
+BugReports: https://github.com/surveygraph/rsgraph/issues, or email me
+License: GPL (>= 2)
