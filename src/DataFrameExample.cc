@@ -22,7 +22,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-List DataFrameExample(const DataFrame & DF)
+List DataFrameExample(const DataFrame &DF)
 {
   // access each column by name
   IntegerVector a = DF["a"];

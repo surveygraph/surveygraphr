@@ -22,7 +22,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-List ListExamples(const List & rparam)
+List ListExamples(const List &rparam)
 {
   // accessing all list elements by name
   std::string method = as<std::string>(rparam["method"]);

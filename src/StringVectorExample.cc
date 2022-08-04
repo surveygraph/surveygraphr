@@ -28,7 +28,7 @@ template <class T> T mytolower (T c)
 }
 
 // [[Rcpp::export]]
-List StringVectorExample(const StringVector & orig)
+List StringVectorExample(const StringVector &orig)
 {
   StringVector vec(orig.size());	
 

@@ -22,7 +22,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-List DateExample(DateVector & dv, DatetimeVector & dtv)
+List DateExample(DateVector &dv, DatetimeVector &dtv)
 {
   // Support for this changed with Rcpp 0.12.8 but is still optional
   // Support for << redirection added added with 0.12.8.2 and later
@@ -37,5 +37,5 @@ List DateExample(DateVector & dv, DatetimeVector & dtv)
   Rcout << dtv << std::endl;
 
   // Build result set to be returned as a list to R.
-  return List::create(Named("date",   dv), Named("datetime", dtv));
+  return List::create(Named("date", dv), Named("datetime", dtv));
 }
