@@ -88,6 +88,36 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ToySurvey
+void ToySurvey();
+RcppExport SEXP _surveygraph_ToySurvey() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    ToySurvey();
+    return R_NilValue;
+END_RCPP
+}
+// ToySurveyArgNV
+void ToySurveyArgNV(NumericVector& v);
+RcppExport SEXP _surveygraph_ToySurveyArgNV(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector& >::type v(vSEXP);
+    ToySurveyArgNV(v);
+    return R_NilValue;
+END_RCPP
+}
+// ToySurveyArgDF
+NumericVector ToySurveyArgDF(const DataFrame& df);
+RcppExport SEXP _surveygraph_ToySurveyArgDF(SEXP dfSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const DataFrame& >::type df(dfSEXP);
+    rcpp_result_gen = Rcpp::wrap(ToySurveyArgDF(df));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_surveygraph_DataFrameExample", (DL_FUNC) &_surveygraph_DataFrameExample, 1},
@@ -97,6 +127,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_surveygraph_NumericVectorExample", (DL_FUNC) &_surveygraph_NumericVectorExample, 1},
     {"_surveygraph_RcppRNGs", (DL_FUNC) &_surveygraph_RcppRNGs, 1},
     {"_surveygraph_StringVectorExample", (DL_FUNC) &_surveygraph_StringVectorExample, 1},
+    {"_surveygraph_ToySurvey", (DL_FUNC) &_surveygraph_ToySurvey, 0},
+    {"_surveygraph_ToySurveyArgNV", (DL_FUNC) &_surveygraph_ToySurveyArgNV, 1},
+    {"_surveygraph_ToySurveyArgDF", (DL_FUNC) &_surveygraph_ToySurveyArgDF, 1},
     {NULL, NULL, 0}
 };
 

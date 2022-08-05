@@ -29,3 +29,15 @@ StringVectorExample <- function(orig) {
     .Call(`_surveygraph_StringVectorExample`, orig)
 }
 
+ToySurvey <- function() {
+    invisible(.Call(`_surveygraph_ToySurvey`))
+}
+
+ToySurveyArgNV <- function(v) {
+    invisible(.Call(`_surveygraph_ToySurveyArgNV`, v))
+}
+
+ToySurveyArgDF <- function(df) {
+    .Call(`_surveygraph_ToySurveyArgDF`, df)
+}
+

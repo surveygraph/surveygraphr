@@ -7,3 +7,5 @@ this.
 Once R/RcppExports.R has been built, we can carry out a local build, by running
 the shell command `Rscript -e 'package.install("rsgraph", repos=NULL, type="source")`
 which can also be run from the R interpreter.
+
+rcompile.R combines the above, by running Rscript rcompile.r
