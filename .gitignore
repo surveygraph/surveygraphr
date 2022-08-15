@@ -1,6 +1,15 @@
+# cpp object and shared object files
 *.o
 *.so
+
+# temporary text files produced by vim
 *.swp
 
+# ...
 inst
+
+# documentation
 man
+
+# ad hoc directories
+.trash

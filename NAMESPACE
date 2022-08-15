@@ -1,3 +1,2 @@
-useDynLib(surveygraph, .registration=TRUE)
-importFrom(Rcpp, evalCpp)
+useDynLib(rsurveygraph, .registration = TRUE)
 exportPattern("^[[:alpha:]]+")
