@@ -13,3 +13,5 @@ LinkingTo:
 URL: https://surveygraph.ie, not yet built
 BugReports: https://github.com/surveygraph/rsurveygraph/issues, or email me
 License: GPL (>= 2)
+Encoding: UTF-8
+RoxygenNote: 7.2.1
