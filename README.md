@@ -20,6 +20,8 @@ To build object documentation, we run `> devtools::document()`, which in turn ca
 
 Further, roxygen2 will also build the NAMESPACE file based on your annotations of the source code in the `R` and `src` directories.
 
+Note that the `data` directory should be reserved for R formatted data. In the words of Wickham, each file in this directory should be an .RData file created by `save()` containing a single object (with the same name as the file). The easiest way to adhere to these rules is by going `x <- sample(1000)`, then `usethis::use_data(x, egsample)`.
+
 #### Interfacing with C/C++
 
 I'd prefer to steer well clear of the Rcpp library, and interface using the basic API that R has for C/C++ extensions. These are laid out in the headers Rdefine.h, Rinternals.h, R.h, and so on. The location of these is given by `$ R RHOME`. Some helpful resources for learning the basics of  
