@@ -13,3 +13,6 @@ man
 
 # ad hoc directories
 .trash
+inst/doc
+/doc/
+/Meta/

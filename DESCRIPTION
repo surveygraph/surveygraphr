@@ -8,11 +8,13 @@ Description: R package containing bindings for C++ surveygraph library
   The package rsgraph is a development module, designed to test R
   bindings for the core C++ routines in the surveygraph library.
 Depends: R (>= 2.15.1)
-Imports:
-LinkingTo:
 URL: https://surveygraph.ie, not yet built
 BugReports: https://github.com/surveygraph/rsurveygraph/issues, or email me
 License: GPL (>= 2)
 Encoding: UTF-8
 RoxygenNote: 7.2.1
 LazyData: true
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
