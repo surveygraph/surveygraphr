@@ -1,4 +1,4 @@
-# rsurveygraph, the surveygraph package for R
+# surveygraphr, the surveygraph package for R
 
 ## Development workflow
 
@@ -6,7 +6,7 @@ These notes describe my personal workflow when working on this package. Some of 
 
 ### Download
 
-During development, the package can be downloaded from [GitHub](https://github.com/surveygraph/rsurveygraph) organisation page by running the following commands in an R interpreter.
+During development, the package can be downloaded from [GitHub](https://github.com/surveygraph/surveygraphr) organisation page by running the following commands in an R interpreter.
 
 ```
 library(devtools)
@@ -23,7 +23,7 @@ or similar, in the usual way. This is important since most R users won't be fami
 
 ### Install
 
-In a terminal, we can install the package locally by running `R CMD INSTALL .`, assuming we're in the root directory of the project. Using absolute paths, on my machine this would be `R CMD INSTALL /Users/sam/rsurveygraph`.
+In a terminal, we can install the package locally by running `R CMD INSTALL .`, assuming we're in the root directory of the project. Using absolute paths, on my machine this would be `R CMD INSTALL /Users/sam/surveygraphr`.
 
 ### Documentation workflow
 
