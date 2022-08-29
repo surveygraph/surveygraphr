@@ -1,6 +1,6 @@
 # rsurveygraph, the surveygraph package for R
 
-## Development notes
+## Development workflow
 
 These notes describe my own workflow when working on this package. Some of 
 the tools that I use, such as roxygen2 for documentation, of course will be 
@@ -14,7 +14,7 @@ The package can be downloaded by running `devtools::blahblah github("blah")`. Wh
 
 In a terminal, we can install the package locally by running `R CMD INSTALL .`, assuming we're in the root directory of the project. Using absolute paths, on my machine this would be `R CMD INSTALL /Users/sam/rsurveygraph`.
 
-### Documentation
+### Documentation workflow
 
 #### Object documentation
 
