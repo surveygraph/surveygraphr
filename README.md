@@ -6,13 +6,13 @@ These notes describe my personal workflow when working on this package. Some of 
 
 ### Download and install
 
-A local version of the package can be obtained by downloading the zipped repository from our [GitHub](https://github.com/surveygraph/surveygraphr) organisation page, by selecting Code > Download ZIP. This downloads everything the entire repository, including files related to development that won't be included in the package available to end users. Or, if you use `git`, clone the repository in the usual way,
+A local version of the package can be obtained by downloading the zipped repository from our [GitHub](https://github.com/surveygraph/surveygraphr) organisation page, by selecting Code > Download ZIP. This downloads the entire repository, including files related to development that won't be included in the package available to end users. Or, if you use `git`, clone the repository in the usual way,
 
 ```
 git clone git@github.com:surveygraph/surveygraphr.git
 ```
 
-Neither of these approaches actually installs the package, which is done by running
+Neither of these approaches actually installs the package. To install from the source, run
 
 ```
 R CMD INSTALL .
@@ -58,7 +58,7 @@ The script `build-docs.r` contains these commands. There is surely a cleaner way
 
 #### Vignettes
 
-To build vignettes, we follow Wickham and use `knitr`, a markdown vignette engine. `knitr` is piloted by `rmarkdown`, which uses `pandoc` to convert between markdown and HTML. Note that `pandoc` is not an R library, check the [pandoc](https://pandoc.org/installing.html) page for installation instructions. For the minute, it seems like everything in the `doc` directory is build automatically based on the `*.Rmd` files in `vignettes`. Cycling through the build process a few more times should help clarify this.
+To build vignettes, we follow Wickham and use `knitr`, a markdown vignette engine. `knitr` is piloted by `rmarkdown`, which uses `pandoc` to convert between markdown and HTML. Note that `pandoc` is not an R library, check the [pandoc](https://pandoc.org/installing.html) page for installation instructions. For the minute, it seems like everything in the `doc` directory is built automatically based on the `*.Rmd` files in `vignettes`. Iterating through the build process a few more times should help clarify this.
 
 ### Interfacing with C/C++
 
