@@ -18,7 +18,7 @@ Neither of these approaches actually installs the package, which is done by runn
 R CMD INSTALL .
 ```
 
-in the root directory of the repository. Alternatively, the package can be installed from GitHub by running the following commands in an R interpreter.
+in the root directory of the repository you just downloaded and unzipped, or cloned. Alternatively, the package can be installed from GitHub by running the following commands in an R interpreter.
 
 ```
 library(devtools)
@@ -31,16 +31,16 @@ When it is made available on [CRAN](https://cran.r-project.org/), of course ther
 install.packages("surveygraph")
 ```
 
-or similar, in the usual way. This is important since most R users won't be familiar with a `git` workflow. Note that we have to solve the awkward problem of overloading the term "surveygraph", which is the ideal final name of both the R and Python packages, but which necessitate different repository names in our organisation.
+or similar, in the usual way. This is important for discoverability, and because most R users won't be familiar with a `git` workflow. Note that it remains to solve the awkward problem of overloading the term "surveygraph", which is the ideal final name of both the R and Python packages, but which necessitate different repository names in our organisation.
 
 
 ### Documentation workflow
 
 #### Object documentation
 
-To build object documentation, we run `devtools::document()`, which in turn calls `roxygen2::roxygenise()`. As such, anyone contributing to this package must have roxygen2 installed. As usual, this can be done by running `install.packages("roxygen2")`. A detailed guide on building documentation using roxygen2 can be found in Wickham, below, but in short, we comment the entrypoints (which amounts to the rsuveygraph API, if you like) in the `R` directory. These comments are made in markdown, then read by roxygen2 to produce `*.Rd` files.
+To build object documentation, we run `devtools::document()`, which in turn calls `roxygen2::roxygenise()`. As such, anyone contributing to this package must have roxygen2 installed. As usual, this can be done by running `install.packages("roxygen2")`. A detailed guide on building documentation using `roxygen2` can be found in Wickham, below, but in short, we comment the entrypoints (which amounts to the rsuveygraph API, if you like) in the `R` directory. These comments are made in markdown, then read by `roxygen2` to produce `*.Rd` files.
 
-Further, roxygen2 will also build the NAMESPACE file based on your annotations of the source code in the `R` and `src` directories.
+Further, roxygen2 will also build the `NAMESPACE` file based on your annotations of the source code in the `R` and `src` directories.
 
 Note that the `data` directory should be reserved for R formatted data. In the words of Wickham, each file in this directory should be an .RData file created by `save()` containing a single object (with the same name as the file). The easiest way to adhere to these rules is by going `x <- sample(1000)`, then `usethis::use_data(x, egsample)`.
 
@@ -62,7 +62,19 @@ To build vignettes, we follow Wickham and use `knitr`, a markdown vignette engin
 
 ### Interfacing with C/C++
 
-I'd prefer to steer well clear of the `Rcpp` package, for a number of reasons that I won't discuss here. Rather, we will perform bindings using the basic API that R has for C/C++ extensions. These are laid out in the headers `Rdefine.h`, `Rinternals.h`, `R.h`, and so on. The location of these is given by `R RHOME`. Some helpful resources for learning the basics of the R API for C are given below. 
+I'd prefer to steer well clear of the `Rcpp` package, for a number of reasons that I won't discuss here. Rather, we will perform bindings using the basic API that R has for C/C++ extensions. These are laid out mostly in the header `Rinternals.h`, with some additional material in `Rdefine.h` and `R.h`. The location of these is given by `R RHOME`. Some helpful resources for learning the basics of the R API for C are given below. 
+
+#### Resources
+
+I found the following resources to be most helpful in learning R's C API
+
+* a gentle [overview](http://adv-r.had.co.nz/C-interface.html) by Hadley Wickham
+* the authoritative [R internals](https://cran.r-project.org/doc/manuals/r-release/R-ints.html) manual by the core R team
+* the above has been parsed and simplified in [R internals](https://github.com/hadley/r-internals) by Hadley Wickham
+
+In addition these blogs by Jonathan Callahan helped me in the very beginning. An overview of the C interface can be found [here](https://www.r-bloggers.com/2012/11/using-r-calling-c-code-hello-world/) and [here](https://www.r-bloggers.com/2012/11/using-r-callhello/
+), and a packaging walkthrough [here](https://www.r-bloggers.com/2012/11/using-r-packaging-a-c-library-in-15-minutes/).
+
 
 ## Resources
 
@@ -71,6 +83,6 @@ In addition to the [CRAN](https://cran.r-project.org/) home page, which contains
 * the section [Writing R extensions](https://cran.r-project.org/) in the CRAN documentation is an absolute must read. However, there's a steep learning curve if you're not yet familiar with R's API for C
 * [R packages](https://r-pkgs.org/) by Hadley Wickham is much more readable than hardcore CRAN documentation
 * indeed anything about R development by [Hadley Wickham](https://hadley.nz/) I would strongly recommend, he seems to be one of the stars of the R community
-* the so-called [tidyverse](https://github.com/tidyverse) suite of packages demonstrates R best practice in my opinion. There are plenty of beautiful packages in there on which we can model ours. Several include sophisticated C and C++ source libraries (Hadley Wickham is involved in a bunch of these. Incidentally, it would be wonderful if he is available for code review. Can funding be spent in this way?) 
+* the so-called [tidyverse](https://github.com/tidyverse) suite of packages demonstrates R best practice in my opinion. There are plenty of beautiful packages in there on which we can model ours. Several include sophisticated C and C++ source libraries (Hadley Wickham is involved in a bunch of these. Incidentally, it would be wonderful if he is available for code review. Can funding be allocated for this kind of thing?) 
 
 
