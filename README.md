@@ -4,26 +4,35 @@
 
 These notes describe my personal workflow when working on this package. Some of the tools that I use, such as `roxygen2` for documentation, of course will be absent from the final package. They're used locally only. In this document, commands are to be run either in a terminal, or an R interpreter, and I hope it's clear based on the context. For me, that is the macOS interpreter for R, but I assume it's the same in RStudio.
 
-### Download
+### Download and install
 
-During development, the package can be downloaded from [GitHub](https://github.com/surveygraph/surveygraphr) organisation page by running the following commands in an R interpreter.
+A local version of the package can be obtained by downloading the zipped repository from our [GitHub](https://github.com/surveygraph/surveygraphr) organisation page, by selecting Code > Download ZIP. This downloads everything the entire repository, including files related to development that won't be included in the package available to end users. Or, if you use `git`, clone the repository in the usual way,
+
+```
+git clone git@github.com:surveygraph/surveygraphr.git
+```
+
+Neither of these approaches actually installs the package, which is done by running
+
+```
+R CMD INSTALL .
+```
+
+in the root directory of the repository. Alternatively, the package can be installed from GitHub by running the following commands in an R interpreter.
 
 ```
 library(devtools)
 devtools::install_github(surveygraph/surveygraphr)
 ```
 
-When it is made available on [CRAN](https://cran.r-project.org/), of course there will be the option to install by running 
+When it is made available on [CRAN](https://cran.r-project.org/), of course there will be the option to install simply by running 
 
 ```
 install.packages("surveygraph")
 ```
 
-or similar, in the usual way. This is important since most R users won't be familiar with a GitHub install. Note that we have to solve the awkward problem of overloading the term "surveygraph", which is the ideal final name of both the R and Python packages, but which necessitate different repository names in our organisation.
+or similar, in the usual way. This is important since most R users won't be familiar with a `git` workflow. Note that we have to solve the awkward problem of overloading the term "surveygraph", which is the ideal final name of both the R and Python packages, but which necessitate different repository names in our organisation.
 
-### Install
-
-In a terminal, we can install the package locally by running `R CMD INSTALL .`, assuming we're in the root directory of the project. Using absolute paths, on my machine this would be `R CMD INSTALL /Users/sam/surveygraphr`.
 
 ### Documentation workflow
 
