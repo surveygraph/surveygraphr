@@ -12,7 +12,7 @@ helloWorldNum <- function(a, b) {
   a <- as.numeric(a)
   b <- as.numeric(b)
   #print("you should do some type checking here")
-  invisible(.Call(`surveygraphr_hw_num`, a, b))
+  invisible(.Call("surveygraphr_hw_num", a, b))
 }
 
 #' @export
@@ -20,12 +20,12 @@ helloWorldInt <- function(a, b) {
   a <- as.integer(a)
   b <- as.integer(b)
   #print("you should do some type checking here")
-  invisible(.Call(`surveygraphr_hw_int`, a, b))
+  invisible(.Call("surveygraphr_hw_int", a, b))
 }
 
 #' @export
 dataframeCheck <- function(x) {
   #print("you should do some type checking here")
-  invisible(.Call(`surveygraphr_df_check`, x))
+  invisible(.Call("surveygraphr_df_check", x))
 }
 

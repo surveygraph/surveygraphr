@@ -14,9 +14,12 @@ inst
 # documentation
 man
 
+# whatever tf this is
+symbols.rds
+
 # ad hoc directories
-.trash
-inst/doc
+..Rcheck/
+.trash/
+inst/doc/
 doc/
 Meta/
-..Rcheck

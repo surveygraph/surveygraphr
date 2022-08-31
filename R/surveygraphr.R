@@ -1,6 +1,6 @@
-#' rsurveygraph: a package for visualing correlations in survey datasets
+#' surveygraphr: a package for visualing correlations in survey datasets
 #'
-#' The rsurveygraph package provides the following functions....
+#' The surveygraphr package provides the following functions....
 #'
 #' @section reading functions:
 #' The reading functions import survey datasets to R so they can be 
@@ -14,5 +14,5 @@
 #' produce files then will go on to be read by graph visualisation libraries.
 #'
 #' @docType package
-#' @name rsurveygraph
+#' @name surveygraphr
 NULL

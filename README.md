@@ -38,7 +38,8 @@ or similar, in the usual way. This is important for discoverability, and because
 A very handy R command is
 
 ```
-R CMD check 
+R CMD check       # good to run regularly, and especially before CRAN submissions
+R CMD SHLIB...    # for building shared object files
 ```
 
 ### Debugging
