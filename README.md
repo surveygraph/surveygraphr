@@ -33,6 +33,17 @@ install.packages("surveygraph")
 
 or similar, in the usual way. This is important for discoverability, and because most R users won't be familiar with a `git` workflow. Note that it remains to solve the awkward problem of overloading the term "surveygraph", which is the ideal final name of both the R and Python packages, but which necessitate different repository names in our organisation.
 
+### Testing
+
+A very handy R command is
+
+```
+R CMD check 
+```
+
+### Debugging
+
+Loading a shared object directly and running `.Call` directly
 
 ### Documentation workflow
 
@@ -81,7 +92,7 @@ In addition these blogs by Jonathan Callahan helped me in the very beginning. An
 In addition to the [CRAN](https://cran.r-project.org/) home page, which contains a handful of incredibly useful manuals in the documents section, I have found the following to be helpful
 
 * the section [Writing R extensions](https://cran.r-project.org/) in the CRAN documentation is an absolute must read. However, there's a steep learning curve if you're not yet familiar with R's API for C
-* [R packages](https://r-pkgs.org/) by Hadley Wickham is much more readable than hardcore CRAN documentation
+* [R packages](https://r-pkgs.org/) by Hadley Wickham is an excellent guide to packaging best practice, and is much more readable than hardcore CRAN documentation
 * indeed anything about R development by [Hadley Wickham](https://hadley.nz/) I would strongly recommend, he seems to be one of the stars of the R community
 * the so-called [tidyverse](https://github.com/tidyverse) suite of packages demonstrates R best practice in my opinion. There are plenty of beautiful packages in there on which we can model ours. Several include sophisticated C and C++ source libraries (Hadley Wickham is involved in a bunch of these. Incidentally, it would be wonderful if he is available for code review. Can funding be allocated for this kind of thing?) 
 

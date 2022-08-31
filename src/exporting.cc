@@ -33,7 +33,7 @@ static void convert_df_vecvec(SEXP x) {
 }
 
 // checks data type of each dataframe column
-SEXP rsurveygraph_df_check(SEXP x) {
+SEXP surveygraphr_df_check(SEXP x) {
   int len = length(x);
   SEXP result = PROTECT(NEW_CHARACTER(len));
 
@@ -62,7 +62,7 @@ SEXP rsurveygraph_df_check(SEXP x) {
   return result;
 }
 
-SEXP rsurveygraph_hw_num(SEXP a, SEXP b) {
+SEXP surveygraphr_hw_num(SEXP a, SEXP b) {
   SEXP result = PROTECT(NEW_NUMERIC(1));
   REAL(result)[0] = REAL(a)[0] + REAL(b)[0];
   Rprintf("hello world! the sum of %f and %f is %f\n", REAL(a)[0], REAL(b)[0], REAL(result)[0]);
@@ -71,7 +71,7 @@ SEXP rsurveygraph_hw_num(SEXP a, SEXP b) {
   return result;
 }
 
-SEXP rsurveygraph_hw_int(SEXP a, SEXP b) {
+SEXP surveygraphr_hw_int(SEXP a, SEXP b) {
   SEXP result = PROTECT(NEW_INTEGER(1));
   INTEGER(result)[0] = INTEGER(a)[0] + INTEGER(b)[0];
   Rprintf("hello world! the sum of %d and %d is %d\n", INTEGER(a)[0], INTEGER(b)[0], INTEGER(result)[0]);

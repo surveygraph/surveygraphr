@@ -1,4 +1,4 @@
-Package: rsurveygraph
+Package: surveygraphr
 Title: Simple R package illustrating bindings to C++ surveygraph library
 Version: 0.1.9.2
 Date: 2022-07-13
@@ -9,7 +9,7 @@ Description: R package containing bindings for C++ surveygraph library
   bindings for the core C++ routines in the surveygraph library.
 Depends: R (>= 2.15.1)
 URL: https://surveygraph.ie, not yet built
-BugReports: https://github.com/surveygraph/rsurveygraph/issues, or email me
+BugReports: https://github.com/surveygraph/surveygraphr/issues, or email me
 License: GPL (>= 2)
 Encoding: UTF-8
 RoxygenNote: 7.2.1

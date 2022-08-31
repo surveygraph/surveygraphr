@@ -5,6 +5,9 @@
 # temporary text files produced by vim
 *.swp
 
+# tarball result from build process
+*.tar.gz
+
 # ...
 inst
 
@@ -14,5 +17,6 @@ man
 # ad hoc directories
 .trash
 inst/doc
-/doc/
-/Meta/
+doc/
+Meta/
+..Rcheck
