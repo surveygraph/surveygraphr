@@ -12,7 +12,7 @@ A local version of the package can be obtained by downloading the zipped reposit
 git clone git@github.com:surveygraph/surveygraphr.git
 ```
 
-When it is made available on [CRAN](https://cran.r-project.org/), we'll be able to install simply by running 
+When it is made available on [CRAN](https://cran.r-project.org/), we'll be able to download and install in a single step by running 
 
 ```
 install.packages("surveygraph")

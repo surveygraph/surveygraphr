@@ -8,6 +8,14 @@
 #' add(10, 1)
 
 #' @export
+dummy <- function(m, n) {
+  m <- as.integer(m)
+  n <- as.integer(n)
+  #print("you should do some type checking here")
+  invisible(.Call("surveygraphr_dummy", m, n))
+}
+
+#' @export
 helloWorldNum <- function(a, b) {
   a <- as.numeric(a)
   b <- as.numeric(b)
