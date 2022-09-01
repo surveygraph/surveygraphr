@@ -37,7 +37,7 @@ R CMD INSTALL .
 
 and the package is ready to use in an interpreter. Alternatively, the package can be installed from GitHub by running the following commands in an R interpreter.
 
-```
+```R
 library(devtools)
 devtools::install_github(surveygraph/surveygraphr)
 ```
@@ -49,9 +49,11 @@ devtools::install_github(surveygraph/surveygraphr)
 A very handy R command is
 
 ```
-R CMD check       # good to run regularly, and especially before CRAN submissions
-R CMD SHLIB...    # for building shared object files
+R CMD check .           # run especially before CRAN submissions
+R CMD SHLIB src/*.cc    # for building shared object files
 ```
+
+Hadley Wickham has a great [chapter](https://r-pkgs.org/testing-basics.html) on testing. He recommends the third party package `testthat`.
 
 ### Debugging
 
@@ -69,7 +71,7 @@ Note that the `data` directory should be reserved for R formatted data. In the w
 
 In summary, documentation is built by running
 
-```
+```R
 library("devtools")
 
 devtools::document()
