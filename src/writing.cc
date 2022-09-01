@@ -26,7 +26,7 @@ bool fileExists(const std::string& filename)
 
 void surveygraph::writesurvey()
 {
-  string filename = "results/survey1.dat";
+  string filename = "results/survey.dat";
 
   ofstream myfile;
   myfile.open(filename);
