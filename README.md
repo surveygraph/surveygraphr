@@ -1,10 +1,10 @@
-# surveygraphr, the surveygraph package for R
+# surveygraphr, the _surveygraph_ package for R
 
 ## Development workflow
 
-These notes describe my personal workflow when working on this package. Some of the tools that I use, such as `roxygen2` for documentation, of course will be absent from the final package. They're used locally only. In this document, commands are to be run either in a terminal, or an R interpreter, and I hope it's clear based on the context. For me, that is the macOS interpreter for R, but I assume it's the same in RStudio.
+These notes describe my personal workflow when working on this package. I intend this to be a living document that I extend as my workflow improves.
 
-### Download and install
+### Download
 
 A local version of the package can be obtained by downloading the zipped repository from our [GitHub](https://github.com/surveygraph/surveygraphr) organisation page, by selecting Code > Download ZIP. This downloads the entire repository, including files related to development that won't be included in the package available to end users. Or, if you use `git`, clone the repository in the usual way,
 
@@ -12,26 +12,37 @@ A local version of the package can be obtained by downloading the zipped reposit
 git clone git@github.com:surveygraph/surveygraphr.git
 ```
 
-Neither of these approaches actually installs the package. To install from the source, run
+When it is made available on [CRAN](https://cran.r-project.org/), we'll be able to install simply by running 
+
+```
+install.packages("surveygraph")
+```
+
+This is important for discoverability, and because most R users won't be familiar with a `git` workflow.
+
+### Build and install from source
+
+
+Note that neither of the download options (downloading a zip and git cloning) in the previous section actually installs the package. To build from the downloaded source (after unzipping if necessary), run
+
+```
+R CMD BUILD .
+```
+
+This compiles the `*.cc` source files to produce `*.o` object files, then bundles them to create a `*.so` shared object file. (The `build` command does a few other things too...). _[Say something here about ddl files, the NAMESPACE doc, R files etc etc.]_ To install the [?] files, we run
 
 ```
 R CMD INSTALL .
 ```
 
-in the root directory of the repository you just downloaded and unzipped, or cloned. Alternatively, the package can be installed from GitHub by running the following commands in an R interpreter.
+and the package is ready to use in an interpreter. Alternatively, the package can be installed from GitHub by running the following commands in an R interpreter.
 
 ```
 library(devtools)
 devtools::install_github(surveygraph/surveygraphr)
 ```
 
-When it is made available on [CRAN](https://cran.r-project.org/), of course there will be the option to install simply by running 
-
-```
-install.packages("surveygraph")
-```
-
-or similar, in the usual way. This is important for discoverability, and because most R users won't be familiar with a `git` workflow. Note that it remains to solve the awkward problem of overloading the term "surveygraph", which is the ideal final name of both the R and Python packages, but which necessitate different repository names in our organisation.
+ Note that it remains to solve the awkward problem of overloading the term "surveygraph", which is the ideal final name of both the R and Python packages, but which necessitate different repository names in our organisation.
 
 ### Testing
 
@@ -44,7 +55,7 @@ R CMD SHLIB...    # for building shared object files
 
 ### Debugging
 
-Loading a shared object directly and running `.Call` directly
+Loading a shared object using `dyn.load` and running `.Call` directly
 
 ### Documentation workflow
 
@@ -87,6 +98,19 @@ I found the following resources to be most helpful in learning R's C API
 In addition these blogs by Jonathan Callahan helped me in the very beginning. An overview of the C interface can be found [here](https://www.r-bloggers.com/2012/11/using-r-calling-c-code-hello-world/) and [here](https://www.r-bloggers.com/2012/11/using-r-callhello/
 ), and a packaging walkthrough [here](https://www.r-bloggers.com/2012/11/using-r-packaging-a-c-library-in-15-minutes/).
 
+## Usage
+
+Here is a minimal working example of the package as it stands
+
+```R
+library("surveygraph")
+
+surveygraph::dummy(10000, 10)
+
+file1 <- read.csv("results/survey1.dat")
+file2 <- read.csv("results/graph1.dat")
+file3 <- read.csv("results/graph2.dat")
+```
 
 ## Resources
 
