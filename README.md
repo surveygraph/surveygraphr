@@ -8,13 +8,13 @@ These notes describe my personal workflow when working on this package. I intend
 
 A local version of the package can be obtained by downloading the zipped repository from our [GitHub](https://github.com/surveygraph/surveygraphr) organisation page, by selecting Code > Download ZIP. This downloads the entire repository, including files related to development that won't be included in the package available to end users. Or, if you use `git`, clone the repository in the usual way,
 
-```
+```sh
 git clone git@github.com:surveygraph/surveygraphr.git
 ```
 
 When it is made available on [CRAN](https://cran.r-project.org/), we'll be able to download and install in a single step by running 
 
-```
+```r
 install.packages("surveygraph")
 ```
 
@@ -25,19 +25,19 @@ This is important for discoverability, and because most R users won't be familia
 
 Note that neither of the download options (downloading a zip and git cloning) in the previous section actually installs the package. To build from the downloaded source (after unzipping if necessary), run
 
-```
+```sh
 R CMD BUILD .
 ```
 
 This compiles the `*.cc` source files to produce `*.o` object files, then bundles them to create a `*.so` shared object file. (The `build` command does a few other things too...). _[Say something here about ddl files, the NAMESPACE doc, R files etc etc.]_ To install the [?] files, we run
 
-```
+```sh
 R CMD INSTALL .
 ```
 
 and the package is ready to use in an interpreter. Alternatively, the package can be installed from GitHub by running the following commands in an R interpreter.
 
-```R
+```r
 library(devtools)
 devtools::install_github(surveygraph/surveygraphr)
 ```
@@ -48,7 +48,7 @@ devtools::install_github(surveygraph/surveygraphr)
 
 A very handy R command is
 
-```
+```sh
 R CMD check .           # run especially before CRAN submissions
 R CMD SHLIB src/*.cc    # for building shared object files
 ```
@@ -71,7 +71,7 @@ Note that the `data` directory should be reserved for R formatted data. In the w
 
 In summary, documentation is built by running
 
-```R
+```r
 library("devtools")
 
 devtools::document()
@@ -104,7 +104,7 @@ In addition these blogs by Jonathan Callahan helped me in the very beginning. An
 
 Here is a minimal working example of the package in its current version. The method `dummy(m, n)` generates a synthetic survey consisting of `n` questions to which `m` respondents answer on a one to five scale. Their responses are drawn at random from a uniform distribution. Graphs representing the correlations between respondents and questions are generated, and written to a `results/` directory as `graph1.dat` and `graph2.dat`, respectively. The generated survey is outputted as `survey.dat`. 
 
-```R
+```r
 library("surveygraph")
 
 surveygraph::dummy(10000, 10)
