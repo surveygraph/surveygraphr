@@ -124,7 +124,7 @@ file3 <- read.csv("results/graph2.dat")
 
 ## Resources
 
-In addition to the [CRAN](https://cran.r-project.org/) home page, which contains a handful of incredibly useful manuals in the documents section, I have found the following to be helpful
+In addition to the [CRAN](https://cran.r-project.org/) home page, which contains a handful of incredibly useful manuals (under the _Documentation_ section), I have found the following to be helpful
 
 * the section [Writing R extensions](https://cran.r-project.org/) in the CRAN documentation is an absolute must read. However, there's a steep learning curve if you're not yet familiar with R's API for C
 * [R packages](https://r-pkgs.org/) by Hadley Wickham is an excellent guide to packaging best practice, and is much more readable than hardcore CRAN documentation
