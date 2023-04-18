@@ -37,3 +37,8 @@ dataframeCheck <- function(x) {
   invisible(.Call("surveygraphr_df_check", x))
 }
 
+#' @export
+divingBackIn <- function(m) {
+  #print("you should do some type checking here")
+  invisible(.Call("surveygraphr_diving", m))
+}

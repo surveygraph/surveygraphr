@@ -33,6 +33,8 @@ class surveygraph
     void pilot();
     void dummy(const int&, const int&);
 
+    void diving(const int &);
+
     // building methods
     void buildsynthetic();
     void buildquestiongraph();
