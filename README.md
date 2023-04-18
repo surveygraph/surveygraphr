@@ -87,9 +87,10 @@ To build vignettes, we follow Wickham and use `knitr`, a markdown vignette engin
 
 ### R internals and C/C++
 
-I'd prefer to steer well clear of the `Rcpp` package, for a number of reasons that I won't discuss here. Rather, we will perform bindings using the basic API that R has for C/C++ extensions. These are laid out mostly in the header `Rinternals.h`, with some additional material in `Rdefine.h` and `R.h`. The location of these is given by `R RHOME`, which on macOS indicates
+C and C++ extensions to R are often bound using the `Rcpp` package. Since our package is relatively simple, we avoid incurring the additional dependancy that `Rcpp` incurs, and instead perform bindings using the basic API that R provides for C/C++ extensions. Technically this binding is implemented in the header file `Rinternals.h`, with some additional material in `Rdefine.h` and `R.h`. The location of these is given by `R RHOME`, with the full paths on macOS being
 
 ```
+/usr/local/Cellar/r/4.2.3/include/Rdefines.h
 /usr/local/Cellar/r/4.2.3/include/Rdefines.h
 /usr/local/Cellar/r/4.2.3/include/R.h
 ```
