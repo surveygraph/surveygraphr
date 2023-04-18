@@ -85,9 +85,16 @@ The script `build-docs.r` contains these commands. There is surely a cleaner way
 
 To build vignettes, we follow Wickham and use `knitr`, a markdown vignette engine. `knitr` is piloted by `rmarkdown`, which uses `pandoc` to convert between markdown and HTML. Note that `pandoc` is not an R library, check the [pandoc](https://pandoc.org/installing.html) page for installation instructions. For the minute, it seems like everything in the `doc` directory is built automatically based on the `*.Rmd` files in `vignettes`. Iterating through the build process a few more times should help clarify this.
 
-### Interfacing with C/C++
+### R internals and C/C++
 
-I'd prefer to steer well clear of the `Rcpp` package, for a number of reasons that I won't discuss here. Rather, we will perform bindings using the basic API that R has for C/C++ extensions. These are laid out mostly in the header `Rinternals.h`, with some additional material in `Rdefine.h` and `R.h`. The location of these is given by `R RHOME`. Some helpful resources for learning the basics of the R API for C are given below. 
+I'd prefer to steer well clear of the `Rcpp` package, for a number of reasons that I won't discuss here. Rather, we will perform bindings using the basic API that R has for C/C++ extensions. These are laid out mostly in the header `Rinternals.h`, with some additional material in `Rdefine.h` and `R.h`. The location of these is given by `R RHOME`, which on macOS indicates
+
+```
+/usr/local/Cellar/r/4.2.3/include/Rdefines.h
+/usr/local/Cellar/r/4.2.3/include/R.h
+```
+
+Some helpful resources for learning the basics of the R API for C are given below. 
 
 #### Resources
 
