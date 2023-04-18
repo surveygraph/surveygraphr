@@ -2,7 +2,7 @@
 
 ## Development workflow
 
-These notes describe my personal workflow when working on this package. I intend this to be a living document that I extend as my workflow improves.
+These notes describe my personal workflow when working on this package, and is subject to change.
 
 ### Download
 
@@ -85,9 +85,17 @@ The script `build-docs.r` contains these commands. There is surely a cleaner way
 
 To build vignettes, we follow Wickham and use `knitr`, a markdown vignette engine. `knitr` is piloted by `rmarkdown`, which uses `pandoc` to convert between markdown and HTML. Note that `pandoc` is not an R library, check the [pandoc](https://pandoc.org/installing.html) page for installation instructions. For the minute, it seems like everything in the `doc` directory is built automatically based on the `*.Rmd` files in `vignettes`. Iterating through the build process a few more times should help clarify this.
 
-### Interfacing with C/C++
+### R internals and C/C++
 
-I'd prefer to steer well clear of the `Rcpp` package, for a number of reasons that I won't discuss here. Rather, we will perform bindings using the basic API that R has for C/C++ extensions. These are laid out mostly in the header `Rinternals.h`, with some additional material in `Rdefine.h` and `R.h`. The location of these is given by `R RHOME`. Some helpful resources for learning the basics of the R API for C are given below. 
+C and C++ extensions to R are often bound using the `Rcpp` package. Since our package is relatively simple, we avoid incurring the additional dependancy that `Rcpp` incurs, and instead perform bindings using the basic API that R provides for C/C++ extensions. Technically this binding is implemented in the header file `Rinternals.h`, with some additional material in `Rdefine.h` and `R.h`. The location of these is given by `R RHOME`, with the full paths on macOS being
+
+```
+/usr/local/Cellar/r/4.2.3/include/Rinternals.h
+/usr/local/Cellar/r/4.2.3/include/Rdefines.h
+/usr/local/Cellar/r/4.2.3/include/R.h
+```
+
+Some helpful resources for learning the basics of the R API for C are given below. 
 
 #### Resources
 
@@ -97,7 +105,7 @@ I found the following resources to be most helpful in learning R's C API
 * the authoritative [R internals](https://cran.r-project.org/doc/manuals/r-release/R-ints.html) manual by the core R team
 * the above has been parsed and simplified in [R internals](https://github.com/hadley/r-internals) by Hadley Wickham
 
-In addition these blogs by Jonathan Callahan helped me in the very beginning. An overview of the C interface can be found [here](https://www.r-bloggers.com/2012/11/using-r-calling-c-code-hello-world/) and [here](https://www.r-bloggers.com/2012/11/using-r-callhello/
+In addition [these](https://www.r-bloggers.com/author/jonathan-callahan/) blogs by Jonathan Callahan helped me in the very beginning. An overview of the C interface can be found [here](https://www.r-bloggers.com/2012/11/using-r-calling-c-code-hello-world/) and [here](https://www.r-bloggers.com/2012/11/using-r-callhello/
 ), and a packaging walkthrough [here](https://www.r-bloggers.com/2012/11/using-r-packaging-a-c-library-in-15-minutes/).
 
 ## Usage
@@ -116,11 +124,12 @@ file3 <- read.csv("results/graph2.dat")
 
 ## Resources
 
-In addition to the [CRAN](https://cran.r-project.org/) home page, which contains a handful of incredibly useful manuals in the documents section, I have found the following to be helpful
+In addition to the [CRAN](https://cran.r-project.org/) home page, which contains a handful of incredibly useful manuals (under the _Documentation_ section), I have found the following to be helpful
 
 * the section [Writing R extensions](https://cran.r-project.org/) in the CRAN documentation is an absolute must read. However, there's a steep learning curve if you're not yet familiar with R's API for C
 * [R packages](https://r-pkgs.org/) by Hadley Wickham is an excellent guide to packaging best practice, and is much more readable than hardcore CRAN documentation
 * indeed anything about R development by [Hadley Wickham](https://hadley.nz/) I would strongly recommend, he seems to be one of the stars of the R community
 * the so-called [tidyverse](https://github.com/tidyverse) suite of packages demonstrates R best practice in my opinion. There are plenty of beautiful packages in there on which we can model ours. Several include sophisticated C and C++ source libraries (Hadley Wickham is involved in a bunch of these. Incidentally, it would be wonderful if he is available for code review. Can funding be allocated for this kind of thing?)
+* see the resources in the section above on R internals
 
 
