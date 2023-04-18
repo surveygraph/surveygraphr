@@ -2,7 +2,7 @@
 
 ## Development workflow
 
-These notes describe my personal workflow when working on this package. I intend this to be a living document that I extend as my workflow improves.
+These notes describe my personal workflow when working on this package, and is subject to change.
 
 ### Download
 
