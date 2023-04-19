@@ -44,15 +44,19 @@ SEXP surveygraphr_df_check(SEXP x)
     switch(TYPEOF(VECTOR_ELT(x, i))) {
       case(REALSXP):
         CHARACTER_POINTER(result)[i] = mkChar("numeric");
+        Rprintf("%f\n", VECTOR_ELT(x, i));
         break;
       case(INTSXP):
         CHARACTER_POINTER(result)[i] = mkChar("integer");
+        Rprintf("%d\n", VECTOR_ELT(x, i));
         break;
       case(LGLSXP):
         CHARACTER_POINTER(result)[i] = mkChar("logical");
+        Rprintf("%d\n", VECTOR_ELT(x, i));
         break;
       case(STRSXP):
         CHARACTER_POINTER(result)[i] = mkChar("character");
+        Rprintf("%c\n", VECTOR_ELT(x, i));
         break;
       case(VECSXP):
         CHARACTER_POINTER(result)[i] = mkChar("list");
@@ -61,6 +65,16 @@ SEXP surveygraphr_df_check(SEXP x)
         CHARACTER_POINTER(result)[i] = mkChar("dunnoooo");
     }
   }
+  UNPROTECT(1);
+  return result;
+}
+
+// read in a numeric vector, output a modified vector
+SEXP surveygraphr_vecmanip(SEXP x) 
+{
+  int len = length(x);
+  SEXP result = PROTECT(NEW_NUMERIC(len)); // allocVector(REALSXP, len)
+  if(TYPEOF(x) != REALSXP) Rprintf("you're fucked\n");
   UNPROTECT(1);
   return result;
 }

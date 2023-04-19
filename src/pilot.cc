@@ -36,7 +36,7 @@ void surveygraph::dummy(const int &m, const int &n)
   S.writerespondentgraph();
 }
 
-void surveygraph::diving(const int &m)
+void surveygraph::inputdf(const int &m)
 {
   // do nothing
 }

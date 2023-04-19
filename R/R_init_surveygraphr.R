@@ -38,7 +38,13 @@ dataframeCheck <- function(x) {
 }
 
 #' @export
-divingBackIn <- function(m) {
+inputdf <- function(m) {
   #print("you should do some type checking here")
-  invisible(.Call("surveygraphr_diving", m))
+  invisible(.Call("surveygraphr_inputdf", m))
+}
+
+#' @export
+vecmanip <- function(m) {
+  #print("you should do some type checking here")
+  invisible(.Call("surveygraphr_vecmanip", m))
 }

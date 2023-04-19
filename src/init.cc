@@ -2,7 +2,8 @@
 #include <Rinternals.h>
 #include <R_ext/Rdynload.h>
 
-extern SEXP surveygraphr_diving(SEXP m);
+extern SEXP surveygraphr_vecmanip(SEXP m);
+extern SEXP surveygraphr_inputdf(SEXP m);
 extern SEXP surveygraphr_dummy(SEXP m, SEXP n);
 extern SEXP surveygraphr_hw_int(SEXP a, SEXP b);
 extern SEXP surveygraphr_hw_num(SEXP a, SEXP b);
@@ -10,11 +11,12 @@ extern SEXP surveygraphr_df_check(SEXP a);
 //extern SEXP surveygraphr_writeg(void);
 
 static const R_CallMethodDef R_CallDef[] = {
-  {"surveygraphr_diving",    (DL_FUNC) &surveygraphr_diving, 1},
-  {"surveygraphr_dummy",     (DL_FUNC) &surveygraphr_dummy, 2},
-  {"surveygraphr_hw_int",    (DL_FUNC) &surveygraphr_hw_int, 2},
-  {"surveygraphr_hw_num",    (DL_FUNC) &surveygraphr_hw_num, 2},
-  {"surveygraphr_df_check",  (DL_FUNC) &surveygraphr_df_check, 1},
+  {"surveygraphr_vecmanip",     (DL_FUNC) &surveygraphr_vecmanip, 1},
+  {"surveygraphr_inputdf",      (DL_FUNC) &surveygraphr_inputdf, 1},
+  {"surveygraphr_dummy",        (DL_FUNC) &surveygraphr_dummy, 2},
+  {"surveygraphr_hw_int",       (DL_FUNC) &surveygraphr_hw_int, 2},
+  {"surveygraphr_hw_num",       (DL_FUNC) &surveygraphr_hw_num, 2},
+  {"surveygraphr_df_check",     (DL_FUNC) &surveygraphr_df_check, 1},
   {NULL, NULL, 0}
 };
 
