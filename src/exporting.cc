@@ -74,8 +74,43 @@ SEXP surveygraphr_vecmanip(SEXP x)
 {
   int len = length(x);
   SEXP result = PROTECT(NEW_NUMERIC(len)); // allocVector(REALSXP, len)
-  if(TYPEOF(x) != REALSXP) Rprintf("you're fucked\n");
+  if(TYPEOF(x) != REALSXP) Rprintf("you're fucked, not a double\n");
+  for(int i = 0; i < len; ++i) {
+    REAL(result)[i] = 10 * REAL(x)[i] + 1;
+  }
   UNPROTECT(1);
+  return result;
+}
+
+// read in a data frame and output the sum of its elements, assuming double
+SEXP surveygraphr_dfmanip(SEXP x) 
+{
+  int len = 3;
+  SEXP result = PROTECT(NEW_LIST(2)); // allocVector(REALSXP, len)
+
+  SEXP col1 = PROTECT(NEW_NUMERIC(3));
+  SEXP col2 = PROTECT(NEW_NUMERIC(3));
+
+  SEXP newcol1 = PROTECT(NEW_NUMERIC(3));
+  SEXP newcol2 = PROTECT(NEW_NUMERIC(3));
+
+  newcol1 = VECTOR_ELT(x, 0);
+  newcol2 = VECTOR_ELT(x, 1);
+
+  REAL(col1)[0] = 1.0;
+  REAL(col1)[1] = 2.0;
+  REAL(col1)[2] = 3.0;
+
+  REAL(col2)[0] = 2.0;
+  REAL(col2)[1] = 4.0;
+  REAL(col2)[2] = 6.0;
+
+  //SET_VECTOR_ELT(result, 0, col1);
+  //SET_VECTOR_ELT(result, 1, col2);
+  SET_VECTOR_ELT(result, 0, newcol1);
+  SET_VECTOR_ELT(result, 1, newcol2);
+
+  UNPROTECT(5);
   return result;
 }
 

@@ -48,3 +48,9 @@ vecmanip <- function(m) {
   #print("you should do some type checking here")
   invisible(.Call("surveygraphr_vecmanip", m))
 }
+
+#' @export
+dfmanip <- function(m) {
+  #print("you should do some type checking here")
+  invisible(.Call("surveygraphr_dfmanip", m))
+}
