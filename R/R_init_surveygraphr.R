@@ -54,3 +54,9 @@ dfmanip <- function(m) {
   #print("you should do some type checking here")
   invisible(.Call("surveygraphr_dfmanip", m))
 }
+
+#' @export
+buildresp <- function(m) {
+  #print("you should do some type checking here")
+  invisible(.Call("surveygraphr_buildresp", m))
+}

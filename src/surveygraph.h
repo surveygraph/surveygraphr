@@ -26,7 +26,7 @@ class surveygraph
 
     int m, n;   // number of respondents, questions
 
-    vector<vector<int>> surveyvec;    // survey in vector format
+    vector<vector<double>> surveyvec;    // survey in vector format
     map<int, map<int, int>> survey;   // survey in map format
     map<int, set<neighbour>> G, H;    // respondent and question graphs
 

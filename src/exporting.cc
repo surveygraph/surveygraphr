@@ -1,7 +1,47 @@
 #include <R.h>
 #include <Rdefines.h>
 
+#include "surveygraph.h"
+
 #include <vector>
+
+// read in a data frame and output a different data frame, assuming double
+SEXP surveygraphr_buildresp(SEXP df) 
+{
+  int n = length(df);
+  int m = length(VECTOR_ELT(df, 0));
+
+  // read a dataframe into a vector of vectors
+  std::vector<std::vector<double>> survey(m, std::vector<double> (n));
+  SEXP dummy = PROTECT(allocVector(REALSXP, m));
+  for(int j = 0; j < n; ++j) {
+    dummy = VECTOR_ELT(df, j);
+    for(int i = 0; i < m; ++i) {
+      survey[i][j] = REAL(dummy)[i];
+    }
+  }
+
+  // build the corresponding network
+  surveygraph S;
+  S.m = m;
+  S.n = n;
+  S.surveyvec = survey;
+  S.buildrespondentgraph();
+
+  // convert to a list of lists
+  SEXP result = PROTECT(allocVector(VECSXP, m));
+
+  for(auto &it : S.G) {
+    Rprintf("%d : ", it.first);
+    for(auto &jt : it.second) {
+      Rprintf("%d [%d] ", jt.u, jt.w);
+    }
+    Rprintf("\n");
+  }
+
+  UNPROTECT(2);
+  return result;
+}
 
 static void print_df_r(SEXP x) 
 {
@@ -82,38 +122,42 @@ SEXP surveygraphr_vecmanip(SEXP x)
   return result;
 }
 
-// read in a data frame and output the sum of its elements, assuming double
+// read in a data frame and output a different data frame, assuming double
 SEXP surveygraphr_dfmanip(SEXP x) 
 {
-  int len = 3;
-  SEXP result = PROTECT(allocVector(VECSXP, 2)); // allocVector(REALSXP, len)
+  SEXP result = PROTECT(allocVector(VECSXP, 2));
 
-  SEXP col1 = PROTECT(allocVector(REALSXP, 3));   // original column
-  SEXP col2 = PROTECT(allocVector(REALSXP, 3));   // original column
+  SEXP oldcol1 = PROTECT(allocVector(REALSXP, 3));
+  SEXP oldcol2 = PROTECT(allocVector(REALSXP, 3));
 
-  SEXP newcol1 = PROTECT(allocVector(REALSXP, 3));
-  SEXP newcol2 = PROTECT(allocVector(REALSXP, 3));
+  SEXP newcol1 = PROTECT(allocVector(REALSXP, 6));
+  SEXP newcol2 = PROTECT(allocVector(REALSXP, 6));
 
   SEXP names = PROTECT(allocVector(STRSXP, 2));
   SEXP rownames = PROTECT(allocVector(INTSXP, 2));
 
-  // set names of data frame
-  SET_STRING_ELT(names, 0, mkChar("x"));
-  SET_STRING_ELT(names, 1, mkChar("y"));
+  SET_STRING_ELT(names, 0, mkChar("x")); // name first column x
+  SET_STRING_ELT(names, 1, mkChar("y")); // name second column y
 
-  // set row names of data frame. why NA_INTEGER and -10?
-  INTEGER(rownames)[0] = NA_INTEGER;
-  INTEGER(rownames)[1] = -3;
+  INTEGER(rownames)[0] = NA_INTEGER;  // default entry if size below too small
+  INTEGER(rownames)[1] = -6;          // number of rows
+
+  oldcol1 = VECTOR_ELT(x, 0);   // extract first column from x
+  oldcol2 = VECTOR_ELT(x, 1);   // extract second column from x
 
   // set elements of data frame
-  // need to verify that x is of type VECTOR... ie a list?
-  REAL(newcol1)[0] = 1.0;
-  REAL(newcol1)[1] = 2.0;
-  REAL(newcol1)[2] = 3.0;
-
-  REAL(newcol2)[0] = 2.0;
-  REAL(newcol2)[1] = 4.0;
-  REAL(newcol2)[2] = 6.0;
+  REAL(newcol1)[0] = REAL(oldcol1)[0];
+  REAL(newcol1)[1] = REAL(oldcol1)[1];
+  REAL(newcol1)[2] = REAL(oldcol1)[2];
+  REAL(newcol1)[3] = 4.0;
+  REAL(newcol1)[4] = 5.0;
+  REAL(newcol1)[5] = 6.0;
+  REAL(newcol2)[0] = REAL(oldcol2)[0];
+  REAL(newcol2)[1] = REAL(oldcol2)[1];
+  REAL(newcol2)[2] = REAL(oldcol2)[2];
+  REAL(newcol2)[3] = 8.0;
+  REAL(newcol2)[4] = 10.0;
+  REAL(newcol2)[5] = 12.0;
 
   SET_VECTOR_ELT(result, 0, newcol1);
   SET_VECTOR_ELT(result, 1, newcol2);

@@ -36,7 +36,8 @@ void surveygraph::dummy(const int &m, const int &n)
   S.writerespondentgraph();
 }
 
-void surveygraph::inputdf(const vector<vector<double>> &)
+void surveygraph::inputdf(const int &m)
+//void surveygraph::inputdf(const vector<vector<double>> &)
 {
   // do nothing
 }
