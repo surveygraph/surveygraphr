@@ -86,31 +86,43 @@ SEXP surveygraphr_vecmanip(SEXP x)
 SEXP surveygraphr_dfmanip(SEXP x) 
 {
   int len = 3;
-  SEXP result = PROTECT(NEW_LIST(2)); // allocVector(REALSXP, len)
+  SEXP result = PROTECT(allocVector(VECSXP, 2)); // allocVector(REALSXP, len)
 
-  SEXP col1 = PROTECT(NEW_NUMERIC(3));
-  SEXP col2 = PROTECT(NEW_NUMERIC(3));
+  SEXP col1 = PROTECT(allocVector(REALSXP, 3));   // original column
+  SEXP col2 = PROTECT(allocVector(REALSXP, 3));   // original column
 
-  SEXP newcol1 = PROTECT(NEW_NUMERIC(3));
-  SEXP newcol2 = PROTECT(NEW_NUMERIC(3));
+  SEXP newcol1 = PROTECT(allocVector(REALSXP, 3));
+  SEXP newcol2 = PROTECT(allocVector(REALSXP, 3));
 
-  newcol1 = VECTOR_ELT(x, 0);
-  newcol2 = VECTOR_ELT(x, 1);
+  SEXP names = PROTECT(allocVector(STRSXP, 2));
+  SEXP rownames = PROTECT(allocVector(INTSXP, 2));
 
-  REAL(col1)[0] = 1.0;
-  REAL(col1)[1] = 2.0;
-  REAL(col1)[2] = 3.0;
+  // set names of data frame
+  SET_STRING_ELT(names, 0, mkChar("x"));
+  SET_STRING_ELT(names, 1, mkChar("y"));
 
-  REAL(col2)[0] = 2.0;
-  REAL(col2)[1] = 4.0;
-  REAL(col2)[2] = 6.0;
+  // set row names of data frame. why NA_INTEGER and -10?
+  INTEGER(rownames)[0] = NA_INTEGER;
+  INTEGER(rownames)[1] = -3;
 
-  //SET_VECTOR_ELT(result, 0, col1);
-  //SET_VECTOR_ELT(result, 1, col2);
+  // set elements of data frame
+  // need to verify that x is of type VECTOR... ie a list?
+  REAL(newcol1)[0] = 1.0;
+  REAL(newcol1)[1] = 2.0;
+  REAL(newcol1)[2] = 3.0;
+
+  REAL(newcol2)[0] = 2.0;
+  REAL(newcol2)[1] = 4.0;
+  REAL(newcol2)[2] = 6.0;
+
   SET_VECTOR_ELT(result, 0, newcol1);
   SET_VECTOR_ELT(result, 1, newcol2);
 
-  UNPROTECT(5);
+  setAttrib(result, R_ClassSymbol, ScalarString(mkChar("data.frame")));
+  setAttrib(result, R_RowNamesSymbol, rownames);
+  setAttrib(result, R_NamesSymbol, names);
+
+  UNPROTECT(7);
   return result;
 }
 
