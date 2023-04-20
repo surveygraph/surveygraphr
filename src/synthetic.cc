@@ -35,10 +35,11 @@ void surveygraph::buildrespondentgraph()
   for(unsigned int i = 0; i < surveyvec.size(); ++i) {
     for(unsigned int j = i + 1; j < surveyvec.size(); ++j) {
       respondentoverlap(int(i), int(j), w);
-  //    if(w > int(n / 2)) {
+      //if(w > int(n / 2)) {
+      if(w > 0) {
         G[i].insert(neighbour {int(j), w});
         G[j].insert(neighbour {int(i), w});
-   //   }
+      }
     }
   }
 }

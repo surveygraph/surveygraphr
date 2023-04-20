@@ -28,19 +28,29 @@ SEXP surveygraphr_buildresp(SEXP df)
   S.surveyvec = survey;
   S.buildrespondentgraph();
 
-  // convert to a list of lists
-  SEXP result = PROTECT(allocVector(VECSXP, m));
+  int ecount = 0;
+  for(auto &it : S.G) ecount += it.second.size();
+  if(ecount % 2 == 0) {
+    ecount /= 2;
+  } else {
+    Rprintf("you don't have an even number of edges for some reason\n");
+  }
 
+  SEXP edgelist = PROTECT(allocVector(INTSXP, 2 * ecount));
+
+  int i = 0;
   for(auto &it : S.G) {
-    Rprintf("%d : ", it.first);
     for(auto &jt : it.second) {
-      Rprintf("%d [%d] ", jt.u, jt.w);
+      if(it.first < jt.u) {
+        INTEGER(edgelist)[i] = it.first + 1;
+        INTEGER(edgelist)[i + 1] = jt.u + 1;
+        i += 2;
+      }
     }
-    Rprintf("\n");
   }
 
   UNPROTECT(2);
-  return result;
+  return edgelist;
 }
 
 static void print_df_r(SEXP x) 
