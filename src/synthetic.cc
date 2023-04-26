@@ -78,7 +78,6 @@ void surveygraph::questionoverlap(const int &u, const int &v, int &w)
 {
   w = 0;
   for(int i = 0; i < m; ++i) {
-    // assuming a 1 to 5 scale
     if(abs(surveyvec[i][u] - surveyvec[i][v]) < 0.1) w += 1;
   }
 }
