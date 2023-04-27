@@ -9,7 +9,7 @@
 To do : change cout etc to printf
 
 */
-void surveygraph::printsurvey()
+void surveygraph::print_survey()
 {
   for(auto it : survey) {
     int u = it.first;
@@ -30,9 +30,9 @@ void surveygraph::printsurvey()
   }
 }
 
-void surveygraph::printrespondentgraph()
+void surveygraph::print_g_respondents()
 {
-  for(auto &it : G) {
+  for(auto &it : g_respondents) {
     cout << it.first << " : ";
 
     for(auto &jt : it.second) {
@@ -42,9 +42,9 @@ void surveygraph::printrespondentgraph()
   }
 }
 
-void surveygraph::printitemgraph()
+void surveygraph::print_g_items()
 {
-  for(auto &it : H) {
+  for(auto &it : g_items) {
     cout << it.first << " : ";
 
     for(auto &jt : it.second) {

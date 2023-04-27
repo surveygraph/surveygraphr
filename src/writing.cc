@@ -24,7 +24,7 @@ bool fileExists(const std::string& filename)
   return false;
 }
 
-void surveygraph::writesurvey()
+void surveygraph::write_survey()
 {
   string filename = "results/survey.dat";
 
@@ -37,51 +37,44 @@ void surveygraph::writesurvey()
     map<int, int> r = it.second;
 
     myfile << u << " | ";
-
     for(int j = 0; j < n; ++j) {
-      if(r.find(j) != r.end()) {
+      if(r.find(j) != r.end())
         myfile << r[j] << " ";
-      }
-      else {
+      else
         myfile << "NA ";
-      }
     }
     myfile << '\n';
   }
   myfile.close();
 }
 
-void surveygraph::writerespondentgraph()
+void surveygraph::write_g_respondents()
 {
-  string filename = "results/graph1.dat";
+  string filename = "/Users/sam/surveygraphr/results/graph1.dat";
 
   ofstream myfile;
   myfile.open(filename);
 
-  for(auto &it : G) {
+  for(auto &it : g_respondents) {
     myfile << it.first << " : ";
-
-    for(auto &jt : it.second) {
+    for(auto &jt : it.second)
       myfile << jt.u << "[" << jt.w << "] ";
-    }
     myfile << '\n';
   }
   myfile.close();
 }
 
-void surveygraph::writeitemgraph()
+void surveygraph::write_g_items()
 {
   string filename = "results/graph2.dat";
 
   ofstream myfile;
   myfile.open(filename);
 
-  for(auto &it : H) {
+  for(auto &it : g_items) {
     myfile << it.first << " : ";
-
-    for(auto &jt : it.second) {
+    for(auto &jt : it.second)
       myfile << jt.u << "[" << jt.w << "] ";
-    }
     myfile << '\n';
   }
   myfile.close();

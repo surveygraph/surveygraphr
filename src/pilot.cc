@@ -13,9 +13,9 @@ void surveygraph::pilot()
   S.m = 100;
   S.n = 20;
 
-  S.buildsynthetic();
-  S.buildrespondentgraph();
-  S.printrespondentgraph();
+  S.build_survey_synthetic();
+  S.build_g_respondents();
+  S.print_g_respondents();
 }
 
 void surveygraph::dummy(const int &m, const int &n)
@@ -27,13 +27,13 @@ void surveygraph::dummy(const int &m, const int &n)
   S.m = m;
   S.n = n;
 
-  S.buildsynthetic();
-  S.buildrespondentgraph();
-  S.builditemgraph();
+  S.build_survey_synthetic();
+  S.build_g_respondents();
+  S.print_g_respondents();
 
-  S.writesurvey();
-  S.writeitemgraph();
-  S.writerespondentgraph();
+  S.write_survey();
+  S.write_g_items();
+  S.write_g_respondents();
 }
 
 void surveygraph::inputdf(const int &m)

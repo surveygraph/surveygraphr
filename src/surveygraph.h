@@ -9,10 +9,11 @@ using namespace std;
 
 struct neighbour
 {
-  neighbour(int a, int b) { u = a; w = b; }
+  neighbour(int a, double b) { u = a; w = b; }
 
   int u;     // neighbour index
-  int w;     // overlap weight
+  int olap;  // overlap weight
+  double w;  // euclidean distance or cosine similarity weight
   double c;  // covariance
 
   // order by neighbour index, u
@@ -26,34 +27,43 @@ class surveygraph
 
     int m, n;   // number of respondents, items
 
-    vector<vector<double>> surveyvec;    // survey in vector format
-    map<int, map<int, int>> survey;   // survey in map format
-    map<int, set<neighbour>> G, H;    // respondent and item graphs
+    vector<vector<double>> surveyvec;           // survey in vector format
+    map<int, map<int, int>> survey;             // survey in map format
+    map<int, set<neighbour>> g_respondents;     // respondent graph
+    map<int, set<neighbour>> g_items;           // item graph
+    
+    map<int, map<int, double>> likert_1_5;
 
     void pilot();
     void dummy(const int&, const int&);
 
     void inputdf(const int &);
 
-    // building methods
-    void buildsynthetic();
-    void builditemgraph();
-    void buildrespondentgraph();
+    // synthetic survey method
+    void build_survey_synthetic();
 
-    void item_overlap(const int&, const int&, int&);
+    // graph construction methods
+    void build_pilot();
+    void build_g_items();
+    void build_g_respondents();
+
+    void sparse_g_items();
+    void sparse_g_respondents();
+
+    void item_overlap(const int&, const int&, double&);
     void item_euclid(const int&, const int&, double&);
 
-    void respondent_overlap(const int&, const int&, int&);
+    void respondent_overlap(const int&, const int&, double&);
     void respondent_euclid(const int&, const int&, double&);
 
     // printing methods
-    void printitemgraph();
-    void printrespondentgraph();
-    void printsurvey();
+    void print_g_items();
+    void print_g_respondents();
+    void print_survey();
 
     // writing methods
-    void writeitemgraph();
-    void writerespondentgraph();
-    void writesurvey();
+    void write_g_respondents();
+    void write_g_items();
+    void write_survey();
 };
 #endif
