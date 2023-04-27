@@ -69,7 +69,7 @@ void surveygraph::writerespondentgraph()
   myfile.close();
 }
 
-void surveygraph::writequestiongraph()
+void surveygraph::writeitemgraph()
 {
   string filename = "results/graph2.dat";
 

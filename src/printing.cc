@@ -42,7 +42,7 @@ void surveygraph::printrespondentgraph()
   }
 }
 
-void surveygraph::printquestiongraph()
+void surveygraph::printitemgraph()
 {
   for(auto &it : H) {
     cout << it.first << " : ";

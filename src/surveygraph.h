@@ -24,11 +24,11 @@ class surveygraph
   public :
     surveygraph () {}
 
-    int m, n;   // number of respondents, questions
+    int m, n;   // number of respondents, items
 
     vector<vector<double>> surveyvec;    // survey in vector format
     map<int, map<int, int>> survey;   // survey in map format
-    map<int, set<neighbour>> G, H;    // respondent and question graphs
+    map<int, set<neighbour>> G, H;    // respondent and item graphs
 
     void pilot();
     void dummy(const int&, const int&);
@@ -37,22 +37,22 @@ class surveygraph
 
     // building methods
     void buildsynthetic();
-    void buildquestiongraph();
+    void builditemgraph();
     void buildrespondentgraph();
 
-    void questionoverlap(const int&, const int&, int&);
-    void questioncov(const int&, const int&, double&);
+    void item_overlap(const int&, const int&, int&);
+    void item_euclid(const int&, const int&, double&);
 
-    void respondentoverlap(const int&, const int&, int&);
-    void respondentcov(const int&, const int&, double&);
+    void respondent_overlap(const int&, const int&, int&);
+    void respondent_euclid(const int&, const int&, double&);
 
     // printing methods
-    void printquestiongraph();
+    void printitemgraph();
     void printrespondentgraph();
     void printsurvey();
 
     // writing methods
-    void writequestiongraph();
+    void writeitemgraph();
     void writerespondentgraph();
     void writesurvey();
 };

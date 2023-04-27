@@ -29,10 +29,10 @@ void surveygraph::dummy(const int &m, const int &n)
 
   S.buildsynthetic();
   S.buildrespondentgraph();
-  S.buildquestiongraph();
+  S.builditemgraph();
 
   S.writesurvey();
-  S.writequestiongraph();
+  S.writeitemgraph();
   S.writerespondentgraph();
 }
 
