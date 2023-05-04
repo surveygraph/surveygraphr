@@ -11,11 +11,13 @@ using namespace std;
 
 void surveygraph::sparse_g_respondents()
 {
-  for(auto &it : g_respondents) {
-    for(auto &jt : it.second) {
-      Rprintf("");
-    }
-  }
+  //for(auto &it : g_respondents) {
+  //  Rprintf("%d : ", it.first);
+  //  for(auto &jt : it.second) {
+  //    Rprintf("%d [%f] ", jt.u, jt.w);
+  //  }
+  //  Rprintf("\n");
+  //}
 }
 
 void surveygraph::sparse_g_items()
@@ -64,7 +66,6 @@ void surveygraph::build_g_respondents()
     for(unsigned int j = i + 1; j < surveyvec.size(); ++j) {
       //respondent_overlap(int(i), int(j), w);
       respondent_euclid(int(i), int(j), w);
-      Rprintf("%f\n", w);
       g_respondents[i].insert(neighbour{int(j), w});
       g_respondents[j].insert(neighbour{int(i), w});
     }
