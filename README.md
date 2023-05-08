@@ -18,7 +18,7 @@ When it is made available on [CRAN](https://cran.r-project.org/), we'll be able 
 install.packages("surveygraph")
 ```
 
-This is important for discoverability, and because most R users won't be familiar with a `git` workflow.
+This is important for discoverability, as we want to assume that users won't be comfortable building from source, or even installing from GitHub, as can be done using the `devtools` package. We elaborate on this below.
 
 ### Build and install from source
 
