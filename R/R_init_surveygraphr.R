@@ -8,24 +8,6 @@
 #' add(10, 1)
 
 #' @export
-dataframeCheck <- function(x) {
-  #print("you should do some type checking here")
-  invisible(.Call("surveygraphr_df_check", x))
-}
-
-#' @export
-vecmanip <- function(m) {
-  #print("you should do some type checking here")
-  invisible(.Call("surveygraphr_vecmanip", m))
-}
-
-#' @export
-dfmanip <- function(m) {
-  #print("you should do some type checking here")
-  invisible(.Call("surveygraphr_dfmanip", m))
-}
-
-#' @export
 buildgraphs <- function(d) {
   # pilots the building of the respondent and item graphs
   #print("you should do some type checking here")

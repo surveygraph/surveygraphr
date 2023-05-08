@@ -1,7 +1,4 @@
 useDynLib(surveygraphr)
 
-export(dataframeCheck)
-#export(vecmanip)
-#export(dfmanip)
 export(surveydummy)
 export(buildgraphs)

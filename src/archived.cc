@@ -75,6 +75,61 @@ SEXP archived_dftypes(SEXP x)
   return result;
 }
 
+// read in a numeric vector, output a modified vector
+SEXP archived_vectormanip(SEXP x) 
+{
+  int len = length(x);
+  SEXP result = PROTECT(NEW_NUMERIC(len)); // allocVector(REALSXP, len)
+  if(TYPEOF(x) != REALSXP) Rprintf("should be a double\n");
+  for(int i = 0; i < len; ++i) {
+    REAL(result)[i] = 10 * REAL(x)[i] + 1;
+  }
+  UNPROTECT(1);
+  return result;
+}
+
+// read in a data frame and output a different data frame
+SEXP surveygraphr_dfmanip(SEXP x) 
+{
+  SEXP result = PROTECT(allocVector(VECSXP, 2));
+
+  SEXP oldcol1 = PROTECT(allocVector(REALSXP, 3));  // assume three double types
+  SEXP oldcol2 = PROTECT(allocVector(REALSXP, 3));
+  SEXP newcol1 = PROTECT(allocVector(REALSXP, 4));
+  SEXP newcol2 = PROTECT(allocVector(REALSXP, 4));
+
+  SEXP names = PROTECT(allocVector(STRSXP, 2));
+  SET_STRING_ELT(names, 0, mkChar("x"));            // name first column x
+  SET_STRING_ELT(names, 1, mkChar("y"));            // name second column y
+
+  SEXP rownames = PROTECT(allocVector(INTSXP, 2));
+  INTEGER(rownames)[0] = NA_INTEGER;                // default entry if size below too small
+  INTEGER(rownames)[1] = -4;                        // number of rows
+
+  oldcol1 = VECTOR_ELT(x, 0);                       // extract first column from x
+  oldcol2 = VECTOR_ELT(x, 1);                       // extract second column from x
+
+  // set elements of data frame
+  REAL(newcol1)[0] = REAL(oldcol1)[0];
+  REAL(newcol1)[1] = REAL(oldcol1)[1];
+  REAL(newcol1)[2] = REAL(oldcol1)[2];
+  REAL(newcol1)[3] = 4.0;
+  REAL(newcol2)[0] = REAL(oldcol2)[0];
+  REAL(newcol2)[1] = REAL(oldcol2)[1];
+  REAL(newcol2)[2] = REAL(oldcol2)[2];
+  REAL(newcol2)[3] = 8.0;
+
+  SET_VECTOR_ELT(result, 0, newcol1);
+  SET_VECTOR_ELT(result, 1, newcol2);
+
+  setAttrib(result, R_ClassSymbol, ScalarString(mkChar("data.frame")));
+  setAttrib(result, R_RowNamesSymbol, rownames);
+  setAttrib(result, R_NamesSymbol, names);
+
+  UNPROTECT(7);
+  return result;
+}
+
 static void print_df_r(SEXP x) 
 {
   int m = length(x);

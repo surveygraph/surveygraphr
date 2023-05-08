@@ -49,8 +49,6 @@ void surveygraph::build_pilot()
   build_g_respondents();
   build_g_items();
 
-  write_g_respondents();
-
   // threshold search, what is your criteria? fully connected?
   sparse_g_respondents();
   sparse_g_items();

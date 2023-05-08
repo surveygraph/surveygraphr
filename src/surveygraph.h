@@ -35,7 +35,6 @@ class surveygraph
     map<int, map<int, double>> likert_1_5;
 
     void pilot();
-    void dummy(const int&, const int&);
 
     void inputdf(const int &);
 
@@ -55,15 +54,5 @@ class surveygraph
 
     void respondent_overlap(const int&, const int&, double&);
     void respondent_euclid(const int&, const int&, double&);
-
-    // printing methods
-    void print_g_items();
-    void print_g_respondents();
-    void print_survey();
-
-    // writing methods
-    void write_g_respondents();
-    void write_g_items();
-    void write_survey();
 };
 #endif
