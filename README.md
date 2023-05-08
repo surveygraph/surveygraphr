@@ -113,6 +113,7 @@ In addition [these](https://www.r-bloggers.com/author/jonathan-callahan/) blogs 
 Here is a minimal working example of the package in its current version. The method `dummy(m, n)` generates a synthetic survey consisting of `n` questions to which `m` respondents answer on a one to five scale. Their responses are drawn at random from a uniform distribution. Graphs representing the correlations between respondents and questions are generated, and written to a `results/` directory as `graph1.dat` and `graph2.dat`, respectively. The generated survey is outputted as `survey.dat`. 
 
 ```r
+# THIS IS DEPRECATED, STAY TUNED
 library("surveygraph")
 
 surveygraph::dummy(10000, 10)
