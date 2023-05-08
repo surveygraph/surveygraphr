@@ -12,11 +12,8 @@ struct neighbour
   neighbour(int a, double b) { u = a; w = b; }
 
   int u;     // neighbour index
-  int olap;  // overlap weight
   double w;  // euclidean distance or cosine similarity weight
-  double c;  // covariance
 
-  // order by neighbour index, u
   bool operator<(const neighbour& rhs) const { return u < rhs.u; }
 };
 
@@ -27,38 +24,31 @@ class surveygraph
     surveygraph(vector<vector<double>> &s){
       surveyvec = s;
       m = surveyvec.size();
-      n = 0;
-      if(m > 0) n = surveyvec[0].size();
+      n = surveyvec[0].size();      // will have verified dimensions in R routines
+      //build_pilot();
     }
 
-    int m, n;   // number of respondents, items
+    int m, n;                     // number of respondents, items
+    int edgecountr, edgecounti;   // number of edges in respondent and item graphs
+    double threshold;             // used as an edge cutoff, ranges from 0 to 2 * sqrt m
 
     vector<vector<double>> surveyvec;           // survey in vector format
-    map<int, map<int, int>> survey;             // survey in map format
     map<int, set<neighbour>> g_respondents;     // respondent graph
     map<int, set<neighbour>> g_items;           // item graph
     
-    map<int, map<int, double>> likert_1_5;
-
-    void pilot();
-
-    void inputdf(const int &);
-
-    // synthetic survey method
-    void build_survey_synthetic();
+    //void pilot();
 
     // graph construction methods
     void build_pilot();
     void build_g_items();
     void build_g_respondents();
 
-    void sparse_g_items();
-    void sparse_g_respondents();
+    int lcc;
+    set<vector<int>> partition;
+    void components();                    // computes distribution of component sizes
+    void bfs(const int &, vector<int> &); // breadth-first search
 
-    void item_overlap(const int&, const int&, double&);
     void item_euclid(const int&, const int&, double&);
-
-    void respondent_overlap(const int&, const int&, double&);
     void respondent_euclid(const int&, const int&, double&);
 };
 #endif

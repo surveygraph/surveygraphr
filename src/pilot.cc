@@ -9,7 +9,7 @@
 // lists, containing edge lists for respondent and item graphs
 SEXP surveygraphr_pilot(SEXP df) 
 {
-  int n = length(df);
+  int n = length(df); // should be column first, right?
   int m = length(VECTOR_ELT(df, 0));
 
   // read a dataframe into a vector of vectors
@@ -18,16 +18,18 @@ SEXP surveygraphr_pilot(SEXP df)
   for(int j = 0; j < n; ++j) {
     dummy = VECTOR_ELT(df, j);
     for(int i = 0; i < m; ++i) {
-      survey[i][j] = REAL(dummy)[i];
+      survey[i][j] = (REAL(dummy)[i] - 3) / 2; // temporary, won't always be 1 to 5
     }
   }
 
-  // build the corresponding network
+  // build the corresponding networks
   surveygraph S{survey};
-  //S.m = m;
-  //S.n = n;
-  //S.surveyvec = survey;
+
+  S.threshold = 2 * sqrt(n);
+  Rprintf("here a\n");
   S.build_pilot();
+  Rprintf("here b\n");
+  //S.components();
 
   // count edges in respondent graph
   int ecount = 0;
