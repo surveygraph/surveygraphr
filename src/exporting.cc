@@ -209,25 +209,3 @@ SEXP surveygraphr_dfmanip(SEXP x)
   UNPROTECT(7);
   return result;
 }
-
-// practice function, temp
-SEXP surveygraphr_hw_num(SEXP a, SEXP b)
-{
-  SEXP result = PROTECT(NEW_NUMERIC(1));
-  REAL(result)[0] = REAL(a)[0] + REAL(b)[0];
-  Rprintf("hello world! the sum of %f and %f is %f\n", REAL(a)[0], REAL(b)[0], REAL(result)[0]);
-  Rprintf("the value of REALSXP is %d\n", REALSXP);
-  UNPROTECT(1);
-  return result;
-}
-
-// practice function, temp
-SEXP surveygraphr_hw_int(SEXP a, SEXP b) 
-{
-  SEXP result = PROTECT(NEW_INTEGER(1));
-  INTEGER(result)[0] = INTEGER(a)[0] + INTEGER(b)[0];
-  Rprintf("hello world! the sum of %d and %d is %d\n", INTEGER(a)[0], INTEGER(b)[0], INTEGER(result)[0]);
-  Rprintf("the value of INTSXP is %d\n", INTSXP);
-  UNPROTECT(1);
-  return result;
-}
