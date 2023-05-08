@@ -18,12 +18,12 @@ When it is made available on [CRAN](https://cran.r-project.org/), we'll be able 
 install.packages("surveygraph")
 ```
 
-This is important for discoverability, and because most R users won't be familiar with a `git` workflow.
+This is important for discoverability, as we want to assume that users won't be comfortable building from source, or even installing from GitHub, as can be done using the `devtools` package. We elaborate on this below.
 
 ### Build and install from source
 
 
-Note that neither of the download options (downloading a zip and git cloning) in the previous section actually installs the package. To build from the downloaded source (after unzipping if necessary), run
+Note that neither of the download options (downloading a zip and git cloning) in the previous section actually installs the package. To build using the downloaded source (after unzipping if necessary), open a terminal and run
 
 ```sh
 R CMD BUILD .
@@ -113,6 +113,7 @@ In addition [these](https://www.r-bloggers.com/author/jonathan-callahan/) blogs 
 Here is a minimal working example of the package in its current version. The method `dummy(m, n)` generates a synthetic survey consisting of `n` questions to which `m` respondents answer on a one to five scale. Their responses are drawn at random from a uniform distribution. Graphs representing the correlations between respondents and questions are generated, and written to a `results/` directory as `graph1.dat` and `graph2.dat`, respectively. The generated survey is outputted as `survey.dat`. 
 
 ```r
+# THIS IS DEPRECATED, STAY TUNED
 library("surveygraph")
 
 surveygraph::dummy(10000, 10)
