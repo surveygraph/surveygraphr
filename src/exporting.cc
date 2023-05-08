@@ -6,7 +6,7 @@
 #include <vector>
 
 // read in a data frame and output list containing two integer vectors
-// list contains edge lists for respondent and item graphs
+// lists, containing edge lists for respondent and item graphs
 SEXP surveygraphr_pilot(SEXP df) 
 {
   int n = length(df);
@@ -81,35 +81,4 @@ SEXP surveygraphr_pilot(SEXP df)
   UNPROTECT(4);
 
   return edgelists;
-}
-
-static void print_df_r(SEXP x) 
-{
-  int m = length(x);
-  for(int i = 0; i < m; ++i) {
-    printf("%d : ", i);
-    SEXP dummy = PROTECT(VECTOR_ELT(x, i));
-    int n = length(dummy);
-    for(int j = 0; j < n; ++j) {
-      printf("%f ", REAL_ELT(dummy, j));
-    }
-    UNPROTECT(1);
-    printf("\n");
-  }
-}
-
-static void convert_df_vecvec(SEXP x) 
-{
-  int m = length(x);
-  std::vector<std::vector<int>> s(m);
-  for(int i = 0; i < m; ++i) {
-    printf("%d : ", i);
-    SEXP dummy = PROTECT(VECTOR_ELT(x, i));
-    int n = length(dummy);
-    for(int j = 0; j < n; ++j) {
-      printf("%f ", REAL_ELT(dummy, j));
-    }
-    UNPROTECT(1);
-    printf("\n");
-  }
 }

@@ -8,11 +8,11 @@
 #' add(10, 1)
 
 #' @export
-buildgraphs <- function(d) {
+buildgraphs <- function(df) {
   # pilots the building of the respondent and item graphs
   #print("you should do some type checking here")
   #invisible(.Call("surveygraphr_pilot", d))
-  .Call("surveygraphr_pilot", d)
+  .Call("surveygraphr_pilot", df)
   # returns a list of size two, containing respondent and item graphs
 }
 
