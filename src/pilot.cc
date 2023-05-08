@@ -23,14 +23,10 @@ SEXP surveygraphr_pilot(SEXP df)
   }
 
   // build the corresponding network
-  surveygraph S;
-  // would be nice to have a constructor that...
-  // 1. inputs a vector<vector<double>> 
-  // 2. sets m and n based on the size of the vec vec
-  // 3. computes the both graphs
-  S.m = m;
-  S.n = n;
-  S.surveyvec = survey;
+  surveygraph S{survey};
+  //S.m = m;
+  //S.n = n;
+  //S.surveyvec = survey;
   S.build_pilot();
 
   // count edges in respondent graph
@@ -86,22 +82,3 @@ SEXP surveygraphr_pilot(SEXP df)
 
   return edgelists;
 }
-
-//#include "surveygraph.h"
-//
-//#include <random>
-//
-//using namespace std;
-
-//void surveygraph::pilot()
-//{
-//  std::mt19937 gen(std::random_device{}());
-//  std::uniform_real_distribution<double> uniform;
-//
-//  surveygraph S;
-//  S.m = 100;
-//  S.n = 20;
-//
-//  S.build_survey_synthetic();
-//  S.build_g_respondents();
-//}

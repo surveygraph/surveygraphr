@@ -62,7 +62,6 @@ void surveygraph::build_g_respondents()
   double w {0.0};
   for(unsigned int i = 0; i < surveyvec.size(); ++i) {
     for(unsigned int j = i + 1; j < surveyvec.size(); ++j) {
-      //respondent_overlap(int(i), int(j), w);
       respondent_euclid(int(i), int(j), w);
       g_respondents[i].insert(neighbour{int(j), w});
       g_respondents[j].insert(neighbour{int(i), w});

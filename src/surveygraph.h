@@ -23,7 +23,13 @@ struct neighbour
 class surveygraph
 {
   public :
-    surveygraph () {}
+    surveygraph(){}
+    surveygraph(vector<vector<double>> &s){
+      surveyvec = s;
+      m = surveyvec.size();
+      n = 0;
+      if(m > 0) n = surveyvec[0].size();
+    }
 
     int m, n;   // number of respondents, items
 
