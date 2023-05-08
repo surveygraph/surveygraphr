@@ -38,12 +38,6 @@ dataframeCheck <- function(x) {
 }
 
 #' @export
-inputdf <- function(m) {
-  #print("you should do some type checking here")
-  invisible(.Call("surveygraphr_inputdf", m))
-}
-
-#' @export
 vecmanip <- function(m) {
   #print("you should do some type checking here")
   invisible(.Call("surveygraphr_vecmanip", m))
