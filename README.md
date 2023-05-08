@@ -23,7 +23,7 @@ This is important for discoverability, and because most R users won't be familia
 ### Build and install from source
 
 
-Note that neither of the download options (downloading a zip and git cloning) in the previous section actually installs the package. To build from the downloaded source (after unzipping if necessary), run
+Note that neither of the download options (downloading a zip and git cloning) in the previous section actually installs the package. To build using the downloaded source (after unzipping if necessary), open a terminal and run
 
 ```sh
 R CMD BUILD .
