@@ -114,41 +114,6 @@ static void convert_df_vecvec(SEXP x)
   }
 }
 
-// checks data type of each dataframe column
-SEXP surveygraphr_df_check(SEXP x) 
-{
-  int len = length(x);
-  SEXP result = PROTECT(NEW_CHARACTER(len));
-
-  for(int i = 0; i < len; ++i) {
-    switch(TYPEOF(VECTOR_ELT(x, i))) {
-      case(REALSXP):
-        CHARACTER_POINTER(result)[i] = mkChar("numeric");
-        Rprintf("%f\n", VECTOR_ELT(x, i));
-        break;
-      case(INTSXP):
-        CHARACTER_POINTER(result)[i] = mkChar("integer");
-        Rprintf("%d\n", VECTOR_ELT(x, i));
-        break;
-      case(LGLSXP):
-        CHARACTER_POINTER(result)[i] = mkChar("logical");
-        Rprintf("%d\n", VECTOR_ELT(x, i));
-        break;
-      case(STRSXP):
-        CHARACTER_POINTER(result)[i] = mkChar("character");
-        Rprintf("%c\n", VECTOR_ELT(x, i));
-        break;
-      case(VECSXP):
-        CHARACTER_POINTER(result)[i] = mkChar("list");
-        break;
-      default:
-        CHARACTER_POINTER(result)[i] = mkChar("dunnoooo");
-    }
-  }
-  UNPROTECT(1);
-  return result;
-}
-
 // read in a numeric vector, output a modified vector
 SEXP surveygraphr_vecmanip(SEXP x) 
 {

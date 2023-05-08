@@ -1,6 +1,8 @@
 #include <R.h>
 #include <Rdefines.h>
 
+#include <vector>
+
 /*
 
 In this file we archive code snippets, such as functions, that we found helpful
@@ -34,6 +36,41 @@ SEXP archived_hwinteger(SEXP a, SEXP b)
   INTEGER(result)[0] = INTEGER(a)[0] + INTEGER(b)[0];
   Rprintf("hello world! the sum of %d and %d is %d\n", INTEGER(a)[0], INTEGER(b)[0], INTEGER(result)[0]);
   Rprintf("the value of INTSXP is %d\n", INTSXP);
+  UNPROTECT(1);
+  return result;
+}
+
+// checks data type of each column in a dataframe 
+SEXP archived_dftypes(SEXP x) 
+{
+  int len = length(x);
+  SEXP result = PROTECT(NEW_CHARACTER(len));
+
+  for(int i = 0; i < len; ++i) {
+    switch(TYPEOF(VECTOR_ELT(x, i))) {
+      case(REALSXP):
+        CHARACTER_POINTER(result)[i] = mkChar("numeric");
+        Rprintf("%f\n", VECTOR_ELT(x, i));
+        break;
+      case(INTSXP):
+        CHARACTER_POINTER(result)[i] = mkChar("integer");
+        Rprintf("%d\n", VECTOR_ELT(x, i));
+        break;
+      case(LGLSXP):
+        CHARACTER_POINTER(result)[i] = mkChar("logical");
+        Rprintf("%d\n", VECTOR_ELT(x, i));
+        break;
+      case(STRSXP):
+        CHARACTER_POINTER(result)[i] = mkChar("character");
+        Rprintf("%c\n", VECTOR_ELT(x, i));
+        break;
+      case(VECSXP):
+        CHARACTER_POINTER(result)[i] = mkChar("list");
+        break;
+      default:
+        CHARACTER_POINTER(result)[i] = mkChar("unknown");
+    }
+  }
   UNPROTECT(1);
   return result;
 }
