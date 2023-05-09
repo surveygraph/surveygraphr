@@ -38,8 +38,8 @@ R CMD INSTALL .
 and the package is ready to use in an interpreter. Alternatively, the package can be installed from GitHub by running the following commands in an R interpreter.
 
 ```r
-library(devtools)
-devtools::install_github(surveygraph/surveygraphr)
+library("devtools")
+devtools::install_github("surveygraph/surveygraphr")
 ```
 
  Note that it remains to solve the awkward problem of overloading the term "surveygraph", which is the ideal final name of both the R and Python packages, but which necessitate different repository names in our organisation.
