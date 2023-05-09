@@ -8,8 +8,7 @@
 # tarball result from build process
 *.tar.gz
 
-# ...
-inst
+debug.* 
 
 # documentation
 man

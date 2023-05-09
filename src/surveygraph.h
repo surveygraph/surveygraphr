@@ -25,28 +25,25 @@ class surveygraph
       surveyvec = s;
       m = surveyvec.size();
       n = surveyvec[0].size();      // will have verified dimensions in R routines
-      //build_pilot();
     }
 
     int m, n;                     // number of respondents, items
     int edgecountr, edgecounti;   // number of edges in respondent and item graphs
-    double threshold;             // used as an edge cutoff, ranges from 0 to 2 * sqrt m
+    double threshold, radius;     // used as an edge cutoff, ranges from 0 to 2 * sqrt m
+    double zrespondents, zitems;  // average degree of each graph
 
-    vector<vector<double>> surveyvec;           // survey in vector format
-    map<int, set<neighbour>> g_respondents;     // respondent graph
-    map<int, set<neighbour>> g_items;           // item graph
+    vector<vector<double>> surveyvec;        // survey in vector format
+    map<int, set<neighbour>> g_respondents;  // respondent graph
+    map<int, set<neighbour>> g_items;        // item graph
     
-    //void pilot();
-
-    // graph construction methods
     void build_pilot();
     void build_g_items();
     void build_g_respondents();
 
     int lcc;
     set<vector<int>> partition;
-    void components();                    // computes distribution of component sizes
-    void bfs(const int &, vector<int> &); // breadth-first search
+    void build_partition();               // computes distribution of component sizes
+    void bfs(const int&, vector<int>&);   // breadth-first search
 
     void item_euclid(const int&, const int&, double&);
     void respondent_euclid(const int&, const int&, double&);

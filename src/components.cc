@@ -9,13 +9,14 @@
 using namespace std;
 
 // partitions network by connected components
-void surveygraph::components() 
+void surveygraph::build_partition() 
 {
   partition = set<vector<int>>{};
 
   set<int> sorted;
   for(auto &it : g_respondents) sorted.insert(it.first);
 
+  lcc = 0;
   vector<int> comp;
   while(sorted.size() > 0) {
     int u = *sorted.begin();
@@ -25,12 +26,9 @@ void surveygraph::components()
       sorted.erase(it);
     }
     partition.insert(comp);
+    if(comp.size() > lcc) lcc = comp.size();
   }
-
-  //Rprintf("going to test partitioning\n");
-  //Rprintf("components : %d\n", partition.size());
-  //for(auto &it : partition) Rprintf("%d ", it.size());
-  //Rprintf("\n");
+  assert(1 > 2);
 }
 
 // get all nodes in connected component of u

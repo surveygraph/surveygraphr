@@ -26,10 +26,7 @@ SEXP surveygraphr_pilot(SEXP df)
   surveygraph S{survey};
 
   S.threshold = 2 * sqrt(n);
-  Rprintf("here a\n");
   S.build_pilot();
-  Rprintf("here b\n");
-  //S.components();
 
   // count edges in respondent graph
   int ecount = 0;

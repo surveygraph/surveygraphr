@@ -3,7 +3,6 @@
 
 #include "surveygraph.h"
 
-//#include <random>
 #include <cmath>
 
 using namespace std;
@@ -11,9 +10,14 @@ using namespace std;
 // pilots the process of constructing respondent and item graphs
 void surveygraph::build_pilot()
 {
-  // builds complete weighted graph (causes memory problems for large m)
-  build_g_respondents();
-  build_g_items();
+  // search for threshold giving lcc closest to 0.5
+  for(double t = 0.1; t < 0.4; t += 0.001){
+    threshold = t;
+    build_g_respondents();
+    build_g_items();
+    build_partition();
+    Rprintf("%f %f %d\n", threshold, zrespondents, lcc);
+  }
 }
 
 // build the graph of respondents using Euclidean distance or cosine similarity
@@ -25,15 +29,19 @@ void surveygraph::build_g_respondents()
 
   double w = 0.0;
   double wmax = 0.0;
+  zrespondents = 0;
   for(unsigned int i = 0; i < surveyvec.size(); ++i) {
     for(unsigned int j = i + 1; j < surveyvec.size(); ++j) {
       respondent_euclid(int(i), int(j), w);
       if(w < threshscale){
         g_respondents[i].insert(neighbour{int(j), w});
         g_respondents[j].insert(neighbour{int(i), w});
+        zrespondents += 2;
       }
     }
   }
+  zrespondents /= m;
+  //zrespondents /= surveyvec.size();
 }
 
 // build the graph of items using Euclidean distance or cosine similarity
