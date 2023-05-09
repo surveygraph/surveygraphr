@@ -5,7 +5,7 @@ suppressMessages(library("surveygraphr"))
 suppressMessages(library("igraph"))
 
 # create a synthetic survey containing 10 respondents and 3 items
-S <- surveygraphr::gensurvey(1000, 25)
+S <- surveygraphr::gensurvey(500, 25)
 
 # generate the respondent and item graphs
 elists <- surveygraphr::buildgraphs(S)

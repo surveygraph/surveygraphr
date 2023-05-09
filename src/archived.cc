@@ -89,7 +89,7 @@ SEXP archived_vectormanip(SEXP x)
 }
 
 // read in a data frame and output a different data frame
-SEXP surveygraphr_dfmanip(SEXP x) 
+SEXP archived_dfmanip(SEXP x) 
 {
   SEXP result = PROTECT(allocVector(VECSXP, 2));
 

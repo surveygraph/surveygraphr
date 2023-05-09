@@ -10,13 +10,13 @@ using namespace std;
 // pilots the process of constructing respondent and item graphs
 void surveygraph::build_pilot()
 {
-  // search for threshold giving lcc closest to 0.5
-  for(double t = 0.1; t < 0.4; t += 0.001){
-    threshold = t;
+  // search for radius giving lcc closest to 0.5
+  for(double r = 0; r < 0.5; r += 0.001){
+    radius = r;
     build_g_respondents();
     build_g_items();
     build_partition();
-    Rprintf("%f %f %d\n", threshold, zrespondents, lcc);
+    Rprintf("%f %f %d\n", radius, zrespondents, lcc);
   }
 }
 
@@ -25,7 +25,7 @@ void surveygraph::build_g_respondents()
 {
   g_respondents = map<int, set<neighbour>> {};
 
-  double threshscale = threshold * 2 * sqrt(n);
+  double radscale = radius * 2 * sqrt(n);
 
   double w = 0.0;
   double wmax = 0.0;
@@ -33,15 +33,14 @@ void surveygraph::build_g_respondents()
   for(unsigned int i = 0; i < surveyvec.size(); ++i) {
     for(unsigned int j = i + 1; j < surveyvec.size(); ++j) {
       respondent_euclid(int(i), int(j), w);
-      if(w < threshscale){
+      if(w < radscale){
         g_respondents[i].insert(neighbour{int(j), w});
         g_respondents[j].insert(neighbour{int(i), w});
         zrespondents += 2;
       }
     }
   }
-  zrespondents /= m;
-  //zrespondents /= surveyvec.size();
+  zrespondents /= double(m);
 }
 
 // build the graph of items using Euclidean distance or cosine similarity
@@ -49,13 +48,13 @@ void surveygraph::build_g_items()
 {
   g_items = map<int, set<neighbour>> {};
 
-  double threshscale = threshold * 2 * sqrt(m);
+  double radscale = radius * 2 * sqrt(m);
 
   double w = 0.0;
   for(unsigned int i = 0; i < surveyvec[0].size(); ++i) {
     for(unsigned int j = i + 1; j < surveyvec[0].size(); ++j) {
       item_euclid(int(i), int(j), w);
-      if(w < threshscale){
+      if(w < radscale){
         g_items[i].insert(neighbour{int(j), w});
         g_items[j].insert(neighbour{int(i), w});
       }

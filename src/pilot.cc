@@ -7,7 +7,7 @@
 
 // read in a data frame and output list containing two integer vectors
 // lists, containing edge lists for respondent and item graphs
-SEXP surveygraphr_pilot(SEXP df) 
+SEXP surveygraphr_list_graphs(SEXP df) 
 {
   int n = length(df); // should be column first, right?
   int m = length(VECTOR_ELT(df, 0));
@@ -18,7 +18,8 @@ SEXP surveygraphr_pilot(SEXP df)
   for(int j = 0; j < n; ++j) {
     dummy = VECTOR_ELT(df, j);
     for(int i = 0; i < m; ++i) {
-      survey[i][j] = (REAL(dummy)[i] - 3) / 2; // temporary, won't always be 1 to 5
+      //survey[i][j] = (REAL(dummy)[i] - 3) / 2;     // temporary, assumes 1 to 5
+      survey[i][j] = (REAL(dummy)[i] - 5.5) / 4.5; // temporary, assumes 1 to 10
     }
   }
 

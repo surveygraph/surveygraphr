@@ -22,13 +22,12 @@ void surveygraph::build_partition()
     int u = *sorted.begin();
     bfs(u, comp);
     for(auto &it : comp){
-      assert(sorted.find(it) != 0);
+      assert(sorted.find(it) != 0); // this doesn't output anything inside R
       sorted.erase(it);
     }
     partition.insert(comp);
     if(comp.size() > lcc) lcc = comp.size();
   }
-  assert(1 > 2);
 }
 
 // get all nodes in connected component of u

@@ -8,11 +8,10 @@
 #' add(10, 1)
 
 #' @export
-buildgraphs <- function(df) {
-  # pilots the building of the respondent and item graphs
-  #print("you should do some type checking here")
-  #invisible(.Call("surveygraphr_pilot", d))
-  .Call("surveygraphr_pilot", df)
+listgraphs <- function(df) {
+  # returns a list containing respondent and item graphs
+  # we should do some rigorous type checking here...
+  .Call("surveygraphr_list_graphs", df)
   # returns a list of size two, containing respondent and item graphs
 }
 
@@ -21,9 +20,14 @@ gensurvey <- function(m, n) {
   df <- data.frame(matrix(NA, nrow = m, ncol = n))
   for(i in 1:m) {
     for(j in 1:n) {
-      df[i,j] <- as.numeric(sample(1:5, 1))
+      df[i,j] <- as.numeric(sample(1:10, 1))
     }
   }
   return(df)
 }
 
+#' @export
+explore <- function(){
+  S <- gensurvey(1000, 25)
+  elists <- buildgraphs(S)
+}

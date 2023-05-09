@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "rm src/*.o src/*.sh"
+
 if ls src/*.o 1> /dev/null 2>&1; then
   rm src/*.o
 fi
