@@ -8,6 +8,12 @@
 
 using namespace std;
 
+/*
+
+currently only does respondent network, need to generalise
+
+*/
+
 // partitions network by connected components
 void surveygraph::build_partition() 
 {

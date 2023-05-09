@@ -25,9 +25,7 @@ SEXP surveygraphr_list_graphs(SEXP df)
 
   // build the corresponding networks
   surveygraph S{survey};
-
-  S.threshold = 2 * sqrt(n);
-  S.build_pilot();
+  S.list_pilot();
 
   // count edges in respondent graph
   int ecount = 0;
@@ -74,11 +72,13 @@ SEXP surveygraphr_list_graphs(SEXP df)
   }
 
   // return a list containing the two edge sets
-  SEXP edgelists = PROTECT(allocVector(VECSXP, 2));
-  SET_VECTOR_ELT(edgelists, 0, e_respondents);
-  SET_VECTOR_ELT(edgelists, 1, e_items);
+  //SEXP edgelists = PROTECT(allocVector(VECSXP, 1));
+  //SET_VECTOR_ELT(edgelists, 0, e_respondents);
+  //SET_VECTOR_ELT(edgelists, 1, e_items);
 
-  UNPROTECT(4);
+  UNPROTECT(3);
+  //UNPROTECT(4);
 
-  return edgelists;
+  return e_respondents;
+  //return edgelists;
 }

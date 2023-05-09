@@ -36,7 +36,13 @@ class surveygraph
     map<int, set<neighbour>> g_respondents;  // respondent graph
     map<int, set<neighbour>> g_items;        // item graph
     
-    void build_pilot();
+    double radius_respondents, radius_items;  // optimal radii for respondent and item graphs
+    void optimise_radii();
+    vector<vector<double>> explore_respondents;
+
+    void list_pilot();      // builds a pair of graphs with optimal density
+    void explore_pilot();   // sweeps through a range of radii and studies 
+
     void build_g_items();
     void build_g_respondents();
 

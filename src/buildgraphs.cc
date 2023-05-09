@@ -7,18 +7,19 @@
 
 using namespace std;
 
-// pilots the process of constructing respondent and item graphs
-void surveygraph::build_pilot()
-{
-  // search for radius giving lcc closest to 0.5
-  for(double r = 0; r < 0.5; r += 0.001){
-    radius = r;
-    build_g_respondents();
-    build_g_items();
-    build_partition();
-    Rprintf("%f %f %d\n", radius, zrespondents, lcc);
-  }
-}
+//// pilots the process of constructing respondent and item graphs
+//void surveygraph::build_pilot()
+//{
+//  // search for radius giving lcc closest to 0.5
+//  //for(double r = 0; r < 0.5; r += 0.001){
+//    //radius = r;
+//    radius = 0.28;
+//    build_g_respondents();
+//    build_g_items();
+//    build_partition();
+//    //Rprintf("%f %f %d\n", radius, zrespondents, lcc);
+//  //}
+//}
 
 // build the graph of respondents using Euclidean distance or cosine similarity
 void surveygraph::build_g_respondents()

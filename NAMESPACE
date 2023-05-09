@@ -1,4 +1,5 @@
 useDynLib(surveygraphr)
 
+export(exploregraph)
+export(listgraph)
 export(gensurvey)
-export(buildgraphs)

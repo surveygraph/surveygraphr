@@ -8,11 +8,17 @@
 #' add(10, 1)
 
 #' @export
-listgraphs <- function(df) {
+exploregraph <- function(df){
+  thresholdstats <- .Call("surveygraphr_explore_graphs", df)
+  return(thresholdstats)
+}
+
+#' @export
+listgraph <- function(df) {
   # returns a list containing respondent and item graphs
   # we should do some rigorous type checking here...
-  .Call("surveygraphr_list_graphs", df)
-  # returns a list of size two, containing respondent and item graphs
+  edgelist <- .Call("surveygraphr_list_graphs", df)
+  return(edgelist)
 }
 
 #' @export
@@ -24,10 +30,4 @@ gensurvey <- function(m, n) {
     }
   }
   return(df)
-}
-
-#' @export
-explore <- function(){
-  S <- gensurvey(1000, 25)
-  elists <- buildgraphs(S)
 }
