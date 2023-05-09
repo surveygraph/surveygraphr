@@ -17,7 +17,7 @@ static const R_CallMethodDef R_CallDef[] = {
   {"surveygraphr_list_graphs",     (DL_FUNC) &surveygraphr_list_graphs, 1},
   {"surveygraphr_explore_graphs",  (DL_FUNC) &surveygraphr_explore_graphs, 1},
 
-  // archived routines
+  // archived routines, could call but we don't
   {"archived_inputoutput",      (DL_FUNC) &archived_inputoutput, 2},
   {"archived_hwinteger",        (DL_FUNC) &archived_hwinteger, 2},
   {"archived_hwnumeric",        (DL_FUNC) &archived_hwnumeric, 2},
