@@ -53,7 +53,7 @@ R CMD check .           # run especially before CRAN submissions
 R CMD SHLIB src/*.cc    # for building shared object files
 ```
 
-Hadley Wickham has a great [chapter](https://r-pkgs.org/testing-basics.html) on testing. He recommends the third party package `testthat`.
+Hadley Wickham has a great [chapter](https://r-pkgs.org/testing-basics.html) on testing, where he recommends the third party package `testthat`.
 
 ### Debugging
 
