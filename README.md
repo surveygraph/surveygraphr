@@ -104,7 +104,6 @@ I found the following resources to be most helpful in learning R's C API
 * a gentle [overview](http://adv-r.had.co.nz/C-interface.html) by Hadley Wickham
 * the authoritative [R internals](https://cran.r-project.org/doc/manuals/r-release/R-ints.html) manual by the core R team
 * the above has been parsed and simplified in [R internals](https://github.com/hadley/r-internals) by Hadley Wickham
-* Hadley Wickham has an [R style guide](http://adv-r.had.co.nz/Style.html) that would be good to follow
 
 In addition [these](https://www.r-bloggers.com/author/jonathan-callahan/) blogs by Jonathan Callahan helped me in the very beginning. An overview of the C interface can be found [here](https://www.r-bloggers.com/2012/11/using-r-calling-c-code-hello-world/) and [here](https://www.r-bloggers.com/2012/11/using-r-callhello/
 ), and a packaging walkthrough [here](https://www.r-bloggers.com/2012/11/using-r-packaging-a-c-library-in-15-minutes/).
@@ -133,5 +132,4 @@ In addition to the [CRAN](https://cran.r-project.org/) home page, which contains
 * indeed anything about R development by [Hadley Wickham](https://hadley.nz/) I would strongly recommend, he seems to be one of the stars of the R community
 * the so-called [tidyverse](https://github.com/tidyverse) suite of packages demonstrates R best practice in my opinion. There are plenty of beautiful packages in there on which we can model ours. Several include sophisticated C and C++ source libraries (Hadley Wickham is involved in a bunch of these. Incidentally, it would be wonderful if he is available for code review. Can funding be allocated for this kind of thing?)
 * see the resources in the section above on R internals
-
-
+* Hadley Wickham has an [R style guide](http://adv-r.had.co.nz/Style.html) that would be good to follow

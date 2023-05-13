@@ -1,7 +1,7 @@
 useDynLib(surveygraphr)
 
 export(generate_survey)
-export(generate_polarised_survey)
+export(generate_survey_polarised)
 
 export(sweep_thresholds)
 export(list_graphs)

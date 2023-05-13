@@ -22,7 +22,7 @@ list_graphs <- function(df) {
 }
 
 #' @export
-generate_survey <- function(m, n) {
+generate_survey <- function(m = 20, n = 5) {
   df <- data.frame(matrix(NA, nrow = m, ncol = n))
   for(i in 1:m) {
     for(j in 1:n) {
@@ -33,11 +33,23 @@ generate_survey <- function(m, n) {
 }
 
 #' @export
-generate_polarised_survey <- function(m, n) {
-  df <- data.frame(matrix(NA, nrow = m, ncol = n))
+generate_survey_polarised <- function(m = 20, n = 5, p = 0.5) {
+  df <- data.frame(matrix(NA, nrow = m, ncol = n + 1))
+  response_hi = 8
+  response_lo = 2
   for(i in 1:m) {
-    for(j in 1:n) {
-      df[i,j] <- as.numeric(sample(1:10, 1))
+    average_response = response_hi
+    user_group = 1
+    if(runif(1) < p){
+      average_response = response_lo
+      user_group = 0
+    }
+    df[i,1] = 
+    for(j in 2:n) {
+      df[i,j] <- as.numeric(rpois(1, average_response))
+      while(df[i,j] < 1 | df[i,j] > 10){
+        df[i,j] <- as.numeric(rpois(1, average_response))
+      }
     }
   }
   return(df)
