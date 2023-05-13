@@ -104,6 +104,7 @@ I found the following resources to be most helpful in learning R's C API
 * a gentle [overview](http://adv-r.had.co.nz/C-interface.html) by Hadley Wickham
 * the authoritative [R internals](https://cran.r-project.org/doc/manuals/r-release/R-ints.html) manual by the core R team
 * the above has been parsed and simplified in [R internals](https://github.com/hadley/r-internals) by Hadley Wickham
+* Hadley Wickham has an [R style guide](http://adv-r.had.co.nz/Style.html) that would be good to follow
 
 In addition [these](https://www.r-bloggers.com/author/jonathan-callahan/) blogs by Jonathan Callahan helped me in the very beginning. An overview of the C interface can be found [here](https://www.r-bloggers.com/2012/11/using-r-calling-c-code-hello-world/) and [here](https://www.r-bloggers.com/2012/11/using-r-callhello/
 ), and a packaging walkthrough [here](https://www.r-bloggers.com/2012/11/using-r-packaging-a-c-library-in-15-minutes/).
