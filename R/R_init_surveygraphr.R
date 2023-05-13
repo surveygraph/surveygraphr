@@ -32,8 +32,14 @@ generate_survey <- function(m = 20, n = 5) {
   return(df)
 }
 
+generate_survey_errors <- function(){
+  # generate survey with all types of errors, for use with testing and 
+  # demonstration of package
+}
+
 #' @export
 generate_survey_polarised <- function(m = 20, n = 5, p = 0.5) {
+  # instead of sorting on the fly, generate groups in chunks then shuffle at the end
   df <- data.frame(matrix(NA, nrow = m, ncol = n + 1))
   response_hi = 8
   response_lo = 2
