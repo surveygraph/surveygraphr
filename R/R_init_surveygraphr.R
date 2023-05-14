@@ -14,11 +14,11 @@ sweep_thresholds <- function(df){
 }
 
 #' @export
-list_graphs <- function(df) {
+graph_edgelists <- function(df) {
   # returns a list containing respondent and item graphs
   # we should do some rigorous type checking here...
-  elist <- .Call("surveygraphr_list_graphs", df)
-  return(elist)
+  edgelists <- .Call("surveygraphr_list_graphs", df)
+  return(edgelists)
 }
 
 #' @export
@@ -38,20 +38,25 @@ generate_survey_errors <- function(){
 }
 
 #' @export
-generate_survey_polarised <- function(m = 20, n = 5, p = 0.5) {
-  # instead of sorting on the fly, generate groups in chunks then shuffle at the end
-  df <- data.frame(matrix(NA, nrow = m, ncol = n + 1))
-  response_hi = 8
-  response_lo = 2
+generate_survey_polarised <- function(m = 200, n = 15, minority = 0.3, polarisation = 2){
+  if(minority < 0.0 | minority > 1.0) minority = 0.3
+  if(minority > 0.5 & minority < 1.0) minority = 1 - minority
+
+  df <- data.frame(matrix(NA, nrow = m, ncol = n))
+  respondent_mdata <- vector(mode = "integer", length = m)
+
+  response_hi = 5 + polarisation
+  response_lo = 5 - polarisation
+
   for(i in 1:m) {
-    average_response = response_hi
-    user_group = 1
-    if(runif(1) < p){
+    if(i < minority * m){
       average_response = response_lo
-      user_group = 0
+      respondent_mdata[i] = 0
+    }else{
+      average_response = response_hi
+      respondent_mdata[i] = 1
     }
-    df[i,1] = 
-    for(j in 2:n) {
+    for(j in 1:n) {
       df[i,j] <- as.numeric(rpois(1, average_response))
       while(df[i,j] < 1 | df[i,j] > 10){
         df[i,j] <- as.numeric(rpois(1, average_response))

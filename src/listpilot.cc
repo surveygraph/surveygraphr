@@ -7,12 +7,18 @@
 
 using namespace std;
 
-// pilots the process of constructing respondent and item graphs
+/*
+list_pilot() pilots the process of constructing respondent and item graphs. The
+main loop searches for a value of the threshold that produces a largest
+connected component, or LCC, that is a fraction lcctarget of the entire graph.
+For example, when lcctarget = 1, we search for a threshold value that results
+in a fully connected graph.
+*/
 void surveygraph::list_pilot()
 {
-  // search for radius / threshold, s.t. lcc is close to 0.5
   radius_respondents = 0;
   int lccopt = int(1e6);
+  lcctarget = 1.01;
 
   // search for radius giving lcc closest to 0.5
   for(double r = 0; r < 0.5; r += 0.001){
@@ -20,14 +26,12 @@ void surveygraph::list_pilot()
     build_g_respondents();
     build_partition();
 
-    if(abs(lcc - m / 2) < lccopt){
-      lccopt = abs(lcc - m / 2);
+    if(abs(lcc - int(lcctarget * m)) < lccopt){
+      lccopt = abs(lcc - int(lcctarget * m));
       radius_respondents = radius;
     }
   }
-
   // build graph at desired radius
   radius = radius_respondents;
   build_g_respondents();
-  Rprintf("optimal radius is %f\n", radius_respondents);
 }

@@ -47,6 +47,7 @@ class surveygraph
     void build_g_respondents();
 
     int lcc;
+    double lcctarget;
     set<vector<int>> partition;
     void build_partition();               // computes distribution of component sizes
     void bfs(const int&, vector<int>&);   // breadth-first search
