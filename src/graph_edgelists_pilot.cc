@@ -9,10 +9,10 @@ using namespace std;
 
 /*
 list_pilot() pilots the process of constructing respondent and item graphs. The
-main loop searches for a value of the threshold that produces a largest
-connected component, or LCC, that is a fraction lcc_respondents of the entire
-graph.  For example, when lcc_respondents = 1, we search for a threshold value
-that results in a fully connected graph.
+main loop searches for a value of the radius that produces a largest connected
+component, or LCC, that is a fraction lcc_respondents of the entire graph.  For
+example, when lcc_respondents = 1, we search for a radius value that results in
+a fully connected graph.
 */
 void surveygraph::graph_edgelists_pilot()
 {
