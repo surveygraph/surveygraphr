@@ -19,6 +19,7 @@ symbols.rds
 # ad hoc directories
 ..Rcheck/
 .trash/
+.results/
 inst/doc/
 doc/
 Meta/

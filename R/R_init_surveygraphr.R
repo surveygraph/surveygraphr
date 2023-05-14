@@ -14,10 +14,10 @@ sweep_thresholds <- function(df){
 }
 
 #' @export
-graph_edgelists <- function(df) {
-  # returns a list containing respondent and item graphs
-  # we should do some rigorous type checking here...
-  edgelists <- .Call("surveygraphr_list_graphs", df)
+# this is the main function, needs way better documentation and exception handling
+graph_edgelists <- function(df, respondents_lcc = 0.95, items_lcc = 1.00) {
+  # need to throw error if df not supplied
+  edgelists <- .Call("surveygraphr_graph_edgelists", df, respondents_lcc, items_lcc)
   return(edgelists)
 }
 

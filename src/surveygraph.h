@@ -20,11 +20,19 @@ struct neighbour
 class surveygraph
 {
   public :
-    surveygraph(){}
-    surveygraph(vector<vector<double>> &s){
-      survey = s;
+    surveygraph(vector<vector<double>> &a){
+      survey = a;
       m = survey.size();
       n = survey[0].size();      // will have verified dimensions in R routines
+    }
+
+    surveygraph(vector<vector<double>> &a, double b, double c){
+      survey = a;
+      m = survey.size();
+      n = survey[0].size();      // will have verified dimensions in R routines
+
+      lcc_respondents = b;
+      lcc_items = c;
     }
 
     int m, n;                     // number of respondents, items
@@ -45,13 +53,14 @@ class surveygraph
     void search_threshold_respondents();
     void search_threshold_items();
 
-    void list_pilot();     // builds a pair of graphs with optimal density
+    void graph_edgelists_pilot();  // builds a pair of graphs with optimal density
     void explore_pilot();  // sweeps through a range of radii and studies 
 
     void build_g_items();
     void build_g_respondents();
 
     int lcc;
+    double lcc_respondents, lcc_items;  // target LCC values, fraction of network
     double lcctarget;
     set<vector<int>> partition;
     void build_partition();               // computes distribution of component sizes

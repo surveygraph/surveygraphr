@@ -7,7 +7,7 @@
 
 // read in a data frame and output list containing two integer vectors
 // lists, containing edge lists for respondent and item graphs
-SEXP surveygraphr_list_graphs(SEXP df) 
+SEXP surveygraphr_graph_edgelists(SEXP df, SEXP rlcc, SEXP ilcc) 
 {
   int n = length(df); // should be column first, right?
   int m = length(VECTOR_ELT(df, 0));
@@ -23,9 +23,10 @@ SEXP surveygraphr_list_graphs(SEXP df)
     }
   }
 
-  // build the corresponding networks
-  surveygraph S{surveytmp};
-  S.list_pilot();
+  double rlcctmp = REAL(rlcc)[0];
+  double ilcctmp = REAL(ilcc)[0];
+  surveygraph S{surveytmp, rlcctmp, ilcctmp}; // constructor for surveygraph class
+  S.graph_edgelists_pilot();
 
   // count edges in respondent graph
   int ecount = 0;
