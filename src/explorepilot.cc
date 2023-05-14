@@ -18,7 +18,7 @@ void surveygraph::explore_pilot()
   for(double r = 0; r < 0.5; r += 0.001){
     radius_respondents = r;
     build_graph_respondents();
-    build_partition();
+    build_partition_respondents();
     explore_respondents.push_back(vector<double>{radius_respondents, avg_degree_respondents, double(lcc)});
   }
 }

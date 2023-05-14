@@ -71,15 +71,16 @@ SEXP surveygraphr_graph_edgelists(SEXP df, SEXP rlcc, SEXP ilcc)
       }
     }
   }
+  Rprintf("edge counts %d %d\n", length(e_respondents), length(e_items));
 
   // return a list containing the two edge sets
-  //SEXP edgelists = PROTECT(allocVector(VECSXP, 1));
-  //SET_VECTOR_ELT(edgelists, 0, e_respondents);
-  //SET_VECTOR_ELT(edgelists, 1, e_items);
+  SEXP edgelists = PROTECT(allocVector(VECSXP, 2));
+  SET_VECTOR_ELT(edgelists, 0, e_respondents);
+  SET_VECTOR_ELT(edgelists, 1, e_items);
 
-  UNPROTECT(3);
-  //UNPROTECT(4);
+  //UNPROTECT(3);
+  UNPROTECT(4);
 
-  return e_respondents;
-  //return edgelists;
+  //return e_respondents;
+  return edgelists;
 }

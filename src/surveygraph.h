@@ -57,14 +57,16 @@ class surveygraph
     void build_graph_items();
     void build_graph_respondents();
 
-    int lcc;
-    double lcc_respondents, lcc_items;  // target LCC values, fraction of network
-    double lcctarget;
-    set<vector<int>> partition;
-    void build_partition();               // computes distribution of component sizes
-    void bfs(const int&, vector<int>&);   // breadth-first search
-
     void distance_items(const int&, const int&, double&);
     void distance_respondents(const int&, const int&, double&);
+
+    // way too much repetition here, clean up later
+    int lcc;
+    double lcc_respondents, lcc_items;  // target LCC values, fraction of network
+    set<vector<int>> partition_respondents, partition_items;
+    void build_partition_respondents();  // computes distribution of component sizes
+    void build_partition_items();        // computes distribution of component sizes
+    void bfs_respondents(const int&, vector<int>&);   // breadth-first search
+    void bfs_items(const int&, vector<int>&);         // breadth-first search
 };
 #endif
