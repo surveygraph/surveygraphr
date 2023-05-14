@@ -17,20 +17,43 @@ in a fully connected graph.
 void surveygraph::list_pilot()
 {
   radius_respondents = 0;
+  lcctarget = 0.99;
   int lccopt = int(1e6);
-  lcctarget = 1.01;
 
-  // search for radius giving lcc closest to 0.5
-  for(double r = 0; r < 0.5; r += 0.001){
-    radius = r;
+  // halving the interval
+  int searchmax = 20;
+  double rlower = 0.0;
+  double rupper = 1.0;
+  int i = 0;
+  while(i < 20){
+    radius_respondents = (rlower + rupper) / 2.0;
+    radius = radius_respondents;
     build_g_respondents();
     build_partition();
 
-    if(abs(lcc - int(lcctarget * m)) < lccopt){
-      lccopt = abs(lcc - int(lcctarget * m));
-      radius_respondents = radius;
+    if(lcc > int(lcctarget * m)){
+      rupper = radius;
+    }else if(lcc < int(lcctarget * m)){
+      rlower = radius;
+    }else if(lcc == int(lcctarget * m)){
+      Rprintf("exit bisection method\n");
     }
+    i += 1;
+    Rprintf("hello from list_pilot: %f %d %f\n", radius, lcc, zrespondents);
   }
+
+  //for(double r = 0.1; r < 0.4; r += 0.005){
+  //  radius = r;
+  //  build_g_respondents();
+  //  build_partition();
+
+  //  if(abs(lcc - int(lcctarget * m)) < lccopt){
+  //    lccopt = abs(lcc - int(lcctarget * m));
+  //    radius_respondents = radius;
+  //  }
+  //  //Rprintf("hello from list_pilot: %f %d %f\n", r, lcc, zrespondents);
+  //}
+
   // build graph at desired radius
   radius = radius_respondents;
   build_g_respondents();

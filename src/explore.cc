@@ -13,18 +13,18 @@ SEXP surveygraphr_explore_graphs(SEXP df)
   int m = length(VECTOR_ELT(df, 0));
 
   // read a dataframe into a vector of vectors
-  std::vector<std::vector<double>> survey(m, std::vector<double> (n));
+  std::vector<std::vector<double>> surveytmp(m, std::vector<double> (n));
   SEXP dummy = PROTECT(allocVector(REALSXP, m));
   for(int j = 0; j < n; ++j) {
     dummy = VECTOR_ELT(df, j);
     for(int i = 0; i < m; ++i) {
-      //survey[i][j] = (REAL(dummy)[i] - 3) / 2;     // temporary, assumes 1 to 5
-      survey[i][j] = (REAL(dummy)[i] - 5.5) / 4.5; // temporary, assumes 1 to 10
+      //surveytmp[i][j] = (REAL(dummy)[i] - 3) / 2;     // temporary, assumes 1 to 5
+      surveytmp[i][j] = (REAL(dummy)[i] - 5.5) / 4.5; // temporary, assumes 1 to 10
     }
   }
 
   // build the corresponding networks
-  surveygraph S{survey};
+  surveygraph S{surveytmp};
   S.explore_pilot();
 
   // put data from explore_respondents (radius, z, lcc) into a list
