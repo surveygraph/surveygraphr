@@ -37,7 +37,6 @@ class surveygraph
 
     int m, n;                     // number of respondents, items
     int edgecountr, edgecounti;   // number of edges in respondent and item graphs
-    double zrespondents, zitems;  // average degree of each graph
     double avg_degree_respondents;
     double avg_degree_items;
 
@@ -46,7 +45,7 @@ class surveygraph
     map<int, set<neighbour>> g_respondents;  // respondent graph
     map<int, set<neighbour>> g_items;        // item graph
     
-    double radius, radius_respondents, radius_items;  // optimal radii for respondent and item graphs
+    double radius_respondents, radius_items;  // optimal radii for respondent and item graphs
     vector<vector<double>> explore_respondents;
 
     void search_radius_respondents();
@@ -55,8 +54,8 @@ class surveygraph
     void graph_edgelists_pilot();  // builds a pair of graphs with optimal density
     void explore_pilot();  // sweeps through a range of radii and studies 
 
-    void build_g_items();
-    void build_g_respondents();
+    void build_graph_items();
+    void build_graph_respondents();
 
     int lcc;
     double lcc_respondents, lcc_items;  // target LCC values, fraction of network
@@ -65,7 +64,7 @@ class surveygraph
     void build_partition();               // computes distribution of component sizes
     void bfs(const int&, vector<int>&);   // breadth-first search
 
-    void item_euclid(const int&, const int&, double&);
-    void respondent_euclid(const int&, const int&, double&);
+    void distance_items(const int&, const int&, double&);
+    void distance_respondents(const int&, const int&, double&);
 };
 #endif

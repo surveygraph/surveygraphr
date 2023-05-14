@@ -16,30 +16,57 @@ a fully connected graph.
 */
 void surveygraph::graph_edgelists_pilot()
 {
-  radius_respondents = 0;
+  search_radius_respondents();  // sets radius_respondents
+  build_graph_respondents();    // builds respondent graph using the found radius
 
+  search_radius_items();        // sets radius_items
+  build_graph_items();          // builds item graph using the found radius
+}
+
+void surveygraph::search_radius_respondents()
+{
+  radius_respondents = 0;
   double rlower = 0.0;
   double rupper = 1.0;
-  int i = 0;
   bool rfound = false;
-  while(i < 20 && !rfound){  // bisection method
+  int i = 0;
+  while(!rfound && i < 20){  // bisection method
     radius_respondents = (rlower + rupper) / 2.0;
-    radius = radius_respondents;
-    build_g_respondents();
+    build_graph_respondents();
     build_partition();
 
     if(lcc > int(lcc_respondents * m)){
-      rupper = radius;
+      rupper = radius_respondents;
     }else if(lcc < int(lcc_respondents * m)){
-      rlower = radius;
+      rlower = radius_respondents;
     }else if(lcc == int(lcc_respondents * m)){
       rfound = true;
     }
     i += 1;
-    Rprintf("hello from list_pilot: %f %d %f\n", radius, lcc, zrespondents);
+    Rprintf("hello from list_pilot: %f %d %f\n", radius_respondents, lcc, avg_degree_respondents);
   }
+}
 
-  // build graph at desired radius
-  radius = radius_respondents;
-  build_g_respondents();
+void surveygraph::search_radius_items()
+{
+  radius_items = 0;
+  double rlower = 0.0;
+  double rupper = 1.0;
+  bool rfound = false;
+  int i = 0;
+  while(!rfound && i < 20){  // bisection method
+    radius_items = (rlower + rupper) / 2.0;
+    build_graph_items();
+    build_partition();
+
+    if(lcc > int(lcc_items * m)){
+      rupper = radius_items;
+    }else if(lcc < int(lcc_items * m)){
+      rlower = radius_items;
+    }else if(lcc == int(lcc_items * m)){
+      rfound = true;
+    }
+    i += 1;
+    Rprintf("hello from list_pilot: %f %d %f\n", radius_items, lcc, avg_degree_items);
+  }
 }

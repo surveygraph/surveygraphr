@@ -16,9 +16,9 @@ void surveygraph::explore_pilot()
   // currently tailored to a specific type of survey, namely 1000 x 25 survey
   // containing entries in the range (1, 10).
   for(double r = 0; r < 0.5; r += 0.001){
-    radius = r;
-    build_g_respondents();
+    radius_respondents = r;
+    build_graph_respondents();
     build_partition();
-    explore_respondents.push_back(vector<double>{radius, zrespondents, double(lcc)});
+    explore_respondents.push_back(vector<double>{radius_respondents, avg_degree_respondents, double(lcc)});
   }
 }
