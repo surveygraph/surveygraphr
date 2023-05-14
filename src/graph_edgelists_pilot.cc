@@ -21,6 +21,30 @@ void surveygraph::graph_edgelists_pilot()
 
   search_radius_items();        // sets radius_items
   build_graph_items();          // builds item graph using the found radius
+
+  Rprintf("zrespond %f ", avg_degree_respondents);
+  Rprintf("radrespond %f ", radius_respondents);
+  Rprintf("zitem %f ", avg_degree_items);
+  Rprintf("raditem %f ", radius_items);
+  Rprintf("\n");
+  Rprintf("\n");
+
+  for(int i = 0; i < 5; ++i){
+    Rprintf("%d : ", i);
+    for(auto it : g_respondents[i]){
+      Rprintf("%d [%f] ", it.u, it.w);
+    }
+    Rprintf("\n");
+  }
+  Rprintf("\n");
+
+  for(int i = 0; i < 5; ++i){
+    Rprintf("%d : ", i);
+    for(auto it : g_items[i]){
+      Rprintf("%d [%f] ", it.u, it.w);
+    }
+    Rprintf("\n");
+  }
 }
 
 void surveygraph::search_radius_respondents()
@@ -43,7 +67,7 @@ void surveygraph::search_radius_respondents()
       rfound = true;
     }
     i += 1;
-    Rprintf("hello from list_pilot: %f %d %f\n", radius_respondents, lcc, avg_degree_respondents);
+    //Rprintf("hello from list_pilot: %f %d %f\n", radius_respondents, lcc, avg_degree_respondents);
   }
 }
 
@@ -67,6 +91,6 @@ void surveygraph::search_radius_items()
       rfound = true;
     }
     i += 1;
-    Rprintf("hello from list_pilot: %f %d %f\n", radius_items, lcc, avg_degree_items);
+    //Rprintf("hello from list_pilot: %f %d %f\n", radius_items, lcc, avg_degree_items);
   }
 }

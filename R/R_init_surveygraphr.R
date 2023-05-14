@@ -1,12 +1,3 @@
-#' print hello world plus some facts.
-#'
-#' @param x A number.
-#' @param y A number.
-#' @return The sum of \code{x} and \code{y}.
-#' @examples
-#' add(1, 1)
-#' add(10, 1)
-
 #' @export
 sweep_thresholds <- function(df){
   lccdata <- .Call("surveygraphr_explore_graphs", df)
@@ -15,7 +6,7 @@ sweep_thresholds <- function(df){
 
 #' @export
 # this is the main function, needs way better documentation and exception handling
-graph_edgelists <- function(df, respondents_lcc = 0.95, items_lcc = 1.00) {
+graph_edgelists <- function(df, respondents_lcc = 0.95, items_lcc = 0.95) {
   # need to throw error if df not supplied
   edgelists <- .Call("surveygraphr_graph_edgelists", df, respondents_lcc, items_lcc)
   return(edgelists)
@@ -33,8 +24,7 @@ generate_survey <- function(m = 20, n = 5) {
 }
 
 generate_survey_errors <- function(){
-  # generate survey with all types of errors, for use with testing and 
-  # demonstration of package
+  # generate survey with all sorts of errors, for testing and demo purposes
 }
 
 #' @export
