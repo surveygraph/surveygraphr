@@ -91,18 +91,11 @@ SEXP archived_vectormanip(SEXP x)
 // read in a data frame and output a different data frame
 SEXP archived_dfmanip(SEXP x) 
 {
+  // extend a dataframe containing 3 rows to 4 rows
   SEXP oldcol1 = PROTECT(allocVector(REALSXP, 3));  // assume three double types
   SEXP oldcol2 = PROTECT(allocVector(REALSXP, 3));
   SEXP newcol1 = PROTECT(allocVector(REALSXP, 4));
   SEXP newcol2 = PROTECT(allocVector(REALSXP, 4));
-
-  SEXP names = PROTECT(allocVector(STRSXP, 2));
-  SET_STRING_ELT(names, 0, mkChar("x"));            // name first column x
-  SET_STRING_ELT(names, 1, mkChar("y"));            // name second column y
-
-  SEXP rownames = PROTECT(allocVector(INTSXP, 2));
-  INTEGER(rownames)[0] = NA_INTEGER;                // default entry if size below too small
-  INTEGER(rownames)[1] = -4;                        // number of rows
 
   oldcol1 = VECTOR_ELT(x, 0);                       // extract first column from x
   oldcol2 = VECTOR_ELT(x, 1);                       // extract second column from x
@@ -120,6 +113,14 @@ SEXP archived_dfmanip(SEXP x)
   SEXP result = PROTECT(allocVector(VECSXP, 2));
   SET_VECTOR_ELT(result, 0, newcol1);
   SET_VECTOR_ELT(result, 1, newcol2);
+
+  SEXP names = PROTECT(allocVector(STRSXP, 2));
+  SET_STRING_ELT(names, 0, mkChar("x"));            // name first column x
+  SET_STRING_ELT(names, 1, mkChar("y"));            // name second column y
+
+  SEXP rownames = PROTECT(allocVector(INTSXP, 2));
+  INTEGER(rownames)[0] = NA_INTEGER;                // default entry if size below too small
+  INTEGER(rownames)[1] = -4;                        // number of rows
 
   setAttrib(result, R_ClassSymbol, ScalarString(mkChar("data.frame")));
   setAttrib(result, R_RowNamesSymbol, rownames);

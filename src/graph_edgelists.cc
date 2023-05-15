@@ -77,15 +77,36 @@ SEXP surveygraphr_graph_edgelists(SEXP df, SEXP rlcc, SEXP ilcc)
       }
     }
   }
+  // make dataframe of respondent edgelist
   SEXP list_respondents = PROTECT(allocVector(VECSXP, 3));
   SET_VECTOR_ELT(list_respondents, 0, u_respondents);
   SET_VECTOR_ELT(list_respondents, 1, v_respondents);
   SET_VECTOR_ELT(list_respondents, 2, w_respondents);
 
+  SEXP names = PROTECT(allocVector(STRSXP, 3));
+  SET_STRING_ELT(names, 0, mkChar("u"));            // name first column x
+  SET_STRING_ELT(names, 1, mkChar("v"));            // name second column y
+  SET_STRING_ELT(names, 2, mkChar("w"));            // name second column y
+
+  SEXP rownames = PROTECT(allocVector(INTSXP, 2));
+  INTEGER(rownames)[0] = NA_INTEGER;                // default entry if size below too small
+  INTEGER(rownames)[1] = -length(u_respondents);    // number of rows in respondents edgelist
+
+  setAttrib(list_respondents, R_ClassSymbol, ScalarString(mkChar("data.frame")));
+  setAttrib(list_respondents, R_RowNamesSymbol, rownames);
+  setAttrib(list_respondents, R_NamesSymbol, names);
+
+  // make dataframe of item edgelist
   SEXP list_items = PROTECT(allocVector(VECSXP, 3));
   SET_VECTOR_ELT(list_items, 0, u_items);
   SET_VECTOR_ELT(list_items, 1, v_items);
   SET_VECTOR_ELT(list_items, 2, w_items);
+
+  INTEGER(rownames)[1] = -length(u_items);    // number of rows in item edgelist
+
+  setAttrib(list_items, R_ClassSymbol, ScalarString(mkChar("data.frame")));
+  setAttrib(list_items, R_RowNamesSymbol, rownames);
+  setAttrib(list_items, R_NamesSymbol, names);
 
   // return a list containing the two edge sets
   SEXP edgelists = PROTECT(allocVector(VECSXP, 2));
@@ -93,7 +114,7 @@ SEXP surveygraphr_graph_edgelists(SEXP df, SEXP rlcc, SEXP ilcc)
   SET_VECTOR_ELT(edgelists, 1, list_items);
 
   //UNPROTECT(3);
-  UNPROTECT(10);
+  UNPROTECT(12);
 
   //return e_respondents;
   return edgelists;
