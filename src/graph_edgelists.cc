@@ -9,14 +9,15 @@
 // lists, containing edge lists for respondent and item graphs
 SEXP surveygraphr_graph_edgelists(SEXP df, SEXP rlcc, SEXP ilcc) 
 {
-  int n = length(df); // should be column first, right?
+  // ignoring first column, which is id
+  int n = length(df) - 1; // should be column first, right?
   int m = length(VECTOR_ELT(df, 0));
 
   // read a dataframe into a vector of vectors
   std::vector<std::vector<double>> surveytmp(m, std::vector<double> (n));
   SEXP dummy = PROTECT(allocVector(REALSXP, m));
   for(int j = 0; j < n; ++j) {
-    dummy = VECTOR_ELT(df, j);
+    dummy = VECTOR_ELT(df, j + 1);
     for(int i = 0; i < m; ++i) {
       //surveytmp[i][j] = (REAL(dummy)[i] - 3) / 2;     // temporary, assumes 1 to 5
       surveytmp[i][j] = (REAL(dummy)[i] - 5.5) / 4.5; // temporary, assumes 1 to 10

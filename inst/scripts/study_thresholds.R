@@ -1,7 +1,7 @@
 library("surveygraphr")
 library("ggplot2")
 
-S <- surveygraphr::generate_survey_polarised(m=500, polarisation=0)
+S <- surveygraphr::generate_survey_polarised(m=15, polarisation=0)
 
 thresholdlist <- surveygraphr::sweep_thresholds(S)
 
