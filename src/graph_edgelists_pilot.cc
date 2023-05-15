@@ -57,7 +57,6 @@ void surveygraph::search_radius_items()
     radius_items = (rlower + rupper) / 2.0;
     build_graph_items();
     build_partition_items();
-    Rprintf("radius_items after %d steps : %f\n", i, radius_items);
 
     if(lcc > int(lcc_items * n)){ // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< rename to target_lcc_items
       rupper = radius_items;

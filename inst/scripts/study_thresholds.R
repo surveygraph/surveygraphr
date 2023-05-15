@@ -1,11 +1,14 @@
 library("surveygraphr")
 library("ggplot2")
 
-S <- surveygraphr::generate_survey_polarised(m=20, n=4, polarisation=1.25)
+S <- surveygraphr::generate_survey_polarised(m=500, polarisation=0)
 
 thresholdlist <- surveygraphr::sweep_thresholds(S)
 
-#df <- data.frame(radius = thresholdlist[[1]], degree = thresholdlist[[2]], LCC = thresholdlist[[3]])
-#
-#ggplot(df, aes(x = radius, y = LCC)) + geom_point()
-#ggplot(df, aes(x = radius, y = z)) + geom_point()
+p <- ggplot()
+p <- p + geom_point(data = thresholdlist[[1]], aes(x = threshold, y = lcc), color="blue")
+p <- p + geom_point(data = thresholdlist[[1]], aes(x = threshold, y = avgdegree), color="red")
+p <- p + xlab(label = 'threshold')
+p <- p + ylab(label = 'largest component, average degree')
+p <- p + theme_bw()
+print(p)
