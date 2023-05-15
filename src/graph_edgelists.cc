@@ -36,7 +36,9 @@ SEXP surveygraphr_graph_edgelists(SEXP df, SEXP rlcc, SEXP ilcc)
   } else {
     Rprintf("ERROR: respondent graph has uneven number of edges\n");
   }
-  SEXP e_respondents = PROTECT(allocVector(INTSXP, 2 * ecount));
+  SEXP u_respondents = PROTECT(allocVector(INTSXP, ecount));  // u column, respondents
+  SEXP v_respondents = PROTECT(allocVector(INTSXP, ecount));  // v column, respondents
+  SEXP w_respondents = PROTECT(allocVector(REALSXP, ecount)); // weight column, respondents
 
   // count edges in item graph
   ecount = 0;
@@ -46,16 +48,19 @@ SEXP surveygraphr_graph_edgelists(SEXP df, SEXP rlcc, SEXP ilcc)
   } else {
     Rprintf("ERROR: item graph has uneven number of edges\n");
   }
-  SEXP e_items = PROTECT(allocVector(INTSXP, 2 * ecount));
+  SEXP u_items = PROTECT(allocVector(INTSXP, ecount));  // u column, items
+  SEXP v_items = PROTECT(allocVector(INTSXP, ecount));  // v column, items
+  SEXP w_items = PROTECT(allocVector(REALSXP, ecount)); // weight column, items
 
   // create integer vector for respondent graph edge list
   int i = 0;
   for(auto &it : S.g_respondents) {
     for(auto &jt : it.second) {
       if(it.first < jt.u) {
-        INTEGER(e_respondents)[i] = it.first + 1;
-        INTEGER(e_respondents)[i + 1] = jt.u + 1;
-        i += 2;
+        INTEGER(u_respondents)[i] = it.first + 1;
+        INTEGER(v_respondents)[i] = jt.u + 1;
+        REAL(w_respondents)[i] = jt.w;
+        i += 1;
       }
     }
   }
@@ -65,21 +70,30 @@ SEXP surveygraphr_graph_edgelists(SEXP df, SEXP rlcc, SEXP ilcc)
   for(auto &it : S.g_items) {
     for(auto &jt : it.second) {
       if(it.first < jt.u) {
-        INTEGER(e_items)[i] = it.first + 1;
-        INTEGER(e_items)[i + 1] = jt.u + 1;
-        i += 2;
+        INTEGER(u_items)[i] = it.first + 1;
+        INTEGER(v_items)[i] = jt.u + 1;
+        REAL(w_items)[i] = jt.w;
+        i += 1;
       }
     }
   }
-  Rprintf("edge counts %d %d\n", length(e_respondents), length(e_items));
+  SEXP list_respondents = PROTECT(allocVector(VECSXP, 3));
+  SET_VECTOR_ELT(list_respondents, 0, u_respondents);
+  SET_VECTOR_ELT(list_respondents, 1, v_respondents);
+  SET_VECTOR_ELT(list_respondents, 2, w_respondents);
+
+  SEXP list_items = PROTECT(allocVector(VECSXP, 3));
+  SET_VECTOR_ELT(list_items, 0, u_items);
+  SET_VECTOR_ELT(list_items, 1, v_items);
+  SET_VECTOR_ELT(list_items, 2, w_items);
 
   // return a list containing the two edge sets
   SEXP edgelists = PROTECT(allocVector(VECSXP, 2));
-  SET_VECTOR_ELT(edgelists, 0, e_respondents);
-  SET_VECTOR_ELT(edgelists, 1, e_items);
+  SET_VECTOR_ELT(edgelists, 0, list_respondents);
+  SET_VECTOR_ELT(edgelists, 1, list_items);
 
   //UNPROTECT(3);
-  UNPROTECT(4);
+  UNPROTECT(10);
 
   //return e_respondents;
   return edgelists;
