@@ -59,7 +59,8 @@ SEXP surveygraphr_graph_edgelists(SEXP df, SEXP rlcc, SEXP ilcc)
       if(it.first < jt.u) {
         INTEGER(u_respondents)[i] = it.first + 1;
         INTEGER(v_respondents)[i] = jt.u + 1;
-        REAL(w_respondents)[i] = jt.w;
+        //REAL(w_respondents)[i] = jt.w;
+        REAL(w_respondents)[i] = int(100.0 * jt.w) / 100.0;
         i += 1;
       }
     }
@@ -72,7 +73,8 @@ SEXP surveygraphr_graph_edgelists(SEXP df, SEXP rlcc, SEXP ilcc)
       if(it.first < jt.u) {
         INTEGER(u_items)[i] = it.first + 1;
         INTEGER(v_items)[i] = jt.u + 1;
-        REAL(w_items)[i] = jt.w;
+        //REAL(w_items)[i] = jt.w;
+        REAL(w_items)[i] = int(100.0 * jt.w) / 100.0;
         i += 1;
       }
     }

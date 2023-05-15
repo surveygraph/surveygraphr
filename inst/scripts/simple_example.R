@@ -14,6 +14,10 @@ isolated_nodes2 <- which(degree(g2)==0)
 g1c <- delete.vertices(g1, isolated_nodes1)
 g2c <- delete.vertices(g2, isolated_nodes2)
 
+# display weights if necessary
+#E(g1c)$label= E(g1c)$weight
+#E(g2c)$label= E(g2c)$weight
+
 par(mfrow=c(1,2), mar=c(1,1,1,1))
 plot(g1c, vertex.size=2, vertex.label=NA, edge.width=0.1, layout=layout.fruchterman.reingold, main="respondent graph")
 plot(g2c, vertex.size=5, vertex.label=NA, edge.width=0.3, layout=layout.fruchterman.reingold, main="item graph")
