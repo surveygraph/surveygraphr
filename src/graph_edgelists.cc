@@ -86,7 +86,7 @@ SEXP surveygraphr_graph_edgelists(SEXP df, SEXP rlcc, SEXP ilcc)
   SEXP names = PROTECT(allocVector(STRSXP, 3));
   SET_STRING_ELT(names, 0, mkChar("u"));            // name first column x
   SET_STRING_ELT(names, 1, mkChar("v"));            // name second column y
-  SET_STRING_ELT(names, 2, mkChar("w"));            // name second column y
+  SET_STRING_ELT(names, 2, mkChar("weight"));            // name second column y
 
   SEXP rownames = PROTECT(allocVector(INTSXP, 2));
   INTEGER(rownames)[0] = NA_INTEGER;                // default entry if size below too small
@@ -113,9 +113,7 @@ SEXP surveygraphr_graph_edgelists(SEXP df, SEXP rlcc, SEXP ilcc)
   SET_VECTOR_ELT(edgelists, 0, list_respondents);
   SET_VECTOR_ELT(edgelists, 1, list_items);
 
-  //UNPROTECT(3);
   UNPROTECT(12);
 
-  //return e_respondents;
   return edgelists;
 }
