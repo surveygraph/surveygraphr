@@ -86,9 +86,9 @@ SEXP surveygraphr_graph_edgelists(SEXP df, SEXP rlcc, SEXP ilcc)
   SET_VECTOR_ELT(list_respondents, 2, w_respondents);
 
   SEXP names = PROTECT(allocVector(STRSXP, 3));
-  SET_STRING_ELT(names, 0, mkChar("u"));            // name first column x
-  SET_STRING_ELT(names, 1, mkChar("v"));            // name second column y
-  SET_STRING_ELT(names, 2, mkChar("weight"));            // name second column y
+  SET_STRING_ELT(names, 0, mkChar("u"));            // name first column u
+  SET_STRING_ELT(names, 1, mkChar("v"));            // name second column v
+  SET_STRING_ELT(names, 2, mkChar("weight"));       // name third column weight, required by igraph
 
   SEXP rownames = PROTECT(allocVector(INTSXP, 2));
   INTEGER(rownames)[0] = NA_INTEGER;                // default entry if size below too small
