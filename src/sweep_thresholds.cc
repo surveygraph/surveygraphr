@@ -7,7 +7,7 @@
 
 // read in a data frame and output list containing two integer vectors
 // lists, containing edge lists for respondent and item graphs
-SEXP surveygraphr_explore_graphs(SEXP df) 
+SEXP surveygraphr_sweep_thresholds(SEXP df) 
 {
   int n = length(df); // should be column first, right?
   int m = length(VECTOR_ELT(df, 0));
@@ -23,19 +23,18 @@ SEXP surveygraphr_explore_graphs(SEXP df)
     }
   }
 
-  // build the corresponding networks
   surveygraph S{surveytmp};
-  S.explore_pilot();
+  S.sweep_thresholds_pilot();
 
-  // put data from explore_respondents (radius, z, lcc) into a list
-  SEXP e0 = PROTECT(allocVector(REALSXP, S.explore_respondents.size()));
-  SEXP e1 = PROTECT(allocVector(REALSXP, S.explore_respondents.size()));
-  SEXP e2 = PROTECT(allocVector(REALSXP, S.explore_respondents.size()));
+  // put data from threshold_respondents (radius, z, lcc) into a list
+  SEXP e0 = PROTECT(allocVector(REALSXP, S.threshold_respondents.size()));
+  SEXP e1 = PROTECT(allocVector(REALSXP, S.threshold_respondents.size()));
+  SEXP e2 = PROTECT(allocVector(REALSXP, S.threshold_respondents.size()));
 
-  for(int i = 0; i < S.explore_respondents.size(); ++i) {
-    REAL(e0)[i] = S.explore_respondents[i][0];
-    REAL(e1)[i] = S.explore_respondents[i][1];
-    REAL(e2)[i] = S.explore_respondents[i][2];
+  for(int i = 0; i < S.threshold_respondents.size(); ++i) {
+    REAL(e0)[i] = S.threshold_respondents[i][0];
+    REAL(e1)[i] = S.threshold_respondents[i][1];
+    REAL(e2)[i] = S.threshold_respondents[i][2];
   }
 
   // return a list containing the two edge sets

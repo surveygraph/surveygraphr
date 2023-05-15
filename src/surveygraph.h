@@ -35,8 +35,7 @@ class surveygraph
       lcc_items = c;
     }
 
-    int m, n;                     // number of respondents, items
-    int edgecountr, edgecounti;   // number of edges in respondent and item graphs
+    int m, n;  // number of respondents, items
     double avg_degree_respondents;
     double avg_degree_items;
 
@@ -44,15 +43,17 @@ class surveygraph
 
     map<int, set<neighbour>> g_respondents;  // respondent graph
     map<int, set<neighbour>> g_items;        // item graph
+
+    vector<vector<double>> threshold_respondents;  // respondent threshold data
+    vector<vector<double>> threshold_items;        // item threshold data
     
     double radius_respondents, radius_items;  // optimal radii for respondent and item graphs
-    vector<vector<double>> explore_respondents;
 
     void search_radius_respondents();
     void search_radius_items();
 
     void graph_edgelists_pilot();  // builds a pair of graphs with optimal density
-    void explore_pilot();  // sweeps through a range of radii and studies 
+    void sweep_thresholds_pilot();  // sweeps through a range of radii and studies 
 
     void build_graph_items();
     void build_graph_respondents();

@@ -1,7 +1,7 @@
 library("surveygraphr")
 library("igraph")
 
-S <- surveygraphr::generate_survey_polarised(m=20, n=5, polarisation=0.00)
+S <- surveygraphr::generate_survey_polarised(m=300, polarisation=1.25)
 
 edgelists <- surveygraphr::graph_edgelists(S)
 

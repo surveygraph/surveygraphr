@@ -3,7 +3,7 @@
 #include <R_ext/Rdynload.h>
 
 extern SEXP surveygraphr_graph_edgelists(SEXP m, SEXP rlcc, SEXP ilcc);
-extern SEXP surveygraphr_explore_graphs(SEXP m);
+extern SEXP surveygraphr_sweep_thresholds(SEXP m);
 
 extern SEXP archived_inputoutput(SEXP m, SEXP n);
 extern SEXP archived_hwinteger(SEXP a, SEXP b);
@@ -14,8 +14,8 @@ extern SEXP archived_dfmanip(SEXP m);
 
 static const R_CallMethodDef R_CallDef[] = {
   // R package entry points
-  {"surveygraphr_graph_edgelists",  (DL_FUNC) &surveygraphr_graph_edgelists, 3},
-  {"surveygraphr_explore_graphs",   (DL_FUNC) &surveygraphr_explore_graphs, 1},
+  {"surveygraphr_graph_edgelists",   (DL_FUNC) &surveygraphr_graph_edgelists, 3},
+  {"surveygraphr_sweep_thresholds",  (DL_FUNC) &surveygraphr_sweep_thresholds, 1},
 
   // archived routines, could call but we don't
   {"archived_inputoutput",      (DL_FUNC) &archived_inputoutput, 2},

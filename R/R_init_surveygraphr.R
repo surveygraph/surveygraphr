@@ -1,7 +1,7 @@
 #' @export
 sweep_thresholds <- function(df){
-  lccdata <- .Call("surveygraphr_explore_graphs", df)
-  return(lccdata)
+  thresholdlist <- .Call("surveygraphr_sweep_thresholds", df)
+  return(thresholdlist)
 }
 
 #' @export
