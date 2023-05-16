@@ -13,7 +13,6 @@ static void vectors_to_df(map<int, set<neighbour>> &g, SEXP &df)
       if(it.first < jt.u) dummysize += 1;
     }
   }
-
   SEXP u_vector = PROTECT(allocVector(INTSXP, dummysize));  // u column
   SEXP v_vector = PROTECT(allocVector(INTSXP, dummysize));  // v column
   SEXP w_vector = PROTECT(allocVector(REALSXP, dummysize)); // weight column
@@ -29,6 +28,7 @@ static void vectors_to_df(map<int, set<neighbour>> &g, SEXP &df)
       }
     }
   }
+
   SET_VECTOR_ELT(df, 0, u_vector);
   SET_VECTOR_ELT(df, 1, v_vector);
   SET_VECTOR_ELT(df, 2, w_vector);
@@ -53,11 +53,9 @@ static void vectors_to_df(map<int, set<neighbour>> &g, SEXP &df)
 // lists, containing edge lists for respondent and item graphs
 SEXP surveygraphr_graph_edgelists(SEXP df, SEXP rlcc, SEXP ilcc) 
 {
-  // ignoring first column, which is id
   int n = length(df) - 1; // should be column first, right?
   int m = length(VECTOR_ELT(df, 0));
 
-  // read a dataframe into a vector of vectors
   std::vector<std::vector<double>> surveytmp(m, std::vector<double>(n));
   SEXP dummy = PROTECT(allocVector(REALSXP, m));
   for(int j = 0; j < n; ++j){
@@ -77,8 +75,7 @@ SEXP surveygraphr_graph_edgelists(SEXP df, SEXP rlcc, SEXP ilcc)
   vectors_to_df(S.g_respondents, list_respondents);
   vectors_to_df(S.g_items, list_items);
 
-  // return a list containing the two edge sets
-  SEXP edgelists = PROTECT(allocVector(VECSXP, 2));
+  SEXP edgelists = PROTECT(allocVector(VECSXP, 2)); // list of two dataframes
   SET_VECTOR_ELT(edgelists, 0, list_respondents);
   SET_VECTOR_ELT(edgelists, 1, list_items);
 

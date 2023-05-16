@@ -24,4 +24,3 @@ E(g2c)$label= E(g2c)$weight
 par(mfrow=c(1,2), mar=c(1,1,1,1))
 plot(g1c, vertex.size=2, vertex.label=NA, edge.width=0.2, layout=layout.fruchterman.reingold, main="respondents")
 plot(g2c, vertex.size=10, edge.width=1.0, layout=layout.fruchterman.reingold, main="items")
-
