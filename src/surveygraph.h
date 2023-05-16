@@ -43,6 +43,7 @@ class surveygraph
 
     map<int, set<neighbour>> g_respondents;  // respondent graph
     map<int, set<neighbour>> g_items;        // item graph
+    int e_respondents, e_items;              // number of edges
 
     vector<vector<double>> threshold_respondents;  // respondent threshold data
     vector<vector<double>> threshold_items;        // item threshold data
