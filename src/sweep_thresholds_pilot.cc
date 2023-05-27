@@ -8,7 +8,7 @@
 using namespace std;
 
 // pilots the process of constructing respondent and item graphs
-void surveygraph::sweep_thresholds_pilot()
+void surveygraph::sweep_thresholds()
 {
   threshold_respondents = vector<vector<double>>{};
   threshold_items = vector<vector<double>>{};

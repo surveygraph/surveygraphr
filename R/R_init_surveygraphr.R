@@ -1,44 +1,36 @@
 #' @export
-sweep_thresholds <- function(df){
-  thresholdlist <- .Call("surveygraphr_sweep_thresholds", df)
+make_projection <- function(data, layer = "both", respondents_lcc = 0.95, items_lcc = 0.95){
+  if(layer == "both"){
+    edgelists <- .Call("surveygraphr_make_projection", data, respondents_lcc, items_lcc)
+    return(edgelists)
+  }else if(layer == "agent"){
+    edgelist <- .Call("surveygraphr_make_projection_agent", data, respondents_lcc)
+    return(edgelist)
+  }else if(layer == "symbolic"){
+    edgelist <- .Call("surveygraphr_make_projection_symbolic", data, items_lcc)
+    return(edgelist)
+  }
+}
+
+#' @export
+sweep_thresholds <- function(data){
+  thresholdlist <- .Call("surveygraphr_sweep_thresholds", data)
   return(thresholdlist)
 }
 
 #' @export
-# this is the main function, needs way better documentation and exception handling
-graph_edgelists <- function(df, respondents_lcc = 0.95, items_lcc = 0.95) {
-  edgelists <- .Call("surveygraphr_graph_edgelists", df, respondents_lcc, items_lcc)
-  return(edgelists)
-}
-
-#' @export
-generate_survey <- function(m = 20, n = 5) {
-  df <- data.frame(matrix(NA, nrow = m, ncol = n))
-  for(i in 1:m) {
-    for(j in 1:n) {
-      df[i,j] <- as.numeric(sample(1:10, 1))
-    }
-  }
-  return(df)
-}
-
-generate_survey_errors <- function(){
-  # generate survey with all sorts of errors, for testing and demo purposes
-}
-
-#' @export
-generate_survey_polarised <- function(m = 200, n = 15, minority = 0.5, polarisation = 0){
+make_synthetic_data <- function(nrow = 200, ncol = 15, minority = 0.5, polarisation = 0){
   if(minority < 0.0 | minority > 1.0) minority = 0.3
   if(minority > 0.5 & minority < 1.0) minority = 1 - minority
 
-  df <- data.frame(matrix(NA, nrow = m, ncol = n + 1))
-  metadata <- vector(mode = "integer", length = m)
+  data <- data.frame(matrix(NA, nrow = nrow, ncol = ncol + 1))
+  metadata <- vector(mode = "integer", length = nrow)
 
   response_hi = 5 + polarisation
   response_lo = 5 - polarisation
 
-  for(i in 1:m){
-    if(i < minority * m){
+  for(i in 1:nrow){
+    if(i < minority * nrow){
       if(runif(1) < 0.85){
         metadata[i] = 0
       }else{
@@ -56,13 +48,18 @@ generate_survey_polarised <- function(m = 200, n = 15, minority = 0.5, polarisat
       average_response = response_lo
     }
 
-    df[i,1] = as.character(metadata[i])
-    for(j in 2:(n+1)){
-      df[i,j] <- as.numeric(rpois(1, average_response))
-      while(df[i,j] < 1 | df[i,j] > 10){
-        df[i,j] <- as.numeric(rpois(1, average_response))
+    data[i,1] = as.character(metadata[i])
+    for(j in 2:(ncol+1)){
+      data[i,j] <- as.numeric(rpois(1, average_response))
+      while(data[i,j] < 1 | data[i,j] > 10){
+        data[i,j] <- as.numeric(rpois(1, average_response))
       }
     }
   }
-  return(df)
+  return(data)
+}
+
+#' @export
+make_weight_distribution <- function(){
+  print("hello from make_weight_distribution")
 }
