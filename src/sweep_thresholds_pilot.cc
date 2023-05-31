@@ -7,38 +7,51 @@
 
 using namespace std;
 
-// pilots the process of constructing respondent and item graphs
-void surveygraph::sweep_thresholds()
+void surveygraph::sweep_thresholds_agent()
 {
-  threshold_respondents = vector<vector<double>>{};
-  threshold_items = vector<vector<double>>{};
+  threshold_data_agent = vector<vector<double>>{};
 
-  lcc_respondents = 0.95;
-  lcc_items = 0.95;
+  lcc_agent = 0.95;
 
-  search_radius_respondents();  // finds optimal radius
-  search_radius_items();        // finds optimal radius
+  search_threshold_agent_lcc();    // finds optimal threshold
 
-  double optimal_radius_respondents = radius_respondents;
-  double optimal_radius_items = radius_items;
+  double optimal_threshold_agent = threshold_agent;
 
   int sweep_count = 200;
 
-  double dr_respondents = 1.2 * optimal_radius_respondents / double(sweep_count);
+  double dt_agent = 1.2 * optimal_threshold_agent / double(sweep_count);
   for(int i = 0; i < sweep_count; ++i){
-    radius_respondents = i * dr_respondents;
-    build_graph_respondents();
-    build_partition_respondents();
+    threshold_agent = i * dt_agent;
+    build_graph_agent();
+    build_partition_agent();
 
-    threshold_respondents.push_back(vector<double>{radius_respondents, avg_degree_respondents, double(lcc)});
+    avg_degree_agent /= double(nrow);
+    assert(avg_degree_agent >= 0 && avg_degree_agent <= 1);
+    threshold_data_agent.push_back(vector<double>{threshold_agent, avg_degree_agent, lcc / double(nrow)});
   }
+}
 
-  double dr_items = 1.2 * optimal_radius_items / double(sweep_count);
+// pilots the process of constructing respondent and item graphs
+void surveygraph::sweep_thresholds_symbolic()
+{
+  threshold_data_symbolic = vector<vector<double>>{};
+
+  lcc_symbolic = 0.95;
+
+  search_threshold_symbolic_lcc(); // finds optimal threshold
+
+  double optimal_threshold_symbolic = threshold_symbolic;
+
+  int sweep_count = 200;
+
+  double dt_symbolic = 1.2 * optimal_threshold_symbolic / double(sweep_count);
   for(int i = 0; i < sweep_count; ++i){
-    radius_items = i * dr_items;
-    build_graph_items();
-    build_partition_items();
+    threshold_symbolic = i * dt_symbolic;
+    build_graph_symbolic();
+    build_partition_symbolic();
 
-    threshold_items.push_back(vector<double>{radius_items, avg_degree_items, double(lcc)});
+    avg_degree_symbolic /= double(ncol);
+    assert(avg_degree_symbolic >= 0 && avg_degree_symbolic <= 1);
+    threshold_data_symbolic.push_back(vector<double>{threshold_symbolic, avg_degree_symbolic, lcc / double(ncol)});
   }
 }

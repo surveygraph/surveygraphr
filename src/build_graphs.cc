@@ -7,85 +7,87 @@
 
 using namespace std;
 
-// build the graph of respondents using Euclidean distance or cosine similarity
-void surveygraph::build_graph_respondents()
+// build the agent layer graph using Euclidean distance or cosine similarity
+void surveygraph::build_graph_agent()
 {
-  g_respondents = map<int, set<neighbour>>{};
-
-  double radius_scale = radius_respondents * 2 * sqrt(ncol);
+  g_agent = map<int, set<neighbour>>{};
 
   double w = 0.0;
-  e_respondents = 0;
-  avg_degree_respondents = 0;
+  e_agent = 0;
+  avg_degree_agent = 0;
   for(unsigned int i = 0; i < survey.size(); ++i){
     for(unsigned int j = i + 1; j < survey.size(); ++j){
-      man_distance_respondents(int(i), int(j), w);
-      if(w < radius_scale){
-        g_respondents[i].insert(neighbour{int(j), w});
-        g_respondents[j].insert(neighbour{int(i), w});
-        avg_degree_respondents += 2;
-        e_respondents += 1;
+      man_distance_agent(int(i), int(j), w);
+      if(w > threshold_agent){
+        g_agent[i].insert(neighbour{int(j), w});
+        g_agent[j].insert(neighbour{int(i), w});
+        avg_degree_agent += 2;
+        e_agent += 1;
       }
     }
   }
-  avg_degree_respondents /= double(survey.size());
+  avg_degree_agent /= double(nrow);
 }
 
-// build the graph of items using Euclidean distance or cosine similarity
-void surveygraph::build_graph_items()
+// build the graph of symbolic using Euclidean distance or cosine similarity
+void surveygraph::build_graph_symbolic()
 {
-  g_items = map<int, set<neighbour>>{};
+  g_symbolic = map<int, set<neighbour>>{};
 
-  double radius_scale = radius_items * 2 * sqrt(nrow);
+  double threshold_scale = threshold_symbolic * 2 * sqrt(nrow);
 
   double w = 0.0;
-  e_items = 0;
-  avg_degree_items = 0;
+  e_symbolic = 0;
+  avg_degree_symbolic = 0;
   for(unsigned int i = 0; i < survey[0].size(); ++i){
     for(unsigned int j = i + 1; j < survey[0].size(); ++j){
-      man_distance_items(int(i), int(j), w);
-      if(w < radius_scale){
-        g_items[i].insert(neighbour{int(j), w});
-        g_items[j].insert(neighbour{int(i), w});
-        avg_degree_items += 2;
-        e_items += 1;
+      man_distance_symbolic(int(i), int(j), w);
+      if(w > threshold_symbolic){
+        g_symbolic[i].insert(neighbour{int(j), w});
+        g_symbolic[j].insert(neighbour{int(i), w});
+        avg_degree_symbolic += 2;
+        e_symbolic += 1;
       }
     }
   }
-  avg_degree_items /= double(survey[0].size());
+  avg_degree_symbolic /= double(ncol);
 }
 
-// Manhattan distance between respondents u and v
-void surveygraph::man_distance_respondents(const int &u, const int &v, double &w)
+// Manhattan distance between agents u and v
+void surveygraph::man_distance_agent(const int &u, const int &v, double &w)
 {
   w = 0;
-  // loop over items
+  // loop over columns
   for(int i = 0; i < ncol; ++i){
     double responseu = survey[u][i];
     double responsev = survey[v][i];
     w += abs(responseu - responsev);
   }
-  //w -= ncol;
+  w = (double(ncol) - w) / double(ncol);
+
+  assert(w >= -1 && w <= 1);
 }
 
-// Manhattan distance between items
-void surveygraph::man_distance_items(const int &i, const int &j, double &w)
+// Manhattan distance between symbolic i and j
+void surveygraph::man_distance_symbolic(const int &i, const int &j, double &w)
 {
   w = 0;
-  // loop over respondents
+  // loop over rows
   for(int u = 0; u < nrow; ++u){
     double itemi = survey[u][i];
     double itemj = survey[u][j];
     w += abs(itemi - itemj);
   }
-  //w -= nrow;
+  w = (double(nrow) - w) / double(nrow);
+
+  assert(w >= -1 && w <= 1);
 }
 
-// Euclidean distance between respondents u and v
-void surveygraph::euclid_distance_respondents(const int &u, const int &v, double &w)
+// Euclidean distance between agents u and v
+void surveygraph::euclid_distance_agent(const int &u, const int &v, double &w)
 {
   w = 0;
-  // loop over items
+  // loop over columns
   for(int i = 0; i < ncol; ++i){
     double responseu = survey[u][i];
     double responsev = survey[v][i];
@@ -94,11 +96,11 @@ void surveygraph::euclid_distance_respondents(const int &u, const int &v, double
   w = sqrt(w);
 }
 
-// Euclidean distance between items
-void surveygraph::euclid_distance_items(const int &i, const int &j, double &w)
+// Euclidean distance between symbolic
+void surveygraph::euclid_distance_symbolic(const int &i, const int &j, double &w)
 {
   w = 0;
-  // loop over respondents
+  // loop over rows
   for(int u = 0; u < nrow; ++u){
     double itemi = survey[u][i];
     double itemj = survey[u][j];

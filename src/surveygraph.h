@@ -12,7 +12,7 @@ struct neighbour
   neighbour(int a, double b) { u = a; w = b; }
 
   int u;     // neighbour index
-  double w;  // edge weight, corresponding to respondent or item similarity
+  double w;  // edge weight, corresponding to agent or symbolic similarity
 
   bool operator<(const neighbour& rhs) const { return u < rhs.u; }
 };
@@ -26,54 +26,76 @@ class surveygraph
       ncol = survey[0].size();  // will have verified dimensions in R routines
     }
 
-    surveygraph(vector<vector<double>> &a, double b, double c){
+    surveygraph(vector<vector<double>> &a, int b, double c, int d){
       survey = a;
       nrow = survey.size();
-      ncol = survey[0].size();  // will have verified dimensions in R routines
+      ncol = survey[0].size();  // verify dimensions in R routines
 
-      lcc_respondents = b;
-      lcc_items = c;
+      // b is threshold method flag
+      if(b == 0){        // method is target lcc
+        target_lcc = c;     
+      }else if(b == 1){  // method is target avg degree
+        target_ad = c;      
+      }else if(b == 2){  // method is input raw similarity threshold
+        raw_similarity = c;        
+      }
+
+      // d is similarity metric flag
+      if(d == 0){        // similarity metric is Manhattan distance
+        metric = 0;
+      }
     }
 
-    int nrow, ncol;  // number of respondents, items
-    double avg_degree_respondents;
-    double avg_degree_items;
+    double target_lcc, target_ad, raw_similarity;
+    int metric;
+
+    int nrow, ncol;  // number of agent, symbolic
+    double avg_degree_agent;
+    double avg_degree_symbolic;
 
     vector<vector<double>> survey, surveysample;  // survey, small sample of survey
 
-    map<int, set<neighbour>> g_respondents;  // respondent graph
-    map<int, set<neighbour>> g_items;        // item graph
-    int e_respondents, e_items;              // number of edges
+    map<int, set<neighbour>> g_agent;     // agent graph
+    map<int, set<neighbour>> g_symbolic;  // symbolic graph
+    int e_agent, e_symbolic;              // number of edges
 
-    vector<vector<double>> threshold_respondents;  // respondent threshold data
-    vector<vector<double>> threshold_items;        // item threshold data
+    vector<vector<double>> threshold_data_agent;     // agent threshold data
+    vector<vector<double>> threshold_data_symbolic;  // symbolic threshold data
     
-    double radius_respondents, radius_items;  // optimal radii for respondent and item graphs
+    double threshold_agent, threshold_symbolic;  // optimal radii for agent and symbolic graphs
 
-    void search_radius_respondents();
-    void search_radius_items();
+    void search_threshold_agent_lcc();
+    void search_threshold_agent_ad();
+    void search_threshold_symbolic_lcc();
+    void search_threshold_symbolic_ad();
 
-    void make_projection();           // builds a pair of graphs with optimal density
-    void make_projection_agent();     // builds a pair of graphs with optimal density
-    void make_projection_symbolic();  // builds a pair of graphs with optimal density
-    void sweep_thresholds();          // sweeps through a range of radii and studies 
+    void make_proj_agent_lcc();      // builds agent projection graph with target largest component size
+    void make_proj_agent_ad();       // builds agent projection graph with target average degree
+    void make_proj_agent_similar();  // builds agent projection graph with desired threshold
 
-    void build_graph_items();
-    void build_graph_respondents();
+    void make_proj_symbolic_lcc();      // builds symbolic projection graph with target largest component size
+    void make_proj_symbolic_ad();       // builds symbolic projection graph with target average degree
+    void make_proj_symbolic_similar();  // builds symbolic projection graph with desired threshold
 
-    void euclid_distance_items(const int&, const int&, double&);
-    void euclid_distance_respondents(const int&, const int&, double&);
+    void sweep_thresholds_agent();     // sweeps through a range of radii and studies 
+    void sweep_thresholds_symbolic();  // sweeps through a range of radii and studies 
 
-    void man_distance_items(const int&, const int&, double&);
-    void man_distance_respondents(const int&, const int&, double&);
+    void build_graph_symbolic();
+    void build_graph_agent();
+
+    void euclid_distance_symbolic(const int&, const int&, double&);
+    void euclid_distance_agent(const int&, const int&, double&);
+
+    void man_distance_symbolic(const int&, const int&, double&);
+    void man_distance_agent(const int&, const int&, double&);
 
     // way too much repetition here, clean up later
     int lcc;
-    double lcc_respondents, lcc_items;  // target LCC values, fraction of network
-    set<vector<int>> partition_respondents, partition_items;
-    void build_partition_respondents();  // computes distribution of component sizes
-    void build_partition_items();        // computes distribution of component sizes
-    void bfs_respondents(const int&, vector<int>&);   // breadth-first search
-    void bfs_items(const int&, vector<int>&);         // breadth-first search
+    double lcc_agent, lcc_symbolic;  // target LCC values, fraction of network
+    set<vector<int>> partition_agent, partition_symbolic;
+    void build_partition_agent();  // computes distribution of component sizes
+    void build_partition_symbolic();        // computes distribution of component sizes
+    void bfs_agent(const int&, vector<int>&);   // breadth-first search
+    void bfs_symbolic(const int&, vector<int>&);         // breadth-first search
 };
 #endif

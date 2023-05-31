@@ -5,7 +5,23 @@
 
 #include <vector>
 
-static void vectors_to_df(map<int, set<neighbour>> &g, SEXP &df)
+static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
+{
+  int ncol = length(df) - 1; // should be column first, right?
+  int nrow = length(VECTOR_ELT(df, 0));
+
+  stmp = std::vector<std::vector<double>>(nrow, std::vector<double>(ncol));
+
+  SEXP dummy = PROTECT(allocVector(REALSXP, nrow));
+  for(int j = 0; j < ncol; ++j){
+    dummy = VECTOR_ELT(df, j + 1);
+    for(int i = 0; i < nrow; ++i){
+      stmp[i][j] = (REAL(dummy)[i] - 5.5) / 4.5; // temporarily assumes 1 to 10
+    }
+  }
+}
+
+static void vectors_to_df(map<int, set<neighbour>> &g, SEXP &c, SEXP &df)
 {
   int dummysize = 0;
   for(auto &it : g){
@@ -21,9 +37,11 @@ static void vectors_to_df(map<int, set<neighbour>> &g, SEXP &df)
   for(auto &it : g){
     for(auto &jt : it.second){
       if(it.first < jt.u){
+        //Rprintf("%d %d %f\n", it.first + 1, jt.u + 1, jt.w);
         INTEGER(u_vector)[i] = it.first + 1;
         INTEGER(v_vector)[i] = jt.u + 1;
         REAL(w_vector)[i] = int(100.0 * jt.w) / 100.0;
+        if(INTEGER(c)[0] == 0) REAL(w_vector)[i] += 1.0;
         i += 1;
       }
     }
@@ -40,7 +58,7 @@ static void vectors_to_df(map<int, set<neighbour>> &g, SEXP &df)
 
   SEXP rownames = PROTECT(allocVector(INTSXP, 2));
   INTEGER(rownames)[0] = NA_INTEGER;                // default entry if size below too small
-  INTEGER(rownames)[1] = -length(u_vector);         // number of rows in respondents edgelist
+  INTEGER(rownames)[1] = -length(u_vector);         // number of rows in agent edge list
 
   setAttrib(df, R_ClassSymbol, ScalarString(mkChar("data.frame")));
   setAttrib(df, R_RowNamesSymbol, rownames);
@@ -49,91 +67,108 @@ static void vectors_to_df(map<int, set<neighbour>> &g, SEXP &df)
   UNPROTECT(5);
 }
 
-// read in a data frame and output list containing two integer vectors
-// lists, containing edge lists for respondent and item graphs
-SEXP surveygraphr_make_projection(SEXP df, SEXP rlcc, SEXP ilcc) 
+SEXP rmake_proj_agent_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric) 
 {
-  int ncol = length(df) - 1; // should be column first, right?
-  int nrow = length(VECTOR_ELT(df, 0));
+  std::vector<std::vector<double>> surveytmp;
+  df_to_cppvector(df, surveytmp);
 
-  std::vector<std::vector<double>> surveytmp(nrow, std::vector<double>(ncol));
-  SEXP dummy = PROTECT(allocVector(REALSXP, nrow));
-  for(int j = 0; j < ncol; ++j){
-    dummy = VECTOR_ELT(df, j + 1);
-    for(int i = 0; i < nrow; ++i){
-      surveytmp[i][j] = (REAL(dummy)[i] - 5.5) / 4.5; // temporary, assumes 1 to 10
-    }
-  }
+  surveygraph S{surveytmp, 0, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
+  S.make_proj_agent_lcc();
 
-  surveygraph S{surveytmp, REAL(rlcc)[0], REAL(ilcc)[0]};
+  //Rprintf("hello from... %d\n", S.g_agent.size());
 
-  S.make_projection();
+  //for(int i = 0; i < 10; ++i){
+  //  Rprintf("%d : ", i);
+  //  for(auto jt : S.g_agent[i]){
+  //    Rprintf("%d ", jt.u);
+  //  }
+  //  Rprintf("\n");
+  //}
 
-  SEXP list_respondents = PROTECT(allocVector(VECSXP, 3));
-  SEXP list_items = PROTECT(allocVector(VECSXP, 3));
-
-  vectors_to_df(S.g_respondents, list_respondents);
-  vectors_to_df(S.g_items, list_items);
-
-  SEXP edgelists = PROTECT(allocVector(VECSXP, 2)); // list of two dataframes
-  SET_VECTOR_ELT(edgelists, 0, list_respondents);
-  SET_VECTOR_ELT(edgelists, 1, list_items);
-
-  UNPROTECT(4);
-
-  return edgelists;
-}
-
-SEXP surveygraphr_make_projection_agent(SEXP df, SEXP rlcc) 
-{
-  int ncol = length(df) - 1; // should be column first, right?
-  int nrow = length(VECTOR_ELT(df, 0));
-
-  std::vector<std::vector<double>> surveytmp(nrow, std::vector<double>(ncol));
-  SEXP dummy = PROTECT(allocVector(REALSXP, nrow));
-  for(int j = 0; j < ncol; ++j){
-    dummy = VECTOR_ELT(df, j + 1);
-    for(int i = 0; i < nrow; ++i){
-      surveytmp[i][j] = (REAL(dummy)[i] - 5.5) / 4.5; // temporary, assumes 1 to 10
-    }
-  }
-
-  surveygraph S{surveytmp, REAL(rlcc)[0], 0.95};
-
-  S.make_projection_agent();
-
-  SEXP list_respondents = PROTECT(allocVector(VECSXP, 3));
-
-  vectors_to_df(S.g_respondents, list_respondents);
+  SEXP e = PROTECT(allocVector(VECSXP, 3));
+  vectors_to_df(S.g_agent, c, e);
 
   UNPROTECT(2);
 
-  return list_respondents;
+  return e;
 }
 
-SEXP surveygraphr_make_projection_symbolic(SEXP df, SEXP ilcc) 
+SEXP rmake_proj_agent_ad(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric) 
 {
-  int ncol = length(df) - 1; // should be column first, right?
-  int nrow = length(VECTOR_ELT(df, 0));
+  std::vector<std::vector<double>> surveytmp;
+  df_to_cppvector(df, surveytmp);
 
-  std::vector<std::vector<double>> surveytmp(nrow, std::vector<double>(ncol));
-  SEXP dummy = PROTECT(allocVector(REALSXP, nrow));
-  for(int j = 0; j < ncol; ++j){
-    dummy = VECTOR_ELT(df, j + 1);
-    for(int i = 0; i < nrow; ++i){
-      surveytmp[i][j] = (REAL(dummy)[i] - 5.5) / 4.5; // temporary, assumes 1 to 10
-    }
-  }
+  surveygraph S{surveytmp, 1, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
+  S.make_proj_agent_ad();
 
-  surveygraph S{surveytmp, 0.95, REAL(ilcc)[0]};
-
-  S.make_projection_symbolic();
-
-  SEXP list_symbolic = PROTECT(allocVector(VECSXP, 3));
-
-  vectors_to_df(S.g_items, list_symbolic);
+  SEXP e = PROTECT(allocVector(VECSXP, 3));
+  vectors_to_df(S.g_agent, c, e);
 
   UNPROTECT(2);
 
-  return list_symbolic;
+  return e;
+}
+
+SEXP rmake_proj_agent_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric) 
+{
+  std::vector<std::vector<double>> surveytmp;
+  df_to_cppvector(df, surveytmp);
+
+  surveygraph S{surveytmp, 2, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
+  S.make_proj_agent_similar();
+
+  SEXP e = PROTECT(allocVector(VECSXP, 3));
+  vectors_to_df(S.g_agent, c, e);
+
+  UNPROTECT(2);
+
+  return e;
+}
+
+SEXP rmake_proj_symbolic_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric) 
+{
+  std::vector<std::vector<double>> surveytmp;
+  df_to_cppvector(df, surveytmp);
+
+  surveygraph S{surveytmp, 0, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
+  S.make_proj_symbolic_lcc();
+
+  SEXP e = PROTECT(allocVector(VECSXP, 3));
+  vectors_to_df(S.g_symbolic, c, e);
+
+  UNPROTECT(2);
+
+  return e;
+}
+
+SEXP rmake_proj_symbolic_ad(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric) 
+{
+  std::vector<std::vector<double>> surveytmp;
+  df_to_cppvector(df, surveytmp);
+
+  surveygraph S{surveytmp, 1, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
+  S.make_proj_symbolic_ad();
+
+  SEXP e = PROTECT(allocVector(VECSXP, 3));
+  vectors_to_df(S.g_symbolic, c, e);
+
+  UNPROTECT(2);
+
+  return e;
+}
+
+SEXP rmake_proj_symbolic_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric) 
+{
+  std::vector<std::vector<double>> surveytmp;
+  df_to_cppvector(df, surveytmp);
+
+  surveygraph S{surveytmp, 2, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
+  S.make_proj_symbolic_similar();
+
+  SEXP e = PROTECT(allocVector(VECSXP, 3));
+  vectors_to_df(S.g_symbolic, c, e);
+
+  UNPROTECT(2);
+
+  return e;
 }

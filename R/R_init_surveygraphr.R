@@ -1,21 +1,14 @@
 #' @export
-make_projection <- function(data, layer = "both", respondents_lcc = 0.95, items_lcc = 0.95){
-  if(layer == "both"){
-    edgelists <- .Call("surveygraphr_make_projection", data, respondents_lcc, items_lcc)
-    return(edgelists)
-  }else if(layer == "agent"){
-    edgelist <- .Call("surveygraphr_make_projection_agent", data, respondents_lcc)
-    return(edgelist)
+sweep_thresholds <- function(data, layer){
+  if(layer == "agent"){
+    tdata <- .call("rsweep_thresholds_agent", data)
+    return(tdata)
   }else if(layer == "symbolic"){
-    edgelist <- .Call("surveygraphr_make_projection_symbolic", data, items_lcc)
-    return(edgelist)
+    tdata <- .call("rsweep_thresholds_symbolic", data)
+    return(tdata)
+  }else{
+    print("layer must be either agent or symbolic")
   }
-}
-
-#' @export
-sweep_thresholds <- function(data){
-  thresholdlist <- .Call("surveygraphr_sweep_thresholds", data)
-  return(thresholdlist)
 }
 
 #' @export

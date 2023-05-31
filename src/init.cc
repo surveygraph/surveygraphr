@@ -2,10 +2,13 @@
 #include <Rinternals.h>
 #include <R_ext/Rdynload.h>
 
-extern SEXP surveygraphr_make_projection(SEXP m, SEXP rlcc, SEXP ilcc);
-extern SEXP surveygraphr_make_projection_agent(SEXP m, SEXP rlcc);
-extern SEXP surveygraphr_make_projection_symbolic(SEXP m, SEXP ilcc);
-extern SEXP surveygraphr_sweep_thresholds(SEXP m);
+extern SEXP rmake_proj_agent_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sm);
+extern SEXP rmake_proj_agent_ad(SEXP df, SEXP mvalue, SEXP c, SEXP sm);
+extern SEXP rmake_proj_agent_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sm);
+extern SEXP rmake_proj_symbolic_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sm);
+extern SEXP rmake_proj_symbolic_ad(SEXP df, SEXP mvalue, SEXP c, SEXP sm);
+extern SEXP rmake_proj_symbolic_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sm);
+extern SEXP rsweep_thresholds(SEXP m);
 
 extern SEXP archived_inputoutput(SEXP m, SEXP n);
 extern SEXP archived_hwinteger(SEXP a, SEXP b);
@@ -16,10 +19,13 @@ extern SEXP archived_dfmanip(SEXP m);
 
 static const R_CallMethodDef R_CallDef[] = {
   // R package entry points
-  {"surveygraphr_make_projection",           (DL_FUNC) &surveygraphr_make_projection, 3},
-  {"surveygraphr_make_projection_agent",     (DL_FUNC) &surveygraphr_make_projection_agent, 2},
-  {"surveygraphr_make_projection_symbolic",  (DL_FUNC) &surveygraphr_make_projection_symbolic, 2},
-  {"surveygraphr_sweep_thresholds",          (DL_FUNC) &surveygraphr_sweep_thresholds, 1},
+  {"rmake_proj_agent_lcc",         (DL_FUNC) &rmake_proj_agent_lcc, 4},
+  {"rmake_proj_agent_ad",          (DL_FUNC) &rmake_proj_agent_ad, 4},
+  {"rmake_proj_agent_similar",     (DL_FUNC) &rmake_proj_agent_similar, 4},
+  {"rmake_proj_symbolic_lcc",      (DL_FUNC) &rmake_proj_symbolic_lcc, 4},
+  {"rmake_proj_symbolic_ad",       (DL_FUNC) &rmake_proj_symbolic_ad, 4},
+  {"rmake_proj_symbolic_similar",  (DL_FUNC) &rmake_proj_symbolic_similar, 4},
+  {"rsweep_thresholds",            (DL_FUNC) &rsweep_thresholds, 1},
 
   // archived routines, could call but we don't
   {"archived_inputoutput",      (DL_FUNC) &archived_inputoutput, 2},

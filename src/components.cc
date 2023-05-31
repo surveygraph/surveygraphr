@@ -15,29 +15,29 @@ currently only does respondent network, need to generalise
 */
 
 // partitions network by connected components
-void surveygraph::build_partition_respondents() 
+void surveygraph::build_partition_agent() 
 {
-  partition_respondents = set<vector<int>>{};
+  partition_agent = set<vector<int>>{};
 
   set<int> sorted;
-  for(auto &it : g_respondents) sorted.insert(it.first);
+  for(auto &it : g_agent) sorted.insert(it.first);
 
   lcc = 0;
   vector<int> comp;
   while(sorted.size() > 0) {
     int u = *sorted.begin();
-    bfs_respondents(u, comp);
+    bfs_agent(u, comp);
     for(auto &it : comp){
       assert(sorted.find(it) != 0); // this doesn't output anything inside R
       sorted.erase(it);
     }
-    partition_respondents.insert(comp);
+    partition_agent.insert(comp);
     if(comp.size() > lcc) lcc = comp.size();
   }
 }
 
 // get all nodes in connected component of u
-void surveygraph::bfs_respondents(const int &u, vector<int> &occupied) 
+void surveygraph::bfs_agent(const int &u, vector<int> &occupied) 
 {
   occupied = vector<int>{};
 
@@ -47,14 +47,14 @@ void surveygraph::bfs_respondents(const int &u, vector<int> &occupied)
   occupied.push_back(u);
   visited.insert(u);
 
-  for(auto &it : g_respondents[u]){
+  for(auto &it : g_agent[u]){
     adjacent.push(it.u);
     visited.insert(it.u);
   }
 
   while(adjacent.size() > 0) {
     int v = adjacent.front();
-    for(auto &it : g_respondents[v]){
+    for(auto &it : g_agent[v]){
       if(visited.find(it.u) == visited.end()){
         adjacent.push(it.u);  
         visited.insert(it.u);  
@@ -66,29 +66,29 @@ void surveygraph::bfs_respondents(const int &u, vector<int> &occupied)
 }
 
 // partitions network by connected components
-void surveygraph::build_partition_items() 
+void surveygraph::build_partition_symbolic() 
 {
-  partition_items = set<vector<int>>{};
+  partition_symbolic = set<vector<int>>{};
 
   set<int> sorted;
-  for(auto &it : g_items) sorted.insert(it.first);
+  for(auto &it : g_symbolic) sorted.insert(it.first);
 
   lcc = 0;
   vector<int> comp;
   while(sorted.size() > 0) {
     int u = *sorted.begin();
-    bfs_items(u, comp);
+    bfs_symbolic(u, comp);
     for(auto &it : comp){
       assert(sorted.find(it) != 0); // this doesn't output anything inside R
       sorted.erase(it);
     }
-    partition_items.insert(comp);
+    partition_symbolic.insert(comp);
     if(comp.size() > lcc) lcc = comp.size();
   }
 }
 
 // get all nodes in connected component of u
-void surveygraph::bfs_items(const int &u, vector<int> &occupied) 
+void surveygraph::bfs_symbolic(const int &u, vector<int> &occupied) 
 {
   occupied = vector<int>{};
 
@@ -98,14 +98,14 @@ void surveygraph::bfs_items(const int &u, vector<int> &occupied)
   occupied.push_back(u);
   visited.insert(u);
 
-  for(auto &it : g_items[u]){
+  for(auto &it : g_symbolic[u]){
     adjacent.push(it.u);
     visited.insert(it.u);
   }
 
   while(adjacent.size() > 0) {
     int v = adjacent.front();
-    for(auto &it : g_items[v]){
+    for(auto &it : g_symbolic[v]){
       if(visited.find(it.u) == visited.end()){
         adjacent.push(it.u);  
         visited.insert(it.u);  
