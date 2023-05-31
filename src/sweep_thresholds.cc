@@ -18,7 +18,6 @@ SEXP rsweep_thresholds_agent(SEXP df)
   for(int j = 0; j < ncol; ++j) {
     dummy = VECTOR_ELT(df, j + 1);
     for(int i = 0; i < nrow; ++i) {
-      //surveytmp[i][j] = (REAL(dummy)[i] - 3) / 2;     // temporary, assumes 1 to 5
       surveytmp[i][j] = (REAL(dummy)[i] - 5.5) / 4.5; // temporary, assumes 1 to 10
     }
   }
