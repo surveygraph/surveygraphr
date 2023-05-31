@@ -63,11 +63,11 @@ Loading a shared object using `dyn.load` and running `.Call` directly
 
 #### Object documentation
 
-To build object documentation, we run `devtools::document()`, which in turn calls `roxygen2::roxygenise()`. As such, anyone contributing to this package must have roxygen2 installed. As usual, this can be done by running `install.packages("roxygen2")`. A detailed guide on building documentation using `roxygen2` can be found in Wickham, below, but in short, we comment the entrypoints (which amounts to the rsuveygraph API, if you like) in the `R` directory. These comments are made in markdown, then read by `roxygen2` to produce `*.Rd` files.
+To build object documentation, we run `devtools::document()`, which in turn calls `roxygen2::roxygenise()`. As such, anyone contributing to this package must have `roxygen2` installed. This can be done by running `install.packages("roxygen2")`. A detailed guide on building documentation using `roxygen2` can be found in Wickham's book _R Packages_ linked below, but in short, we comment the entrypoints (which amounts to the `rsuveygraph` API) in the `R` directory. These comments are made in markdown, then read by `roxygen2` to produce `*.Rd` files.
 
 Further, roxygen2 will also build the `NAMESPACE` file based on your annotations of the source code in the `R` and `src` directories.
 
-Note that the `data` directory should be reserved for R formatted data. In the words of Wickham, each file in this directory should be an .RData file created by `save()` containing a single object (with the same name as the file). The easiest way to adhere to these rules is by going `x <- sample(1000)`, then `usethis::use_data(x, egsample)`.
+Note that the `data` directory should be reserved for R formatted data. In the words of Wickham, each file in this directory should be an .RData file created by `save()` containing a single object (with the same name as the file). The easiest way to adhere to these rules is by going `x <- sample(1000)`, then `usethis::use_data(x, sample)`.
 
 In summary, documentation is built by running
 
