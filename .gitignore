@@ -20,7 +20,4 @@ symbols.rds
 ..Rcheck/
 .trash/
 .results/
-inst/doc/
-doc/
 Meta/
-docs
