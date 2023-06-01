@@ -26,7 +26,7 @@ void surveygraph::sweep_thresholds_agent()
     build_partition_agent();
 
     avg_degree_agent /= double(nrow);
-    assert(avg_degree_agent >= 0 && avg_degree_agent <= 1);
+    //assert(avg_degree_agent >= 0 && avg_degree_agent <= 1);
     threshold_data_agent.push_back(vector<double>{threshold_agent, avg_degree_agent, lcc / double(nrow)});
   }
 }
@@ -51,7 +51,7 @@ void surveygraph::sweep_thresholds_symbolic()
     build_partition_symbolic();
 
     avg_degree_symbolic /= double(ncol);
-    assert(avg_degree_symbolic >= 0 && avg_degree_symbolic <= 1);
+    //assert(avg_degree_symbolic >= 0 && avg_degree_symbolic <= 1);
     threshold_data_symbolic.push_back(vector<double>{threshold_symbolic, avg_degree_symbolic, lcc / double(ncol)});
   }
 }

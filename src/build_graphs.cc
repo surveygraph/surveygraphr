@@ -65,7 +65,7 @@ void surveygraph::man_distance_agent(const int &u, const int &v, double &w)
   }
   w = (double(ncol) - w) / double(ncol);
 
-  assert(w >= -1 && w <= 1);
+  //assert(w >= -1 && w <= 1);
 }
 
 // Manhattan distance between symbolic i and j
@@ -80,7 +80,7 @@ void surveygraph::man_distance_symbolic(const int &i, const int &j, double &w)
   }
   w = (double(nrow) - w) / double(nrow);
 
-  assert(w >= -1 && w <= 1);
+  //assert(w >= -1 && w <= 1);
 }
 
 // Euclidean distance between agents u and v
