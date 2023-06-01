@@ -1,11 +1,27 @@
-#' Add together two numbers.
+#' Outputs the survey projection onto the agent or symbolic layer
 #'
-#' @param x A number.
-#' @param y A number.
-#' @return The sum of \code{x} and \code{y}.
+#' @description
+#' `make_projection()` outputs the agent network or the symbolic
+#' network corresponding to a survey, i.e. the row or column projection.
+#' 
+#' @details
+#' add some details here
+#' 
+#' @return
+#' A data.frame corresponding to the edge list of the specified network. It contains
+#' three columns, the first two being the indices of nodes adjacent to an edge, and the 
+#' third column its weight.
+#'
+#' @param data A data frame corresponding to a survey
+#' @param layer A string flag that specifies which layer to project, either agent or symbolic
+#' @param threshold_method A string flag that specifies how to threshold the network
+#' @param method_value A utility numerical value that we interpret according to the threshold_method chosen
 #' @examples
-#' add(1, 1)
-#' add(10, 1)
+#' make_check(df, "agent")
+#' make_projection(df, "agent")
+#' make_projection(df, "agent")
+#' make_projection(df, "agent")
+#' make_projection(df, "agent", threshold_method="target_lcc")
 #' @export
 make_projection <- function(data,
                             layer,

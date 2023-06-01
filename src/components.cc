@@ -4,7 +4,7 @@
 #include "surveygraph.h"
 
 #include <queue>
-#include <cassert>
+//#include <cassert>
 
 using namespace std;
 
@@ -28,7 +28,7 @@ void surveygraph::build_partition_agent()
     int u = *sorted.begin();
     bfs_agent(u, comp);
     for(auto &it : comp){
-      assert(sorted.find(it) != 0); // this doesn't output anything inside R
+      //assert(sorted.find(it) != sorted.end()); // this doesn't output anything inside R
       sorted.erase(it);
     }
     partition_agent.insert(comp);
@@ -79,7 +79,7 @@ void surveygraph::build_partition_symbolic()
     int u = *sorted.begin();
     bfs_symbolic(u, comp);
     for(auto &it : comp){
-      assert(sorted.find(it) != 0); // this doesn't output anything inside R
+      //assert(sorted.find(it) != sorted.end()); // this doesn't output anything inside R
       sorted.erase(it);
     }
     partition_symbolic.insert(comp);
