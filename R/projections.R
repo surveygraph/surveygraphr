@@ -88,18 +88,18 @@ make_projection <- function(data,
   if(layer == "symbolic"){
     if(!is.null(threshold_method) && !is.null(method_value)){
       if(threshold_method == "target_lcc"){
-        edgelist <- .Call("make_proj_symbolic_lcc", data, method_value, centre, similarity_metric)
+        edgelist <- .Call("rmake_proj_symbolic_lcc", data, method_value, centre, similarity_metric)
         return(edgelist)
       }else if(threshold_method == "target_ad"){
-        edgelist <- .Call("make_proj_symbolic_ad", data, method_value, centre, similarity_metric)
+        edgelist <- .Call("rmake_proj_symbolic_ad", data, method_value, centre, similarity_metric)
         return(edgelist)
       }else if(threshold_method == "raw_similarity"){
-        edgelist <- .Call("make_proj_symbolic_similar", data, method_value, centre, similarity_metric)
+        edgelist <- .Call("rmake_proj_symbolic_similar", data, method_value, centre, similarity_metric)
         return(edgelist)
       }else{
         print("threshold method must be one of [...]")
         print("defaulting to target_ad with method_value = 1")
-        edgelist <- .Call("make_proj_symbolic_ad", data, 1, centre, similarity_metric)
+        edgelist <- .Call("rmake_proj_symbolic_ad", data, 1, centre, similarity_metric)
         return(edgelist)
       }
     }else{
