@@ -9,14 +9,14 @@
 // lists, containing edge lists for respondent and item graphs
 SEXP rmake_threshold_profile_agent(SEXP df) 
 {
-  int ncol = length(df) - 1; // should be column first, right?
+  int ncol = length(df); // should be column first, right?
   int nrow = length(VECTOR_ELT(df, 0));
 
   // read a dataframe into a vector of vectors
   std::vector<std::vector<double>> surveytmp(nrow, std::vector<double>(ncol));
   SEXP dummy = PROTECT(allocVector(REALSXP, nrow));
   for(int j = 0; j < ncol; ++j) {
-    dummy = VECTOR_ELT(df, j + 1);
+    dummy = VECTOR_ELT(df, j);
     for(int i = 0; i < nrow; ++i) {
       surveytmp[i][j] = (REAL(dummy)[i] - 5.5) / 4.5; // temporary, assumes 1 to 10
     }
@@ -60,14 +60,14 @@ SEXP rmake_threshold_profile_agent(SEXP df)
 
 SEXP rmake_threshold_profile_symbolic(SEXP df) 
 {
-  int ncol = length(df) - 1; // should be column first, right?
+  int ncol = length(df); // should be column first, right?
   int nrow = length(VECTOR_ELT(df, 0));
 
   // read a dataframe into a vector of vectors
   std::vector<std::vector<double>> surveytmp(nrow, std::vector<double>(ncol));
   SEXP dummy = PROTECT(allocVector(REALSXP, nrow));
   for(int j = 0; j < ncol; ++j) {
-    dummy = VECTOR_ELT(df, j + 1);
+    dummy = VECTOR_ELT(df, j);
     for(int i = 0; i < nrow; ++i) {
       //surveytmp[i][j] = (REAL(dummy)[i] - 3) / 2;     // temporary, assumes 1 to 5
       surveytmp[i][j] = (REAL(dummy)[i] - 5.5) / 4.5; // temporary, assumes 1 to 10

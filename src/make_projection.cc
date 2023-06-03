@@ -7,14 +7,14 @@
 
 static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
 {
-  int ncol = length(df) - 1; // should be column first, right?
+  int ncol = length(df); // should be column first, right?
   int nrow = length(VECTOR_ELT(df, 0));
 
   stmp = std::vector<std::vector<double>>(nrow, std::vector<double>(ncol));
 
   SEXP dummy = PROTECT(allocVector(REALSXP, nrow));
   for(int j = 0; j < ncol; ++j){
-    dummy = VECTOR_ELT(df, j + 1);
+    dummy = VECTOR_ELT(df, j);
     for(int i = 0; i < nrow; ++i){
       stmp[i][j] = (REAL(dummy)[i] - 5.5) / 4.5; // temporarily assumes 1 to 10
     }
