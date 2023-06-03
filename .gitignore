@@ -9,9 +9,10 @@
 *.tar.gz
 
 debug.* 
+*.dat
 
 # documentation
-man
+#man
 
 # whatever tf this is
 symbols.rds
