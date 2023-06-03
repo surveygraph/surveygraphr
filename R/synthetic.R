@@ -36,5 +36,13 @@ make_synthetic_data <- function(nrow = 200, ncol = 15, minority = 0.5, polarisat
       }
     }
   }
+
+  newnames <- c("group")
+  for(i in 1:ncol){
+    cntemp <- paste(c("item_", i), collapse="")
+    newnames <- append(newnames, cntemp) 
+  }
+  colnames(data) <- newnames
+
   return(data)
 }

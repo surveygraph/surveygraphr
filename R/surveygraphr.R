@@ -15,4 +15,5 @@
 #'
 #' @docType package
 #' @name surveygraphr
+#' @useDynLib surveygraphr
 NULL

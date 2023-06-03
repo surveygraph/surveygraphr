@@ -4,9 +4,11 @@ suppressMessages(library("ggplot2"))
 
 S <- make_synthetic_data(nrow=200, ncol=5, polarisation=1.25)
 
-names <- data.frame(id=c(1:length(S$X1)), group=S$X1)
+names <- data.frame(id=c(1:length(S$group)), group=S$group)
 
-e <- make_projection(data=S, layer="agent", threshold_method="target_lcc", method_value=0.95)
+S <- subset(S, select=-c(group))
+
+e <- make_projection(data=S, layer="symbolic", threshold_method="raw_similarity", method_value=-1)
 
 #t <- make_threshold_profile(S, layer="agent")
 #
