@@ -24,11 +24,11 @@ make_projection(
 }
 \value{
 A data.frame corresponding to the edge list of the specified network. It contains
-three columns, the first two being the indices of nodes adjacent to an edge, and the 
+three columns, the first two being the indices of nodes adjacent to an edge, and the
 third column its weight.
 }
 \description{
-`make_projection()` outputs the agent network or the symbolic
+\code{make_projection()} outputs the agent network or the symbolic
 network corresponding to a survey, i.e. the row or column projection.
 }
 \details{
