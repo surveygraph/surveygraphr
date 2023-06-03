@@ -63,7 +63,7 @@ Loading a shared object using `dyn.load` and running `.Call` directly
 
 #### Object documentation
 
-To build object documentation, we run `devtools::document()`, which in turn calls `roxygen2::roxygenise()`. As such, anyone contributing to this package must have `roxygen2` installed. This can be done by running `install.packages("roxygen2")`. A detailed guide on building documentation using `roxygen2` can be found in Wickham's book _R Packages_ linked below, but in short, we comment the entrypoints (which amounts to the `rsuveygraph` API) in the `R` directory. These comments are made in markdown, then read by `roxygen2` to produce `*.Rd` files.
+To build object documentation, we run `devtools::document()`, which in turn calls `roxygen2::roxygenise()`. As such, anyone contributing to this package must have `roxygen2` installed. This can be done by running `install.packages("roxygen2")`. A detailed guide on building documentation using `roxygen2` can be found in Wickham's book _R Packages_ linked below, but in short, we comment in markdown all exported functions in the `R/` directory. These comments are then read by `roxygen2` to produce `*.Rd` files.
 
 Further, roxygen2 will also build the `NAMESPACE` file based on your annotations of the source code in the `R` and `src` directories.
 
@@ -84,6 +84,17 @@ The script `build-docs.r` contains these commands. There is surely a cleaner way
 #### Vignettes
 
 To build vignettes, we follow Wickham and use `knitr`, a markdown vignette engine. `knitr` is piloted by `rmarkdown`, which uses `pandoc` to convert between markdown and HTML. Note that `pandoc` is not an R library, check the [pandoc](https://pandoc.org/installing.html) page for installation instructions. For the minute, it seems like everything in the `doc` directory is built automatically based on the `*.Rmd` files in `vignettes`. Iterating through the build process a few more times should help clarify this.
+
+#### Package website
+
+We use the static site generator `pkgdown` as follows
+
+```
+library("pkgdown")
+pkgdown::build_site()
+```
+
+This produces relevant text files in the `docs/` directory. We commit this to the `gh-pages` branch to avoid polluting the `main` branch, which is reserved for source code.
 
 ### R internals and C/C++
 
