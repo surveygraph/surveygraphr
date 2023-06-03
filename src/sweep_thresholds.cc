@@ -7,7 +7,7 @@
 
 // read in a data frame and output list containing two integer vectors
 // lists, containing edge lists for respondent and item graphs
-SEXP rsweep_thresholds_agent(SEXP df) 
+SEXP rmake_threshold_profile_agent(SEXP df) 
 {
   int ncol = length(df) - 1; // should be column first, right?
   int nrow = length(VECTOR_ELT(df, 0));
@@ -23,7 +23,7 @@ SEXP rsweep_thresholds_agent(SEXP df)
   }
 
   surveygraph S{surveytmp};
-  S.sweep_thresholds_agent();
+  S.make_threshold_profile_agent();
 
   // put data from threshold_agent (radius, z, lcc) into a list
   SEXP r_agent = PROTECT(allocVector(REALSXP, S.threshold_data_agent.size())); // radius
@@ -58,7 +58,7 @@ SEXP rsweep_thresholds_agent(SEXP df)
   return list_agent;
 }
 
-SEXP rsweep_thresholds_symbolic(SEXP df) 
+SEXP rmake_threshold_profile_symbolic(SEXP df) 
 {
   int ncol = length(df) - 1; // should be column first, right?
   int nrow = length(VECTOR_ELT(df, 0));
@@ -75,7 +75,7 @@ SEXP rsweep_thresholds_symbolic(SEXP df)
   }
 
   surveygraph S{surveytmp};
-  S.sweep_thresholds_symbolic();
+  S.make_threshold_profile_symbolic();
 
   // put data from threshold_symbolic (radius, z, lcc) into a list
   SEXP r_symbolic = PROTECT(allocVector(REALSXP, S.threshold_data_symbolic.size())); // radius

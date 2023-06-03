@@ -8,8 +8,8 @@ extern SEXP rmake_proj_agent_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sm);
 extern SEXP rmake_proj_symbolic_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sm);
 extern SEXP rmake_proj_symbolic_ad(SEXP df, SEXP mvalue, SEXP c, SEXP sm);
 extern SEXP rmake_proj_symbolic_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sm);
-extern SEXP rsweep_thresholds_agent(SEXP m);
-extern SEXP rsweep_thresholds_symbolic(SEXP m);
+extern SEXP rmake_threshold_profile_agent(SEXP m);
+extern SEXP rmake_threshold_profile_symbolic(SEXP m);
 
 extern SEXP archived_inputoutput(SEXP m, SEXP n);
 extern SEXP archived_hwinteger(SEXP a, SEXP b);
@@ -23,11 +23,13 @@ static const R_CallMethodDef R_CallDef[] = {
   {"rmake_proj_agent_lcc",         (DL_FUNC) &rmake_proj_agent_lcc, 4},
   {"rmake_proj_agent_ad",          (DL_FUNC) &rmake_proj_agent_ad, 4},
   {"rmake_proj_agent_similar",     (DL_FUNC) &rmake_proj_agent_similar, 4},
+
   {"rmake_proj_symbolic_lcc",      (DL_FUNC) &rmake_proj_symbolic_lcc, 4},
   {"rmake_proj_symbolic_ad",       (DL_FUNC) &rmake_proj_symbolic_ad, 4},
   {"rmake_proj_symbolic_similar",  (DL_FUNC) &rmake_proj_symbolic_similar, 4},
-  {"rsweep_thresholds_agent",      (DL_FUNC) &rsweep_thresholds_agent, 1},
-  {"rsweep_thresholds_symbolic",   (DL_FUNC) &rsweep_thresholds_symbolic, 1},
+
+  {"rmake_threshold_profile_agent",      (DL_FUNC) &rmake_threshold_profile_agent, 1},
+  {"rmake_threshold_profile_symbolic",   (DL_FUNC) &rmake_threshold_profile_symbolic, 1},
 
   // archived routines, could call but we don't
   {"archived_inputoutput",      (DL_FUNC) &archived_inputoutput, 2},

@@ -1,10 +1,10 @@
 #' @export
-sweep_thresholds <- function(data, layer){
+make_threshold_profile <- function(data, layer){
   if(layer == "agent"){
-    tdata <- .call("rsweep_thresholds_agent", data)
+    tdata <- .Call("rmake_threshold_profile_agent", data)
     return(tdata)
   }else if(layer == "symbolic"){
-    tdata <- .call("rsweep_thresholds_symbolic", data)
+    tdata <- .Call("rmake_threshold_profile_symbolic", data)
     return(tdata)
   }else{
     print("layer must be either agent or symbolic")

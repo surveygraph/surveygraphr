@@ -77,8 +77,10 @@ class surveygraph
     void make_proj_symbolic_ad();       // builds symbolic projection graph with target average degree
     void make_proj_symbolic_similar();  // builds symbolic projection graph with desired threshold
 
-    void sweep_thresholds_agent();     // sweeps through a range of radii and studies 
-    void sweep_thresholds_symbolic();  // sweeps through a range of radii and studies 
+    void max_threshold_agent(double, int);
+
+    void make_threshold_profile_agent();     // sweeps through a range of radii and studies 
+    void make_threshold_profile_symbolic();  // sweeps through a range of radii and studies 
 
     void build_graph_symbolic();
     void build_graph_agent();
