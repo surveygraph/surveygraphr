@@ -11,6 +11,7 @@ BugReports: https://github.com/surveygraph/surveygraphr/issues, or email me
 License: GPL (>= 2)
 Encoding: UTF-8
 RoxygenNote: 7.2.3
+Roxygen: list(markdown = TRUE)
 LazyData: true
 Suggests: 
     knitr,
