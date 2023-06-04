@@ -19,32 +19,23 @@ make_projection(
 \item{layer}{A string flag specifying which layer to project
 \itemize{
 \item \code{"agent"} produces the network corresponding to the agents, which we assume
-to be rows in the \code{data}
+to be rows in \code{data}
 \item \code{"symbolic"} produces the network corresponding to the symbols, or items,
-which we assume to be columns in the `data
-}
+which we assume to be columns in \code{data}
+}}
 
-If a string is provided that doesn't match the above two options, we default
-to the agent layer.}
-
-\item{threshold_method}{A string flag that specifies how edges are selected in
+\item{threshold_method}{A string flag specifying how edges are selected in
 the network representation.
 \itemize{
-\item \code{"raw_similarity"} means we remove all edges whose weight (i.e. node
-similarity) is below a specified threshold.
+\item \code{"raw_similarity"} means we remove all edges whose weight, meaning node
+similarity, is below a specified threshold.
 \item \code{"target_lcc"} finds the value of the threshold that results in the network
-whose largest connected component (lcc) is as close as possible to a
-specified value. In general, there will be a range of thresholds that satisfy
-this condition, and as such, we choose the upper limit of this range. That
-is, this method produces the sparsest possible network of all those with an
-optimal lcc.
+whose largest connected component is as close as possible to a specified
+value. In general a range of thresholds will satisfy this condition, and we
+choose the upper limit of this range.
 \item \code{"target_ad"} finds the value of the threshold that results in the network
-whose average degree (ad) is as close as possible to that specified by
-\code{method_value}
-}
-
-If a string is provided that doesn't match these options, the method defaults to
-\code{"target_lcc"} with \code{threshold_method = 0.98}.}
+whose average degree is as close as possible to a specified value.
+}}
 
 \item{method_value}{A utility variable that we interpret according to the
 \code{threshold_method} chosen.
@@ -63,20 +54,27 @@ the range \verb{[0, 1]} When \code{method_value = 0}, then no nodes are connecte
 if \code{method_value = 1}, the network is complete, meaning it contains every
 possible edge.
 }}
+
+\item{centre}{If \code{TRUE}, we shift edge weights by 1 from \link{-1, 1} to \link{0, 2}.
+Defaults to FALSE.}
+
+\item{similarity_metric}{This currently has just one allowed value, namely the
+Manhattan distance, which is the default.}
 }
 \value{
-A data.frame corresponding to the edge list of the specified network. It
-contains three columns named \code{u}, \code{v} and \code{weight}, such that each row
-represents an undirected, weighted edge.
+A data frame corresponding to the edge list of the specified network. It
+contains three columns named
+\itemize{
+\item \code{u}, the first node adjacent to the edge
+\item \code{v}, the second node adjacent to the edge, and
+\item \code{weight}, the similarity between nodes \code{u} and \code{v}
+}
 }
 \description{
-\code{make_projection()} outputs the agent network or the symbolic
-network corresponding to a survey, i.e. the row or column projection.
+\code{make_projection()} outputs the agent or symbolic network corresponding
+to a survey, i.e. the row or column projection.
 }
 \examples{
-make_check(df, "agent")
-make_projection(df, "agent")
-make_projection(df, "agent")
-make_projection(df, "agent")
-make_projection(df, "agent", threshold_method="target_lcc")
+S <- make_synthetic_data(20, 5)
+make_projection(S, "agent")
 }

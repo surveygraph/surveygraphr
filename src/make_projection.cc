@@ -5,6 +5,12 @@
 
 #include <vector>
 
+/* 
+
+This is where we should handle data cleaning, checking for a 'group' column, type 
+checking etc.
+
+*/
 static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
 {
   int ncol = length(df); // should be column first, right?

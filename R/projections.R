@@ -1,13 +1,18 @@
 #' Outputs the survey projection onto the agent or symbolic layer
 #'
 #' @description
-#' `make_projection()` outputs the agent network or the symbolic
-#' network corresponding to a survey, i.e. the row or column projection.
+#' `make_projection()` outputs the agent or symbolic network corresponding
+#' to a survey, i.e. the row or column projection.
 #' 
 #' @return
-#' A data.frame corresponding to the edge list of the specified network. It
-#' contains three columns named `u`, `v` and `weight`, such that each row
-#' represents an undirected, weighted edge.
+#' A data frame corresponding to the edge list of the specified network. It
+#' contains three columns named 
+#' 
+#'   - `u`, the first node adjacent to the edge
+#' 
+#'   - `v`, the second node adjacent to the edge, and 
+#' 
+#'   - `weight`, the similarity between nodes `u` and `v`
 #' 
 #' @param data A data frame corresponding to a survey
 #' @param layer A string flag specifying which layer to project
@@ -18,8 +23,6 @@
 #'   - `"symbolic"` produces the network corresponding to the symbols, or items,
 #'   which we assume to be columns in `data`
 #' 
-#'   If a string is provided that doesn't match the above two options, we default
-#'   to the agent layer.
 #' @param threshold_method A string flag specifying how edges are selected in
 #' the network representation.
 #' 
@@ -34,8 +37,6 @@
 #'   - `"target_ad"` finds the value of the threshold that results in the network
 #'   whose average degree is as close as possible to a specified value.
 #' 
-#'   If a string is provided that doesn't match these options, the method defaults to
-#'   `"target_lcc"` with `threshold_method = 0.98`.
 #' @param method_value A utility variable that we interpret according to the
 #'   `threshold_method` chosen.
 #' 
@@ -56,16 +57,19 @@
 #'   possible edge.
 #' @param centre If `TRUE`, we shift edge weights by 1 from [-1, 1] to [0, 2]. 
 #'   Defaults to FALSE.
-#' @param similarity_metric This currently has just one option, namely the
-#'   Manhattan distance, which is also the default.
+#' @param similarity_metric This currently has just one allowed value, namely the
+#'   Manhattan distance, which is the default.
 #' 
-#' @examples
-#' make_projection(df, "agent")
-#' make_projection(df, "agent")
-#' make_projection(df, "agent")
-#' make_projection(df, "agent", threshold_method="target_lcc")
 #' @export
-make_projection <- function(data, layer, threshold_method = NULL, method_value = NULL, centre = NULL, similarity_metric = NULL){
+#' @examples
+#' S <- make_synthetic_data(20, 5)
+#' make_projection(S, "agent")
+make_projection <- function(data, 
+                            layer, 
+                            threshold_method = NULL, 
+                            method_value = NULL, 
+                            centre = NULL, 
+                            similarity_metric = NULL){
 
   # check that layer is either agent or symbolic
   if(layer != "agent" && layer != "symbolic")
@@ -118,7 +122,7 @@ make_projection <- function(data, layer, threshold_method = NULL, method_value =
         return(edgelist)
       }
     }else{
-      print("threshold_method and method_value both need to be set, defaulting to...")
+      edgelist <- .Call("rmake_proj_agent_lcc", data, 0.97, centre, similarity_metric)
     }
   }
 
@@ -140,7 +144,7 @@ make_projection <- function(data, layer, threshold_method = NULL, method_value =
         return(edgelist)
       }
     }else{
-      print("threshold_method and method_value both need to be set, defaulting to...")
+      edgelist <- .Call("rmake_proj_agent_lcc", data, 0.97, centre, similarity_metric)
     }
   }
 }
