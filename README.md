@@ -63,13 +63,10 @@ Loading a shared object using `dyn.load` and running `.Call` directly
 
 #### Object documentation
 
-To build object documentation, we run `devtools::document()`, which in turn calls `roxygen2::roxygenise()`. As such, anyone contributing to this package must have `roxygen2` installed. This can be done by running `install.packages("roxygen2")`. A detailed guide on building documentation using `roxygen2` can be found in Wickham's book _R Packages_ linked below, but in short, we comment in markdown all exported functions in the `R/` directory. These comments are then read by `roxygen2` to produce `*.Rd` files.
+To build object documentation, we run `devtools::document()`, which in turn calls `roxygenise()` from the `roxygen2` package. This function looks for `roxygen2` comments in markdown above R functions in the `R/` directory. We comment in markdown all exported functions in the `R/` directory. These comments are then translated to produce `.Rd` files in the `man/` directory. Further, roxygen2 will also build the `NAMESPACE` file based on the `@export` function tags.
 
-Further, roxygen2 will also build the `NAMESPACE` file based on your annotations of the source code in the `R` and `src` directories.
+The script `buildman.R` contains the commands
 
-Note that the `data` directory should be reserved for R formatted data. In the words of Wickham, each file in this directory should be an .RData file created by `save()` containing a single object (with the same name as the file). The easiest way to adhere to these rules is by going `x <- sample(1000)`, then `usethis::use_data(x, sample)`.
-
-In summary, documentation is built by running
 
 ```r
 library("devtools")
@@ -79,7 +76,11 @@ devtools::build_vignettes()
 devtools::build()
 ```
 
-The script `build-docs.r` contains these commands. There is surely a cleaner way of automating this.
+which populates `man/` when executed. Static site builders like `pkgdown` look in `man/` to produce site files, however commands like the following allow for a quick check of how `.Rd` actually render.
+
+```
+R CMD Rdconv -t html man/make_projection.Rd > make_projections.html
+```
 
 #### Vignettes
 
