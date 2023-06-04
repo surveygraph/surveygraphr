@@ -13,29 +13,26 @@
 #' @param layer A string flag specifying which layer to project
 #'   
 #'   - `"agent"` produces the network corresponding to the agents, which we assume
-#'   to be rows in the `data`
+#'   to be rows in `data`
 #' 
 #'   - `"symbolic"` produces the network corresponding to the symbols, or items,
-#'   which we assume to be columns in the `data
+#'   which we assume to be columns in `data`
 #' 
 #'   If a string is provided that doesn't match the above two options, we default
 #'   to the agent layer.
-#' @param threshold_method A string flag that specifies how edges are selected in
+#' @param threshold_method A string flag specifying how edges are selected in
 #' the network representation.
 #' 
-#'   - `"raw_similarity"` means we remove all edges whose weight (i.e. node
-#'   similarity) is below a specified threshold.
+#'   - `"raw_similarity"` means we remove all edges whose weight, meaning node
+#'   similarity, is below a specified threshold.
 #' 
 #'   - `"target_lcc"` finds the value of the threshold that results in the network
-#'   whose largest connected component (lcc) is as close as possible to a
-#'   specified value. In general, there will be a range of thresholds that satisfy
-#'   this condition, and as such, we choose the upper limit of this range. That
-#'   is, this method produces the sparsest possible network of all those with an
-#'   optimal lcc.
+#'   whose largest connected component is as close as possible to a specified
+#'   value. In general a range of thresholds will satisfy this condition, and we
+#'   choose the upper limit of this range. 
 #' 
 #'   - `"target_ad"` finds the value of the threshold that results in the network
-#'   whose average degree (ad) is as close as possible to that specified by
-#'   `method_value`
+#'   whose average degree is as close as possible to a specified value.
 #' 
 #'   If a string is provided that doesn't match these options, the method defaults to
 #'   `"target_lcc"` with `threshold_method = 0.98`.
@@ -57,9 +54,12 @@
 #'   the range `[0, 1]` When `method_value = 0`, then no nodes are connected, and
 #'   if `method_value = 1`, the network is complete, meaning it contains every
 #'   possible edge.
+#' @param centre If `TRUE`, we shift edge weights by 1 from [-1, 1] to [0, 2]. 
+#'   Defaults to FALSE.
+#' @param similarity_metric This currently has just one option, namely the
+#'   Manhattan distance, which is also the default.
 #' 
 #' @examples
-#' make_check(df, "agent")
 #' make_projection(df, "agent")
 #' make_projection(df, "agent")
 #' make_projection(df, "agent")
