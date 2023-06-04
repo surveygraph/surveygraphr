@@ -1,4 +1,4 @@
-#' surveygraphr: a package for visualing correlations in survey datasets
+#' surveygraphr: network representations of attitudes
 #'
 #' The surveygraphr package provides the following functions....
 #'
@@ -8,10 +8,6 @@
 #'
 #' @section network generating functions:
 #' The network functions are implemented in C++, and blah blah blah.
-#'
-#' @section writing functions:
-#' The writing functions are implemented in both R and C++ as needed, and
-#' produce files then will go on to be read by graph visualisation libraries.
 #'
 #' @docType package
 #' @name surveygraphr

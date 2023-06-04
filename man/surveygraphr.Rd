@@ -3,7 +3,7 @@
 \docType{package}
 \name{surveygraphr}
 \alias{surveygraphr}
-\title{surveygraphr: a package for visualing correlations in survey datasets}
+\title{surveygraphr: network representations of attitudes}
 \description{
 The surveygraphr package provides the following functions....
 }
@@ -16,11 +16,5 @@ passed to C++ routines. A bunch of file formats need to be accounted for.
 \section{network generating functions}{
 
 The network functions are implemented in C++, and blah blah blah.
-}
-
-\section{writing functions}{
-
-The writing functions are implemented in both R and C++ as needed, and
-produce files then will go on to be read by graph visualisation libraries.
 }
 
