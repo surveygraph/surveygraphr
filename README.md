@@ -76,11 +76,13 @@ devtools::build_vignettes()
 devtools::build()
 ```
 
-which populates `man/` when executed. Static site builders like `pkgdown` look in `man/` to produce site files, however commands like the following allow for a quick check of how `.Rd` actually render.
+which populates `man/` when executed. Static site builders like `pkgdown` look in `man/` to produce site files, however commands like the following allow for a quick check of how `.Rd` files actually render.
 
 ```
 R CMD Rdconv -t html man/make_projection.Rd > make_projections.html
 ```
+
+For more information see the CRAN page on [writing R extensions](https://cran.r-project.org/).
 
 #### Vignettes
 
