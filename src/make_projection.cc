@@ -10,21 +10,56 @@
 This is where we should handle data cleaning, checking for a 'group' column, type 
 checking etc.
 
+TODO: currently assuming df is a data.frame... do not do this
+
 */
 static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
 {
-  int ncol = length(df); // should be column first, right?
-  int nrow = length(VECTOR_ELT(df, 0));
+  // check column types
+  //SEXP check = PROTECT(allocVector(VECSXP, length(df)));
+  //Rprintf("df is of type: %d\n", TYPEOF(df));
+  //for(int i = 0; i < length(df); ++i){
+  //  check = VECTOR_ELT(df, i);
+  //  Rprintf("%d has type: %d\n", TYPEOF(check));
+  //}
 
-  stmp = std::vector<std::vector<double>>(nrow, std::vector<double>(ncol));
+  vector<vector<double>> surveytmp;
 
-  SEXP dummy = PROTECT(allocVector(REALSXP, nrow));
-  for(int j = 0; j < ncol; ++j){
-    dummy = VECTOR_ELT(df, j);
-    for(int i = 0; i < nrow; ++i){
-      stmp[i][j] = (REAL(dummy)[i] - 5.5) / 4.5; // temporarily assumes 1 to 10
+  // idea: use numeric coercion... if not coercable (returns NULL?) skip column
+  SEXP check = PROTECT(allocVector(VECSXP, length(df)));
+  for(int i = 0; i < length(df); ++i){
+    check = VECTOR_ELT(df, i);
+    if(TYPEOF(check) == STRSXP){
+      //Rprintf("you've found a string column\n");
+    }else if(TYPEOF(check) == REALSXP){
+      vector<double> coltmp;
+      for(int j = 0; j < length(check); ++j){
+        coltmp.push_back(((REAL(check)[j]) - 5.5) / 4.5);
+      }
+      surveytmp.push_back(coltmp);
+    }else if(TYPEOF(check) == INTSXP){
+      vector<double> coltmp;
+      for(int j = 0; j < length(check); ++j){
+        coltmp.push_back((double(INTEGER(check)[j]) - 5.5) / 4.5);
+      }
+      surveytmp.push_back(coltmp);
+    }else{
+      //Rprintf("you've found a column that's neither string, real or int\n");
     }
   }
+
+  int ncol = surveytmp.size();
+  int nrow = surveytmp[0].size();
+
+  // take the transpose
+  stmp = std::vector<std::vector<double>>(nrow, std::vector<double>(ncol));
+  for(int i = 0; i < surveytmp.size(); ++i){
+    for(int j = 0; j < surveytmp[i].size(); ++j){
+      stmp[j][i] = surveytmp[i][j];
+    }
+  }
+
+  UNPROTECT(1);
 }
 
 static void vectors_to_df(map<int, set<neighbour>> &g, SEXP &c, SEXP &df)
@@ -43,7 +78,6 @@ static void vectors_to_df(map<int, set<neighbour>> &g, SEXP &c, SEXP &df)
   for(auto &it : g){
     for(auto &jt : it.second){
       if(it.first < jt.u){
-        //Rprintf("%d %d %f\n", it.first + 1, jt.u + 1, jt.w);
         INTEGER(u_vector)[i] = it.first + 1;
         INTEGER(v_vector)[i] = jt.u + 1;
         REAL(w_vector)[i] = int(100.0 * jt.w) / 100.0;
@@ -81,20 +115,10 @@ SEXP rmake_proj_agent_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   surveygraph S{surveytmp, 0, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
   S.make_proj_agent_lcc();
 
-  //Rprintf("hello from... %d\n", S.g_agent.size());
-
-  //for(int i = 0; i < 10; ++i){
-  //  Rprintf("%d : ", i);
-  //  for(auto jt : S.g_agent[i]){
-  //    Rprintf("%d ", jt.u);
-  //  }
-  //  Rprintf("\n");
-  //}
-
   SEXP e = PROTECT(allocVector(VECSXP, 3));
   vectors_to_df(S.g_agent, c, e);
 
-  UNPROTECT(2);
+  UNPROTECT(1);
 
   return e;
 }
@@ -110,7 +134,7 @@ SEXP rmake_proj_agent_ad(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   SEXP e = PROTECT(allocVector(VECSXP, 3));
   vectors_to_df(S.g_agent, c, e);
 
-  UNPROTECT(2);
+  UNPROTECT(1);
 
   return e;
 }
@@ -126,7 +150,7 @@ SEXP rmake_proj_agent_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   SEXP e = PROTECT(allocVector(VECSXP, 3));
   vectors_to_df(S.g_agent, c, e);
 
-  UNPROTECT(2);
+  UNPROTECT(1);
 
   return e;
 }
@@ -142,7 +166,7 @@ SEXP rmake_proj_symbolic_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   SEXP e = PROTECT(allocVector(VECSXP, 3));
   vectors_to_df(S.g_symbolic, c, e);
 
-  UNPROTECT(2);
+  UNPROTECT(1);
 
   return e;
 }
@@ -158,7 +182,7 @@ SEXP rmake_proj_symbolic_ad(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   SEXP e = PROTECT(allocVector(VECSXP, 3));
   vectors_to_df(S.g_symbolic, c, e);
 
-  UNPROTECT(2);
+  UNPROTECT(1);
 
   return e;
 }
@@ -174,7 +198,7 @@ SEXP rmake_proj_symbolic_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   SEXP e = PROTECT(allocVector(VECSXP, 3));
   vectors_to_df(S.g_symbolic, c, e);
 
-  UNPROTECT(2);
+  UNPROTECT(1);
 
   return e;
 }

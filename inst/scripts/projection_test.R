@@ -6,9 +6,7 @@ S <- make_synthetic_data(nrow=200, ncol=5, polarisation=1.25)
 
 names <- data.frame(id=c(1:length(S$group)), group=S$group)
 
-S <- subset(S, select=-c(group))
-
-e <- make_projection(data=S, layer="symbolic", threshold_method="raw_similarity", method_value=-1)
+e <- make_projection(data=S, layer="agent", threshold_method="target_lcc", method_value=0.99)
 
 #t <- make_threshold_profile(S, layer="agent")
 #
@@ -23,7 +21,7 @@ e <- make_projection(data=S, layer="symbolic", threshold_method="raw_similarity"
 
 g <- graph.data.frame(e, vertices=names, directed=FALSE)
 
-V(g)$color <- ifelse(V(g)$group == 1, "blue", "red")
+V(g)$color <- ifelse(V(g)$group == '1', "blue", "red")
 
 g <- delete.vertices(g, which(degree(g)==0))
 

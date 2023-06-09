@@ -123,6 +123,7 @@ make_projection <- function(data,
       }
     }else{
       edgelist <- .Call("rmake_proj_agent_lcc", data, 0.97, centre, similarity_metric)
+      return(edgelist)
     }
   }
 
@@ -145,6 +146,7 @@ make_projection <- function(data,
       }
     }else{
       edgelist <- .Call("rmake_proj_agent_lcc", data, 0.97, centre, similarity_metric)
+      return(edgelist)
     }
   }
 }
