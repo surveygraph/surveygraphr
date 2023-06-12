@@ -21,7 +21,7 @@ void surveygraph::make_threshold_profile_agent()
 
   double optimal_threshold_agent = threshold_agent;
 
-  int count = 250;
+  int count = 20;
 
   //double dt_agent = 1.5 * optimal_threshold_agent / double(count);
   double dt_agent = 1.0 / double(count);
@@ -31,7 +31,13 @@ void surveygraph::make_threshold_profile_agent()
     build_partition_agent();
 
     avg_degree_agent /= double(nrow);
-    threshold_data_agent.push_back(vector<double>{threshold_agent, avg_degree_agent, lcc / double(nrow)});
+    vector<double> dummy;
+    dummy.push_back(threshold_agent);
+    dummy.push_back(avg_degree_agent);
+    dummy.push_back(lcc / double(nrow));
+    dummy.push_back(double(isol_agent));
+    dummy.push_back(double(comp_agent));
+    threshold_data_agent.push_back(dummy);
 
     if(!(avg_degree_agent >= 0 && avg_degree_agent <= 1)){
       error("an internal test has failed, please report to package creators\n");
@@ -59,7 +65,13 @@ void surveygraph::make_threshold_profile_symbolic()
     build_partition_symbolic();
 
     avg_degree_symbolic /= double(ncol);
-    threshold_data_symbolic.push_back(vector<double>{threshold_symbolic, avg_degree_symbolic, lcc / double(ncol)});
+    vector<double> dummy;
+    dummy.push_back(threshold_symbolic);
+    dummy.push_back(avg_degree_symbolic);
+    dummy.push_back(lcc / double(ncol));
+    dummy.push_back(double(isol_symbolic));
+    dummy.push_back(double(comp_symbolic));
+    threshold_data_symbolic.push_back(dummy);
 
     if(!(avg_degree_symbolic >= 0 && avg_degree_symbolic <= 1)){
       error("an internal test has failed, please report to package creators\n");

@@ -94,6 +94,8 @@ class surveygraph
     // way too much repetition here, clean up later
     int lcc;
     double lcc_agent, lcc_symbolic;  // target LCC values, fraction of network
+    int isol_agent, isol_symbolic;
+    int comp_agent, comp_symbolic;
     set<vector<int>> partition_agent, partition_symbolic;
     void build_partition_agent();  // computes distribution of component sizes
     void build_partition_symbolic();        // computes distribution of component sizes

@@ -12,6 +12,8 @@ void surveygraph::build_graph_agent()
 {
   g_agent = map<int, set<neighbour>>{};
 
+  for(int i = 0; i < nrow; ++i) g_agent[i] = set<neighbour>{};
+
   double w = 0.0;
   e_agent = 0;
   avg_degree_agent = 0;
@@ -34,7 +36,7 @@ void surveygraph::build_graph_symbolic()
 {
   g_symbolic = map<int, set<neighbour>>{};
 
-  double threshold_scale = threshold_symbolic * 2 * sqrt(nrow);
+  for(int i = 0; i < ncol; ++i) g_symbolic[i] = set<neighbour>{};
 
   double w = 0.0;
   e_symbolic = 0;
