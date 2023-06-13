@@ -21,7 +21,7 @@ void surveygraph::make_threshold_profile_agent()
 
   double optimal_threshold_agent = threshold_agent;
 
-  int count = 20;
+  int count = 200;
 
   //double dt_agent = 1.5 * optimal_threshold_agent / double(count);
   double dt_agent = 1.0 / double(count);
