@@ -42,7 +42,7 @@ static const R_CallMethodDef R_CallDef[] = {
   {NULL, NULL, 0}
 };
 
-extern "C" void R_init_surveygraphr(DllInfo *dll) 
+extern "C" void R_init_surveygraph(DllInfo *dll) 
 {
   R_registerRoutines(dll, NULL, R_CallDef, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);

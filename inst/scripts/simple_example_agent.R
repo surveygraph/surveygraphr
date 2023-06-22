@@ -1,4 +1,4 @@
-library("surveygraphr")
+library("surveygraph")
 library("igraph")
 
 S <- make_synthetic_data(nrow=400, ncol=15, polarisation=1.25)

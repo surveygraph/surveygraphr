@@ -1,4 +1,4 @@
-library("surveygraphr")
+library("surveygraph")
 library("ggplot2")
 
 S <- make_synthetic_data(nrow=30, ncol=5, polarisation=0)

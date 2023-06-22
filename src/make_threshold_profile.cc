@@ -78,18 +78,18 @@ SEXP rmake_threshold_profile_agent(SEXP df)
   S.make_threshold_profile_agent();
 
   // put data from threshold_agent (threshold, z, lcc) into a list
-  SEXP t_agent = PROTECT(allocVector(REALSXP, S.threshold_data_agent.size())); // threshold
-  SEXP z_agent = PROTECT(allocVector(REALSXP, S.threshold_data_agent.size())); // average degree
-  SEXP l_agent = PROTECT(allocVector(REALSXP, S.threshold_data_agent.size())); // LCC
-  SEXP i_agent = PROTECT(allocVector(INTSXP, S.threshold_data_agent.size())); // isolated node count
-  SEXP c_agent = PROTECT(allocVector(INTSXP, S.threshold_data_agent.size())); // component count
+  SEXP t_agent = PROTECT(allocVector(REALSXP, S.profile_agent.size())); // threshold
+  SEXP z_agent = PROTECT(allocVector(REALSXP, S.profile_agent.size())); // average degree
+  SEXP l_agent = PROTECT(allocVector(REALSXP, S.profile_agent.size())); // LCC
+  SEXP i_agent = PROTECT(allocVector(INTSXP, S.profile_agent.size())); // isolated node count
+  SEXP c_agent = PROTECT(allocVector(INTSXP, S.profile_agent.size())); // component count
 
-  for(int i = 0; i < S.threshold_data_agent.size(); ++i) {
-    REAL(t_agent)[i] = S.threshold_data_agent[i][0];
-    REAL(z_agent)[i] = S.threshold_data_agent[i][1];
-    REAL(l_agent)[i] = S.threshold_data_agent[i][2];
-    INTEGER(i_agent)[i] = int(S.threshold_data_agent[i][3] + 0.5);
-    INTEGER(c_agent)[i] = int(S.threshold_data_agent[i][4] + 0.5);
+  for(int i = 0; i < S.profile_agent.size(); ++i) {
+    REAL(t_agent)[i] = S.profile_agent[i][0];
+    REAL(z_agent)[i] = S.profile_agent[i][1];
+    REAL(l_agent)[i] = S.profile_agent[i][2];
+    INTEGER(i_agent)[i] = int(S.profile_agent[i][3] + 0.5);
+    INTEGER(c_agent)[i] = int(S.profile_agent[i][4] + 0.5);
   }
 
   SEXP list_agent = PROTECT(allocVector(VECSXP, 5));
@@ -141,18 +141,18 @@ SEXP rmake_threshold_profile_symbolic(SEXP df)
   S.make_threshold_profile_symbolic();
 
   // put data from threshold_symbolic (threshold, z, lcc) into a list
-  SEXP t_symbolic = PROTECT(allocVector(REALSXP, S.threshold_data_symbolic.size())); // threshold
-  SEXP z_symbolic = PROTECT(allocVector(REALSXP, S.threshold_data_symbolic.size())); // average degree
-  SEXP l_symbolic = PROTECT(allocVector(REALSXP, S.threshold_data_symbolic.size())); // LCC
-  SEXP i_symbolic = PROTECT(allocVector(INTSXP, S.threshold_data_symbolic.size())); // isolated node count
-  SEXP c_symbolic = PROTECT(allocVector(INTSXP, S.threshold_data_symbolic.size())); // number of components
+  SEXP t_symbolic = PROTECT(allocVector(REALSXP, S.profile_symbolic.size())); // threshold
+  SEXP z_symbolic = PROTECT(allocVector(REALSXP, S.profile_symbolic.size())); // average degree
+  SEXP l_symbolic = PROTECT(allocVector(REALSXP, S.profile_symbolic.size())); // LCC
+  SEXP i_symbolic = PROTECT(allocVector(INTSXP, S.profile_symbolic.size())); // isolated node count
+  SEXP c_symbolic = PROTECT(allocVector(INTSXP, S.profile_symbolic.size())); // number of components
 
-  for(int i = 0; i < S.threshold_data_symbolic.size(); ++i) {
-    REAL(t_symbolic)[i] = S.threshold_data_symbolic[i][0];
-    REAL(z_symbolic)[i] = S.threshold_data_symbolic[i][1];
-    REAL(l_symbolic)[i] = S.threshold_data_symbolic[i][2];
-    INTEGER(i_symbolic)[i] = int(S.threshold_data_symbolic[i][3] + 0.5);
-    INTEGER(c_symbolic)[i] = int(S.threshold_data_symbolic[i][4] + 0.5);
+  for(int i = 0; i < S.profile_symbolic.size(); ++i) {
+    REAL(t_symbolic)[i] = S.profile_symbolic[i][0];
+    REAL(z_symbolic)[i] = S.profile_symbolic[i][1];
+    REAL(l_symbolic)[i] = S.profile_symbolic[i][2];
+    INTEGER(i_symbolic)[i] = int(S.profile_symbolic[i][3] + 0.5);
+    INTEGER(c_symbolic)[i] = int(S.profile_symbolic[i][4] + 0.5);
   }
 
   SEXP list_symbolic = PROTECT(allocVector(VECSXP, 5));

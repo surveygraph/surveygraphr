@@ -1,6 +1,6 @@
-#' surveygraphr: network representations of attitudes
+#' surveygraph: network representations of attitudes
 #'
-#' The surveygraphr package provides the following functions....
+#' The surveygraph package provides the following functions....
 #'
 #' @section reading functions:
 #' The reading functions import survey datasets to R so they can be 
@@ -10,6 +10,6 @@
 #' The network functions are implemented in C++, and blah blah blah.
 #'
 #' @docType package
-#' @name surveygraphr
-#' @useDynLib surveygraphr
+#' @name surveygraph
+#' @useDynLib surveygraph
 NULL

@@ -10,41 +10,38 @@ using namespace std;
 void surveygraph::make_proj_symbolic_lcc()
 {
   search_threshold_symbolic_lcc();  // finds threshold_symbolic with desired lcc
-  build_graph_symbolic();  // builds symbolic graph using the found threshold
 }
 
 void surveygraph::make_proj_symbolic_ad()
 {
   search_threshold_symbolic_ad();  // finds threshold_symbolic with desired avg degree
-  build_graph_symbolic();  // builds symbolic graph using the found threshold
 }
 
 void surveygraph::make_proj_symbolic_similar()
 {
-  threshold_symbolic = raw_similarity;
-  build_graph_symbolic();  // builds symbolic graph using the found threshold
+  double threshold = raw_similarity;
+  g_symbolic = graph(1, threshold, survey);
 }
 
 void surveygraph::search_threshold_symbolic_lcc()
 {
   double tlower = -1;
   double tupper = 1;
-
-  threshold_symbolic = 0;
+  double threshold = 0;
 
   bool tfound = false;
   int i = 0;
   while(!tfound && i < 20){  // bisection method
-    threshold_symbolic = (tlower + tupper) / 2.0;
-    build_graph_symbolic();
-    build_partition_symbolic();
+    threshold = (tlower + tupper) / 2.0;
+    g_symbolic = graph(1, threshold, survey);
 
-    double lccdummy = lcc / double(ncol);
+    double lccdummy = g_symbolic.lcc / double(g_symbolic.network.size());
 
+    // not exploring all cases?
     if(lccdummy > target_lcc){
-      tlower = threshold_symbolic;
+      tlower = g_symbolic.threshold;
     }else if(lccdummy < target_lcc){
-      tupper = threshold_symbolic;
+      tupper = g_symbolic.threshold;
     }else if(lccdummy == target_lcc){
       tfound = true;
     }
@@ -56,22 +53,20 @@ void surveygraph::search_threshold_symbolic_ad()
 {
   double tlower = -1;
   double tupper = 1;
-
-  threshold_symbolic = 0;
+  double threshold = 0;
 
   bool tfound = false;
   int i = 0;
   while(!tfound && i < 20){  // bisection method
-    threshold_symbolic = (tlower + tupper) / 2.0;
-    build_graph_symbolic();
-    //build_partition_symbolic();
+    threshold = (tlower + tupper) / 2.0;
+    g_symbolic = graph(1, threshold, survey);
 
-    double addummy = avg_degree_symbolic / double(ncol);
+    double addummy = g_symbolic.avg_degree / double(g_symbolic.network.size());
 
     if(addummy > target_ad){
-      tlower = threshold_symbolic;
+      tlower = g_symbolic.threshold;
     }else if(addummy < target_ad){
-      tupper = threshold_symbolic;
+      tupper = g_symbolic.threshold;
     }else if(addummy == target_ad){
       tfound = true;
     }

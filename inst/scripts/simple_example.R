@@ -1,12 +1,12 @@
-library("surveygraphr")
+library("surveygraph")
 library("igraph")
 
-S <- surveygraphr::make_synthetic_data(nrow=400, ncol=15, polarisation=1.25)
+S <- surveygraph::make_synthetic_data(nrow=400, ncol=15, polarisation=1.25)
 
 names1 <- data.frame(id=c(1:length(S$X1)), group=S$X1)
 names2 <- data.frame(id=c(1:length(S)))
 
-edgelists <- surveygraphr::make_projection(S)
+edgelists <- surveygraph::make_projection(S)
 
 g1 <- graph.data.frame(edgelists[[1]], vertices=names1, directed=FALSE)
 g2 <- graph.data.frame(edgelists[[2]], vertices=names2, directed=FALSE)

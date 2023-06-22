@@ -1,8 +1,8 @@
-suppressMessages(library("surveygraphr"))
+suppressMessages(library("surveygraph"))
 suppressMessages(library("igraph"))
 suppressMessages(library("ggplot2"))
 
-S <- make_synthetic_data(nrow=200, ncol=5, polarisation=1.25)
+S <- make_synthetic_data(nrow=150, ncol=15, polarisation=1.25)
 
 names <- data.frame(id=c(1:length(S$group)), group=S$group)
 
@@ -23,6 +23,6 @@ g <- graph.data.frame(e, vertices=names, directed=FALSE)
 
 V(g)$color <- ifelse(V(g)$group == '1', "blue", "red")
 
-g <- delete.vertices(g, which(degree(g)==0))
+#g <- delete.vertices(g, which(degree(g)==0))
 
 plot(g, vertex.size=2, vertex.label=NA, edge.width=0.2, layout=layout.fruchterman.reingold, main="agent layer")

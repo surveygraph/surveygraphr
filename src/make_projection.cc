@@ -12,20 +12,13 @@ checking etc.
 
 TODO: currently assuming df is a data.frame... do not do this
 
+Use numeric coercion to read deta. If not coercable (returns NULL?) skip column.
+
 */
 static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
 {
-  // check column types
-  //SEXP check = PROTECT(allocVector(VECSXP, length(df)));
-  //Rprintf("df is of type: %d\n", TYPEOF(df));
-  //for(int i = 0; i < length(df); ++i){
-  //  check = VECTOR_ELT(df, i);
-  //  Rprintf("%d has type: %d\n", TYPEOF(check));
-  //}
-
   vector<vector<double>> surveytmp;
 
-  // idea: use numeric coercion... if not coercable (returns NULL?) skip column
   SEXP check = PROTECT(allocVector(VECSXP, length(df)));
   for(int i = 0; i < length(df); ++i){
     check = VECTOR_ELT(df, i);
@@ -70,6 +63,9 @@ static void vectors_to_df(map<int, set<neighbour>> &g, SEXP &c, SEXP &df)
       if(it.first < jt.u) dummysize += 1;
     }
   }
+
+  //Rprintf("verifying edge count : %d %d\n", dummysize, g_agent.e);
+
   SEXP u_vector = PROTECT(allocVector(INTSXP, dummysize));  // u column
   SEXP v_vector = PROTECT(allocVector(INTSXP, dummysize));  // v column
   SEXP w_vector = PROTECT(allocVector(REALSXP, dummysize)); // weight column
@@ -116,7 +112,7 @@ SEXP rmake_proj_agent_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   S.make_proj_agent_lcc();
 
   SEXP e = PROTECT(allocVector(VECSXP, 3));
-  vectors_to_df(S.g_agent, c, e);
+  vectors_to_df(S.g_agent.network, c, e);
 
   UNPROTECT(1);
 
@@ -132,7 +128,7 @@ SEXP rmake_proj_agent_ad(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   S.make_proj_agent_ad();
 
   SEXP e = PROTECT(allocVector(VECSXP, 3));
-  vectors_to_df(S.g_agent, c, e);
+  vectors_to_df(S.g_agent.network, c, e);
 
   UNPROTECT(1);
 
@@ -148,7 +144,7 @@ SEXP rmake_proj_agent_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   S.make_proj_agent_similar();
 
   SEXP e = PROTECT(allocVector(VECSXP, 3));
-  vectors_to_df(S.g_agent, c, e);
+  vectors_to_df(S.g_agent.network, c, e);
 
   UNPROTECT(1);
 
@@ -164,7 +160,7 @@ SEXP rmake_proj_symbolic_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   S.make_proj_symbolic_lcc();
 
   SEXP e = PROTECT(allocVector(VECSXP, 3));
-  vectors_to_df(S.g_symbolic, c, e);
+  vectors_to_df(S.g_symbolic.network, c, e);
 
   UNPROTECT(1);
 
@@ -180,7 +176,7 @@ SEXP rmake_proj_symbolic_ad(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   S.make_proj_symbolic_ad();
 
   SEXP e = PROTECT(allocVector(VECSXP, 3));
-  vectors_to_df(S.g_symbolic, c, e);
+  vectors_to_df(S.g_symbolic.network, c, e);
 
   UNPROTECT(1);
 
@@ -196,7 +192,7 @@ SEXP rmake_proj_symbolic_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   S.make_proj_symbolic_similar();
 
   SEXP e = PROTECT(allocVector(VECSXP, 3));
-  vectors_to_df(S.g_symbolic, c, e);
+  vectors_to_df(S.g_symbolic.network, c, e);
 
   UNPROTECT(1);
 
