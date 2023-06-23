@@ -1,5 +1,9 @@
 # surveygraph
 
+<!-- badges: start -->
+[![codecov](https://codecov.io/gh/surveygraph/surveygraphr/branch/main/graph/badge.svg?token=SHFUE2Z36X)](https://codecov.io/gh/surveygraph/surveygraphr)
+<!-- badges: end -->
+
 ## Overview
 
 surveygraph is a lightweight library used to produce network representations of attitudes, as they emerge in tabular sociological data such as surveys.
