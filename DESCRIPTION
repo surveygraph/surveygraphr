@@ -11,7 +11,8 @@ Authors@R: c(
 Description: surveygraph computes network representations of attitudes,
   extracted from tabular data such as sociological surveys.
 Depends: R (>= 2.15.1)
-URL: https://surveygraph.github.io/surveygraphr, https://surveygraph.ie/
+URL: https://surveygraph.github.io/surveygraphr,
+    https://surveygraph.ie/
 BugReports: https://github.com/surveygraph/surveygraphr/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
