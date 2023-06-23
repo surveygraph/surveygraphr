@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://surveygraph.ie/404.html</loc>
+  </url>
+  <url>
+    <loc>https://surveygraph.ie/CHANGELOG.html</loc>
+  </url>
+  <url>
+    <loc>https://surveygraph.ie/CONTRIBUTING.html</loc>
+  </url>
+  <url>
+    <loc>https://surveygraph.ie/LICENSE.html</loc>
+  </url>
+  <url>
+    <loc>https://surveygraph.ie/TODO.html</loc>
+  </url>
+  <url>
+    <loc>https://surveygraph.ie/authors.html</loc>
+  </url>
+  <url>
+    <loc>https://surveygraph.ie/index.html</loc>
+  </url>
+  <url>
+    <loc>https://surveygraph.ie/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://surveygraph.ie/reference/make_projection.html</loc>
+  </url>
+  <url>
+    <loc>https://surveygraph.ie/reference/make_threshold_profile.html</loc>
+  </url>
+  <url>
+    <loc>https://surveygraph.ie/reference/surveygraph.html</loc>
+  </url>
+</urlset>
