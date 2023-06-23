@@ -20,7 +20,7 @@ library("devtools")
 devtools::install_github("surveygraph/surveygraphr")
 ```
 
-The package can then be loaded within R in the usual way, namely
+The package can then be loaded within R as follows.
 
 ```
 library("surveygraph")

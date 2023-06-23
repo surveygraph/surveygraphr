@@ -1,4 +1,4 @@
-# surveygraphr, the _surveygraph_ package for R
+# Contributing to the R version of surveygraph
 
 ## Development workflow
 
@@ -46,18 +46,18 @@ devtools::install_github("surveygraph/surveygraphr")
 
 ### Testing
 
-A very handy R command is
+The standard check for R projects is `R CMD check` which i 
 
 ```sh
 R CMD check .           # run especially before CRAN submissions
 R CMD SHLIB src/*.cc    # for building shared object files
 ```
 
-Hadley Wickham has a great [chapter](https://r-pkgs.org/testing-basics.html) on testing, where he recommends the third party package `testthat`.
+Following the convention of the tidyverse, we carry out unit tests using the `testthat` package.
 
 ### Debugging
 
-Loading a shared object using `dyn.load` and running `.Call` directly
+One can debug on the level of shared objects directly using `dyn.load`, as well as running `.Call` directly
 
 ### Documentation workflow
 
@@ -121,21 +121,6 @@ I found the following resources to be most helpful in learning R's C API
 
 In addition [these](https://www.r-bloggers.com/author/jonathan-callahan/) blogs by Jonathan Callahan helped me in the very beginning. An overview of the C interface can be found [here](https://www.r-bloggers.com/2012/11/using-r-calling-c-code-hello-world/) and [here](https://www.r-bloggers.com/2012/11/using-r-callhello/
 ), and a packaging walkthrough [here](https://www.r-bloggers.com/2012/11/using-r-packaging-a-c-library-in-15-minutes/).
-
-## Usage
-
-Here is a minimal working example of the package in its current version. The method `dummy(m, n)` generates a synthetic survey consisting of `n` questions to which `m` respondents answer on a one to five scale. Their responses are drawn at random from a uniform distribution. Graphs representing the correlations between respondents and questions are generated, and written to a `results/` directory as `graph1.dat` and `graph2.dat`, respectively. The generated survey is outputted as `survey.dat`. 
-
-```r
-# THIS IS DEPRECATED, STAY TUNED
-library("surveygraph")
-
-surveygraph::dummy(10000, 10)
-
-file1 <- read.csv("results/survey1.dat")
-file2 <- read.csv("results/graph1.dat")
-file3 <- read.csv("results/graph2.dat")
-```
 
 ## Resources
 
