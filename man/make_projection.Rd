@@ -72,7 +72,7 @@ contains three columns named
 }
 \description{
 \code{make_projection()} outputs the agent or symbolic network corresponding
-to a survey, i.e. the row or column projection. Testing.
+to a survey, i.e. the row or column projection. Testing workflow.
 }
 \examples{
 S <- make_synthetic_data(20, 5)
