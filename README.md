@@ -7,7 +7,7 @@ surveygraph is a lightweight library used to produce network representations of 
 We assume tabular data with rows representing agents, such as individuals, and columns representing items, such as survey questions. Table entries represent responses by agents to items. By computing the similarity between each pair of rows and each pair of columns we obtain, respectively,
 
 1. the *agent* network, where nodes represent agents, with weighted edges drawn between similar agents
-2. the *symbolic* network, where nodes represent survey items, with weighted edges drawn between similar items
+2. the *symbolic* network, where nodes represent items, with weighted edges drawn between similar items
 
 By plotting these networks with tools such as igraph, we obtain accessible and visually striking representations of structure within the survey data.
 
@@ -20,13 +20,19 @@ library("devtools")
 devtools::install_github("surveygraph/surveygraphr")
 ```
 
-The package can then be loaded within R as follows.
+The package can then be loaded in an R session as follows.
 
 ```
 library("surveygraph")
 ```
 
 ## Usage
+
+To do.
+
+## Gallery
+
+To do.
 
 ## Getting help
 
