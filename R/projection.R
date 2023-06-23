@@ -2,7 +2,7 @@
 #'
 #' @description
 #' `make_projection()` outputs the agent or symbolic network corresponding
-#' to a survey, i.e. the row or column projection.
+#' to a survey, i.e. the row or column projection. Testing.
 #' 
 #' @return
 #' A data frame corresponding to the edge list of the specified network. It
