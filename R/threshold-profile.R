@@ -29,11 +29,10 @@
 #' @details
 #' Note that this routine is expensive on large graphs. We study networks over the
 #' full range of similarity thresholds `[-1, 1]`, and as a result, produce
-#' networks that are complete at the lower limit of that range. [SU: by default we
+#' networks that are complete at the lower limit of that range. Note that by default we
 #' will subsample the provided survey with the C++ implementation in order to
 #' avoid memory issues. We could then allow a flag that turns off the subsampling
-#' step, at the users peril]
-#' 
+#' step, at the user's peril.
 #' @export
 #' @examples
 #' make_synthetic_data(20, 5)

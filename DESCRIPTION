@@ -4,11 +4,11 @@ Version: 0.1.9.2
 Date: 2022-07-13
 Author: Samuel Unicomb
 Authors@R : c(
-  person("Samuel" "Unicomb", email = "samuel.l.unicomb@ul.ie", role = c("cre", "aut")),
-  person("Pádraig" "MacCarron", email = "padraig.maccarron@ul.ie", role = "aut"),
-  person("Alejandro" "Dinkelberg", email = "alejandro.dinkelberg@ul.ie", role = "aut"),
-  person("David" "O'Sullivan", email = "david.osullivan@ul.ie", role = "aut"),
-  person("Mike" "Quayle", email = "mike.quayle@ul.ie", role = "aut"))
+  person("Samuel", "Unicomb", email = "samuel.l.unicomb@ul.ie", role = c("cre", "aut")),
+  person("Pádraig", "MacCarron", email = "padraig.maccarron@ul.ie", role = "aut"),
+  person("Alejandro", "Dinkelberg", email = "alejandro.dinkelberg@ul.ie", role = "aut"),
+  person("David", "O'Sullivan", email = "david.osullivan@ul.ie", role = "aut"),
+  person("Mike", "Quayle", email = "mike.quayle@ul.ie", role = "aut"))
 Maintainer: Samuel Unicomb <samuelunicomb@gmail.com>
 Description: surveygraph computes network representations of attitudes,
   extracted from tabular data such as sociological surveys.

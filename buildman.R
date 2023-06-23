@@ -1,4 +1,4 @@
-# statically generates *.Rd files in man/ using doxygen2 via devtools
+# generates *.Rd files in man/ using doxygen2 via devtools
 library("devtools")
 
 devtools::document()
