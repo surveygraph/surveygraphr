@@ -10,6 +10,9 @@
     <loc>https://surveygraph.ie/CONTRIBUTING.html</loc>
   </url>
   <url>
+    <loc>https://surveygraph.ie/LICENSE-text.html</loc>
+  </url>
+  <url>
     <loc>https://surveygraph.ie/TODO.html</loc>
   </url>
   <url>
@@ -23,6 +26,9 @@
   </url>
   <url>
     <loc>https://surveygraph.ie/reference/make_projection.html</loc>
+  </url>
+  <url>
+    <loc>https://surveygraph.ie/reference/make_synthetic_data.html</loc>
   </url>
   <url>
     <loc>https://surveygraph.ie/reference/make_threshold_profile.html</loc>
