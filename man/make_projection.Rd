@@ -55,7 +55,7 @@ if \code{method_value = 1}, the network is complete, meaning it contains every
 possible edge.
 }}
 
-\item{centre}{If \code{TRUE}, we shift edge weights by 1 from \link{-1, 1} to \link{0, 2}.
+\item{centre}{If \code{TRUE}, we shift edge weights by 1 from \verb{[-1, 1]} to \verb{[0, 2]}.
 Defaults to FALSE.}
 
 \item{similarity_metric}{This currently has just one allowed value, namely the
@@ -76,5 +76,4 @@ to a survey, i.e. the row or column projection. Testing workflow.
 }
 \examples{
 S <- make_synthetic_data(20, 5)
-make_projection(S, "agent")
 }

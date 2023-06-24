@@ -42,6 +42,5 @@ avoid memory issues. We could then allow a flag that turns off the subsampling
 step, at the user's peril.
 }
 \examples{
-make_synthetic_data(20, 5)
-make_threshold_profile(S, "agent")
+S <- make_synthetic_data(20, 5)
 }

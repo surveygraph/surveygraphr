@@ -11,5 +11,6 @@
 #'
 #' @docType package
 #' @name surveygraph
+#' @importFrom stats runif rpois
 #' @useDynLib surveygraph
 NULL

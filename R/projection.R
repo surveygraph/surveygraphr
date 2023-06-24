@@ -55,7 +55,7 @@
 #'   the range `[0, 1]` When `method_value = 0`, then no nodes are connected, and
 #'   if `method_value = 1`, the network is complete, meaning it contains every
 #'   possible edge.
-#' @param centre If `TRUE`, we shift edge weights by 1 from [-1, 1] to [0, 2]. 
+#' @param centre If `TRUE`, we shift edge weights by 1 from `[-1, 1]` to `[0, 2]`. 
 #'   Defaults to FALSE.
 #' @param similarity_metric This currently has just one allowed value, namely the
 #'   Manhattan distance, which is the default.
@@ -63,7 +63,6 @@
 #' @export
 #' @examples
 #' S <- make_synthetic_data(20, 5)
-#' make_projection(S, "agent")
 make_projection <- function(data, 
                             layer, 
                             threshold_method = NULL, 

@@ -1,3 +1,19 @@
+#' Outputs a synthetic survey using a simple model
+#'
+#' @description
+#' `make_synthetic_data()` outputs a synthetic survey.
+#' 
+#' @return
+#' A data frame corresponding to a survey.
+#' 
+#' @param nrow The number of rows in the survey
+#' @param ncol The number of columns in the survey
+#' @param minority The fraction of nodes in the smaller of the polariseed group
+#' @param polarisation The degree of polarisation among agents
+#' 
+#' @export
+#' @examples
+#' S <- make_synthetic_data(20, 5)
 #' @export
 make_synthetic_data <- function(nrow = 200, ncol = 15, minority = 0.5, polarisation = 0){
   if(minority < 0.0 | minority > 1.0) minority = 0.3

@@ -35,8 +35,7 @@
 #' step, at the user's peril.
 #' @export
 #' @examples
-#' make_synthetic_data(20, 5)
-#' make_threshold_profile(S, "agent")
+#' S <- make_synthetic_data(20, 5)
 make_threshold_profile <- function(data, layer){
   if(layer == "agent"){
     tdata <- .Call("rmake_threshold_profile_agent", data)
