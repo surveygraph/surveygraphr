@@ -18,7 +18,7 @@ By plotting these networks with tools such as igraph, we obtain accessible and v
 
 ## Installation
 
-Still in the development stage, the surveygraph package  is not yet available on CRAN, but can be installed from [GitHub](https://github.com/surveygraph/surveygraphr/) via the devtools package as follows.
+Still in the development stage, the surveygraph package is not yet available on CRAN, but can be installed from [GitHub](https://github.com/surveygraph/surveygraphr/) via the devtools package as follows.
 
 ```
 library("devtools")
