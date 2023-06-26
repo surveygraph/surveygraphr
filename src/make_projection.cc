@@ -27,13 +27,15 @@ static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
     }else if(TYPEOF(check) == REALSXP){
       vector<double> coltmp;
       for(int j = 0; j < length(check); ++j){
-        coltmp.push_back(((REAL(check)[j]) - 5.5) / 4.5);
+        //coltmp.push_back(((REAL(check)[j]) - 5.5) / 4.5);
+        coltmp.push_back(REAL(check)[j]);
       }
       surveytmp.push_back(coltmp);
     }else if(TYPEOF(check) == INTSXP){
       vector<double> coltmp;
       for(int j = 0; j < length(check); ++j){
-        coltmp.push_back((double(INTEGER(check)[j]) - 5.5) / 4.5);
+        //coltmp.push_back((double(INTEGER(check)[j]) - 5.5) / 4.5);
+        coltmp.push_back(double(INTEGER(check)[j]));
       }
       surveytmp.push_back(coltmp);
     }else{
@@ -55,23 +57,36 @@ static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
   UNPROTECT(1);
 }
 
-static void vectors_to_df(map<int, set<neighbour>> &g, SEXP &c, SEXP &df)
+static void normalise_columns(std::vector<vector<double>> &s)
 {
-  int dummysize = 0;
-  for(auto &it : g){
-    for(auto &jt : it.second){
-      if(it.first < jt.u) dummysize += 1;
+  // compute the max and min of each column
+  vector<double> colmax(s[0].size(), -1e6);
+  vector<double> colmin(s[0].size(),  1e6);
+  for(int j = 0; j < s[0].size(); ++j){
+    for(int i = 0; i < s.size(); ++i){
+      if(s[i][j] > colmax[j]) colmax[j] = s[i][j];
+      if(s[i][j] < colmin[j]) colmin[j] = s[i][j];
     }
   }
 
-  //Rprintf("verifying edge count : %d %d\n", dummysize, g_agent.e);
+  // map column entries to the interval to [-1, 1]
+  for(int j = 0; j < s[0].size(); ++j){
+    double m = 2 / (colmax[j] - colmin[j]);
+    double b = -(colmax[j] + colmin[j]) / (colmax[j] - colmin[j]);
+    for(int i = 0; i < s.size(); ++i){
+      s[i][j] = m * s[i][j] + b;
+    }
+  }
+}
 
-  SEXP u_vector = PROTECT(allocVector(INTSXP, dummysize));  // u column
-  SEXP v_vector = PROTECT(allocVector(INTSXP, dummysize));  // v column
-  SEXP w_vector = PROTECT(allocVector(REALSXP, dummysize)); // weight column
+static void vectors_to_df(const graph &g, SEXP &c, SEXP &df)
+{
+  SEXP u_vector = PROTECT(allocVector(INTSXP, g.e));  // u column
+  SEXP v_vector = PROTECT(allocVector(INTSXP, g.e));  // v column
+  SEXP w_vector = PROTECT(allocVector(REALSXP, g.e)); // weight column
 
   int i = 0;
-  for(auto &it : g){
+  for(auto &it : g.network){
     for(auto &jt : it.second){
       if(it.first < jt.u){
         INTEGER(u_vector)[i] = it.first + 1;
@@ -107,12 +122,13 @@ SEXP rmake_proj_agent_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
 {
   std::vector<std::vector<double>> surveytmp;
   df_to_cppvector(df, surveytmp);
+  normalise_columns(surveytmp);
 
   surveygraph S{surveytmp, 0, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
   S.make_proj_agent_lcc();
 
   SEXP e = PROTECT(allocVector(VECSXP, 3));
-  vectors_to_df(S.g_agent.network, c, e);
+  vectors_to_df(S.g_agent, c, e);
 
   UNPROTECT(1);
 
@@ -123,12 +139,13 @@ SEXP rmake_proj_agent_ad(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
 {
   std::vector<std::vector<double>> surveytmp;
   df_to_cppvector(df, surveytmp);
+  normalise_columns(surveytmp);
 
   surveygraph S{surveytmp, 1, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
   S.make_proj_agent_ad();
 
   SEXP e = PROTECT(allocVector(VECSXP, 3));
-  vectors_to_df(S.g_agent.network, c, e);
+  vectors_to_df(S.g_agent, c, e);
 
   UNPROTECT(1);
 
@@ -139,12 +156,13 @@ SEXP rmake_proj_agent_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
 {
   std::vector<std::vector<double>> surveytmp;
   df_to_cppvector(df, surveytmp);
+  normalise_columns(surveytmp);
 
   surveygraph S{surveytmp, 2, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
   S.make_proj_agent_similar();
 
   SEXP e = PROTECT(allocVector(VECSXP, 3));
-  vectors_to_df(S.g_agent.network, c, e);
+  vectors_to_df(S.g_agent, c, e);
 
   UNPROTECT(1);
 
@@ -155,12 +173,13 @@ SEXP rmake_proj_symbolic_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
 {
   std::vector<std::vector<double>> surveytmp;
   df_to_cppvector(df, surveytmp);
+  normalise_columns(surveytmp);
 
   surveygraph S{surveytmp, 0, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
   S.make_proj_symbolic_lcc();
 
   SEXP e = PROTECT(allocVector(VECSXP, 3));
-  vectors_to_df(S.g_symbolic.network, c, e);
+  vectors_to_df(S.g_symbolic, c, e);
 
   UNPROTECT(1);
 
@@ -171,12 +190,13 @@ SEXP rmake_proj_symbolic_ad(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
 {
   std::vector<std::vector<double>> surveytmp;
   df_to_cppvector(df, surveytmp);
+  normalise_columns(surveytmp);
 
   surveygraph S{surveytmp, 1, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
   S.make_proj_symbolic_ad();
 
   SEXP e = PROTECT(allocVector(VECSXP, 3));
-  vectors_to_df(S.g_symbolic.network, c, e);
+  vectors_to_df(S.g_symbolic, c, e);
 
   UNPROTECT(1);
 
@@ -187,12 +207,13 @@ SEXP rmake_proj_symbolic_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
 {
   std::vector<std::vector<double>> surveytmp;
   df_to_cppvector(df, surveytmp);
+  normalise_columns(surveytmp);
 
   surveygraph S{surveytmp, 2, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
   S.make_proj_symbolic_similar();
 
   SEXP e = PROTECT(allocVector(VECSXP, 3));
-  vectors_to_df(S.g_symbolic.network, c, e);
+  vectors_to_df(S.g_symbolic, c, e);
 
   UNPROTECT(1);
 

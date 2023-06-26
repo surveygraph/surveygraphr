@@ -38,9 +38,14 @@ void graph::man_distance(const surveydef &S, const int &u, const int &v, double 
   switch(layer){
     case Layer::agent:
       w = 0;
-      for(int i = 0; i < m; ++i)
+      for(int i = 0; i < m; ++i){
         w += abs(S[u][i] - S[v][i]);
+        //Rprintf("S[%d][%d] - S[%d][%d] = %f - %f\n", u, i, v, i, S[u][i], S[v][i]);
+      }
+      //Rprintf("%d %d %f before\n", u, v, w);
       w = (double(m) - w) / double(m);
+      //Rprintf("%d %d %f after\n", u, v, w);
+      //Rprintf("\n");
       break;
     case Layer::symbolic:
       w = 0;
