@@ -4,15 +4,21 @@
 #include <vector>
 #include <map>
 #include <set>
-#include <string>
-
-#include "neighbour.h"
 
 using namespace std;
 
 typedef vector<vector<double>> surveydef;
-
 enum class Layer{agent, symbolic};
+
+struct neighbour
+{
+  neighbour(int a, double b) { u = a; w = b; }
+
+  int u;     // neighbour index
+  double w;  // edge weight, corresponding to agent or symbolic similarity
+
+  bool operator<(const neighbour& rhs) const { return u < rhs.u; }
+};
 
 class graph
 {

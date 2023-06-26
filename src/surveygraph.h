@@ -2,7 +2,6 @@
 #define SURVEYGRAPH_H_
 
 #include "graph.h"
-#include "neighbour.h"
 
 #include <vector>
 #include <map>
@@ -45,11 +44,6 @@ class surveygraph
     int nrow, ncol;  // number of agent, symbolic
 
     vector<vector<double>> survey, surveysample;  // survey, small sample of survey
-
-    //map<int, set<neighbour>> g_agent;     // agent graph
-    //map<int, set<neighbour>> g_symbolic;  // symbolic graph
-
-    //graph grphagent, grphsymbolic;
 
     graph g_agent, g_symbolic;
 

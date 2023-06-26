@@ -6,7 +6,7 @@ S <- make_synthetic_data(nrow=150, ncol=15, polarisation=1.25)
 
 names <- data.frame(id=c(1:length(S$group)), group=S$group)
 
-e <- make_projection(data=S, layer="agent", threshold_method="target_lcc", method_value=0.99)
+e <- make_projection(data=S, layer="agent", threshold_method="target_lcc", method_value=1)
 
 #t <- make_threshold_profile(S, layer="agent")
 #

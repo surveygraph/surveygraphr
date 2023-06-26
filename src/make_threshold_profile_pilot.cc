@@ -7,11 +7,6 @@
 
 using namespace std;
 
-/*
-
-THIS NEEDS WAY MORE TESTING
-
-*/
 void surveygraph::make_threshold_profile_agent()
 {
   profile_agent = vector<vector<double>>{};
@@ -31,14 +26,14 @@ void surveygraph::make_threshold_profile_agent()
 
     vector<double> dummy;
     dummy.push_back(threshold);
-    dummy.push_back(g_agent.avg_degree / double(g_agent.network.size()));
-    dummy.push_back(g_agent.lcc / double(g_agent.network.size()));
+    dummy.push_back(g_agent.avg_degree / double(g_agent.n));
+    dummy.push_back(g_agent.lcc / double(g_agent.n));
     dummy.push_back(double(g_agent.isols));
     dummy.push_back(double(g_agent.comps));
 
     profile_agent.push_back(dummy);
 
-    if(!(g_agent.avg_degree >= 0 && g_agent.avg_degree <= 1)){
+    if(!(g_agent.avg_degree / double(g_agent.n) >= 0 && g_agent.avg_degree / double(g_agent.n) <= 1)){
       error("an internal test has failed, please report to package creators\n");
     }
   }
@@ -64,14 +59,14 @@ void surveygraph::make_threshold_profile_symbolic()
 
     vector<double> dummy;
     dummy.push_back(threshold);
-    dummy.push_back(g_symbolic.avg_degree / double(g_symbolic.network.size()));
-    dummy.push_back(g_symbolic.lcc / double(g_symbolic.network.size()));
+    dummy.push_back(g_symbolic.avg_degree / double(g_symbolic.n));
+    dummy.push_back(g_symbolic.lcc / double(g_symbolic.n));
     dummy.push_back(double(g_symbolic.isols));
     dummy.push_back(double(g_symbolic.comps));
 
     profile_symbolic.push_back(dummy);
 
-    if(!(g_symbolic.avg_degree >= 0 && g_symbolic.avg_degree <= 1)){
+    if(!(g_symbolic.avg_degree / double(g_symbolic.n) >= 0 && g_symbolic.avg_degree / double(g_symbolic.n) <= 1)){
       error("an internal test has failed, please report to package creators\n");
     }
   }
