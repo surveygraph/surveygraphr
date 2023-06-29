@@ -9,10 +9,9 @@
 *.tar.gz
 
 debug.* 
-*.dat
 
-# documentation
-#man
+*.dat
+*.txt
 
 # whatever tf this is
 symbols.rds
@@ -23,3 +22,8 @@ symbols.rds
 .results/
 Meta/
 docs
+
+buildman.R
+clean.sh
+rcmdinstall.sh
+rcmdtest.sh

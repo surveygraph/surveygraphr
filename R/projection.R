@@ -55,8 +55,8 @@
 #'   the range `[0, 1]` When `method_value = 0`, then no nodes are connected, and
 #'   if `method_value = 1`, the network is complete, meaning it contains every
 #'   possible edge.
-#' @param centre If `TRUE`, we shift edge weights by 1 from `[-1, 1]` to `[0, 2]`. 
-#'   Defaults to FALSE.
+#' @param centre If `FALSE`, we shift edge weights by 1 from `[-1, 1]` to `[0, 2]`. 
+#'   Defaults to TRUE.
 #' @param similarity_metric This currently has just one allowed value, namely the
 #'   Manhattan distance, which is the default.
 #' 
@@ -79,14 +79,12 @@ make_projection <- function(data,
     if(layer == "agent"){
       centre <- as.integer(1)
     }else if(layer == "symbolic"){
-      centre <- as.integer(1)
+      centre <- as.integer(0)
     }
   }else if(centre == TRUE){
     centre <- as.integer(1)
   }else if(centre == FALSE){
     centre <- as.integer(0)
-  }else{
-    print("centre must be either TRUE or FALSE") 
   }
 
   # check the value of similarity_matric

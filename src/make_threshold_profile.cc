@@ -7,36 +7,27 @@
 
 static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
 {
-  // check column types
-  //SEXP check = PROTECT(allocVector(VECSXP, length(df)));
-  //Rprintf("df is of type: %d\n", TYPEOF(df));
-  //for(int i = 0; i < length(df); ++i){
-  //  check = VECTOR_ELT(df, i);
-  //  Rprintf("%d has type: %d\n", TYPEOF(check));
-  //}
-
   vector<vector<double>> surveytmp;
 
-  // idea: use numeric coercion... if not coercable (returns NULL?) skip column
   SEXP check = PROTECT(allocVector(VECSXP, length(df)));
   for(int i = 0; i < length(df); ++i){
     check = VECTOR_ELT(df, i);
     if(TYPEOF(check) == STRSXP){
-      //Rprintf("you've found a string column\n");
+      // string column, do nothing
     }else if(TYPEOF(check) == REALSXP){
       vector<double> coltmp;
       for(int j = 0; j < length(check); ++j){
-        coltmp.push_back(((REAL(check)[j]) - 5.5) / 4.5);
+        coltmp.push_back(REAL(check)[j]);
       }
       surveytmp.push_back(coltmp);
     }else if(TYPEOF(check) == INTSXP){
       vector<double> coltmp;
       for(int j = 0; j < length(check); ++j){
-        coltmp.push_back((double(INTEGER(check)[j]) - 5.5) / 4.5);
+        coltmp.push_back(double(INTEGER(check)[j]));
       }
       surveytmp.push_back(coltmp);
     }else{
-      //Rprintf("you've found a column that's neither string, real or int\n");
+      // neither string, real or integer, do nothing
     }
   }
 
@@ -54,25 +45,35 @@ static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
   UNPROTECT(1);
 }
 
+static void normalise_columns(std::vector<vector<double>> &s)
+{
+  // compute the max and min of each column
+  vector<double> colmax(s[0].size(), -1e6);
+  vector<double> colmin(s[0].size(),  1e6);
+  for(int j = 0; j < s[0].size(); ++j){
+    for(int i = 0; i < s.size(); ++i){
+      if(s[i][j] > colmax[j]) colmax[j] = s[i][j];
+      if(s[i][j] < colmin[j]) colmin[j] = s[i][j];
+    }
+  }
+
+  // map column entries to the interval to [-1, 1]
+  for(int j = 0; j < s[0].size(); ++j){
+    double m = 2 / (colmax[j] - colmin[j]);
+    double b = -(colmax[j] + colmin[j]) / (colmax[j] - colmin[j]);
+    for(int i = 0; i < s.size(); ++i){
+      s[i][j] = m * s[i][j] + b;
+    }
+  }
+}
+
 // read in a data frame and output list containing two integer vectors
 // lists, containing edge lists for respondent and item graphs
 SEXP rmake_threshold_profile_agent(SEXP df) 
 {
-  //int ncol = length(df); // should be column first, right?
-  //int nrow = length(VECTOR_ELT(df, 0));
-
-  //// read a dataframe into a vector of vectors
-  //std::vector<std::vector<double>> surveytmp(nrow, std::vector<double>(ncol));
-  //SEXP dummy = PROTECT(allocVector(REALSXP, nrow));
-  //for(int j = 0; j < ncol; ++j) {
-  //  dummy = VECTOR_ELT(df, j);
-  //  for(int i = 0; i < nrow; ++i) {
-  //    surveytmp[i][j] = (REAL(dummy)[i] - 5.5) / 4.5; // temporary, assumes 1 to 10
-  //  }
-  //}
-
   std::vector<std::vector<double>> surveytmp;
   df_to_cppvector(df, surveytmp);
+  normalise_columns(surveytmp);
 
   surveygraph S{surveytmp};
   S.make_threshold_profile_agent();
@@ -81,8 +82,8 @@ SEXP rmake_threshold_profile_agent(SEXP df)
   SEXP t_agent = PROTECT(allocVector(REALSXP, S.profile_agent.size())); // threshold
   SEXP z_agent = PROTECT(allocVector(REALSXP, S.profile_agent.size())); // average degree
   SEXP l_agent = PROTECT(allocVector(REALSXP, S.profile_agent.size())); // LCC
-  SEXP i_agent = PROTECT(allocVector(INTSXP, S.profile_agent.size())); // isolated node count
-  SEXP c_agent = PROTECT(allocVector(INTSXP, S.profile_agent.size())); // component count
+  SEXP i_agent = PROTECT(allocVector(INTSXP, S.profile_agent.size()));  // isolated node count
+  SEXP c_agent = PROTECT(allocVector(INTSXP, S.profile_agent.size()));  // component count
 
   for(int i = 0; i < S.profile_agent.size(); ++i) {
     REAL(t_agent)[i] = S.profile_agent[i][0];
@@ -120,22 +121,9 @@ SEXP rmake_threshold_profile_agent(SEXP df)
 
 SEXP rmake_threshold_profile_symbolic(SEXP df) 
 {
-  //int ncol = length(df); // should be column first, right?
-  //int nrow = length(VECTOR_ELT(df, 0));
-
-  //// read a dataframe into a vector of vectors
-  //std::vector<std::vector<double>> surveytmp(nrow, std::vector<double>(ncol));
-  //SEXP dummy = PROTECT(allocVector(REALSXP, nrow));
-  //for(int j = 0; j < ncol; ++j) {
-  //  dummy = VECTOR_ELT(df, j);
-  //  for(int i = 0; i < nrow; ++i) {
-  //    //surveytmp[i][j] = (REAL(dummy)[i] - 3) / 2;     // temporary, assumes 1 to 5
-  //    surveytmp[i][j] = (REAL(dummy)[i] - 5.5) / 4.5; // temporary, assumes 1 to 10
-  //  }
-  //}
-
   std::vector<std::vector<double>> surveytmp;
   df_to_cppvector(df, surveytmp);
+  normalise_columns(surveytmp);
 
   surveygraph S{surveytmp};
   S.make_threshold_profile_symbolic();
@@ -144,8 +132,8 @@ SEXP rmake_threshold_profile_symbolic(SEXP df)
   SEXP t_symbolic = PROTECT(allocVector(REALSXP, S.profile_symbolic.size())); // threshold
   SEXP z_symbolic = PROTECT(allocVector(REALSXP, S.profile_symbolic.size())); // average degree
   SEXP l_symbolic = PROTECT(allocVector(REALSXP, S.profile_symbolic.size())); // LCC
-  SEXP i_symbolic = PROTECT(allocVector(INTSXP, S.profile_symbolic.size())); // isolated node count
-  SEXP c_symbolic = PROTECT(allocVector(INTSXP, S.profile_symbolic.size())); // number of components
+  SEXP i_symbolic = PROTECT(allocVector(INTSXP, S.profile_symbolic.size()));  // isolated node count
+  SEXP c_symbolic = PROTECT(allocVector(INTSXP, S.profile_symbolic.size()));  // number of components
 
   for(int i = 0; i < S.profile_symbolic.size(); ++i) {
     REAL(t_symbolic)[i] = S.profile_symbolic[i][0];

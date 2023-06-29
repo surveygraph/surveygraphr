@@ -18,7 +18,7 @@ By plotting these networks with tools such as igraph, we obtain accessible and v
 
 ## Installation
 
-Still in the development stage, the surveygraph package is not yet available on CRAN, but can be installed from [GitHub](https://github.com/surveygraph/surveygraphr/) via the devtools package as follows.
+Still in the development stage, the surveygraph package  is not yet available on CRAN, but can be installed from [GitHub](https://github.com/surveygraph/surveygraphr/) via the devtools package as follows.
 
 ```
 library("devtools")
@@ -33,11 +33,22 @@ library("surveygraph")
 
 ## Usage
 
-To do.
+Generate a synthetic survey dataset
+
+```
+S <- make_synthetic_data(500, 9, polarisation=0.2)
+```
+
+Compute a network representation of the survey respondents, retaining edges if the corresponding pair of respondents are sufficiently similar
+
+```
+e <- make_projection(S, layer="agent")
+
+```
 
 ## Gallery
 
-To do.
+<a><img src="man/figures/eg1.jpg" align="center" height="238" /></a>
 
 ## Getting help
 

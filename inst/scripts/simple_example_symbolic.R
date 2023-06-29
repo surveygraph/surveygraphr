@@ -1,16 +1,24 @@
 library("surveygraph")
 library("igraph")
 
-S <- surveygraph::make_synthetic_data(nrow=400, ncol=15, polarisation=1.25)
+S <- make_synthetic_data(nrow=400, ncol=9, polarisation=0.3)
 
-names <- data.frame(id=c(1:length(S)))
+e <- make_projection(S, layer="symbolic", threshold_method="raw_similarity", method_value=-1.0)
 
-edgelist <- surveygraph::make_projection(S, layer="symbolic")
+names <- data.frame(id=c(1:(length(S) - 1)))
 
-g <- graph.data.frame(edgelist, vertices=names, directed=FALSE)
+g <- graph.data.frame(e, vertices=names, directed=FALSE)
 
-g <- delete.vertices(g, which(degree(g)==0))
+E(g)$width <- 1 * E(g)$weight ** 3
+E(g)$label <- E(g)$weight
 
-E(g)$label= E(g)$weight
+E(g)$color <- ifelse(E(g)$weight > 1.4, "#af8dc3", "#7fbf7b")
 
-plot(g, vertex.size=10, edge.width=1.0, layout=layout.fruchterman.reingold, main="symbolic layer")
+plot(
+  g, 
+  vertex.size=10,
+  layout=layout.circle,
+  vertex.label.family="sans",
+  edge.label.cex=0.9,
+  edge.label.family="sans",
+)

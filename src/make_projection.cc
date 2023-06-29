@@ -23,23 +23,21 @@ static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
   for(int i = 0; i < length(df); ++i){
     check = VECTOR_ELT(df, i);
     if(TYPEOF(check) == STRSXP){
-      //Rprintf("you've found a string column\n");
+      // string column, do nothing
     }else if(TYPEOF(check) == REALSXP){
       vector<double> coltmp;
       for(int j = 0; j < length(check); ++j){
-        //coltmp.push_back(((REAL(check)[j]) - 5.5) / 4.5);
         coltmp.push_back(REAL(check)[j]);
       }
       surveytmp.push_back(coltmp);
     }else if(TYPEOF(check) == INTSXP){
       vector<double> coltmp;
       for(int j = 0; j < length(check); ++j){
-        //coltmp.push_back((double(INTEGER(check)[j]) - 5.5) / 4.5);
         coltmp.push_back(double(INTEGER(check)[j]));
       }
       surveytmp.push_back(coltmp);
     }else{
-      //Rprintf("you've found a column that's neither string, real or int\n");
+      // neither string, real or integer, do nothing
     }
   }
 
