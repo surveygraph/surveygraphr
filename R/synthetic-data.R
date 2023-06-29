@@ -11,10 +11,12 @@
 #' @param ncol The number of columns in the survey
 #' @param minority The fraction of nodes in the smaller of the two polarised groups
 #' @param polarisation The degree of polarisation among the system's agents
+#' @param correlation Probability that group item corresponds to polarisation
+#' @param scale Range of the Likert scale
 #' 
 #' @export
 #' @examples
-#' S <- make_synthetic_data()
+#' S <- make_synthetic_data(200, 8)
 #' @export
 make_synthetic_data <- function(nrow, 
                                 ncol,

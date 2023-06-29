@@ -55,8 +55,8 @@ if \code{method_value = 1}, the network is complete, meaning it contains every
 possible edge.
 }}
 
-\item{centre}{If \code{TRUE}, we shift edge weights by 1 from \verb{[-1, 1]} to \verb{[0, 2]}.
-Defaults to FALSE.}
+\item{centre}{If \code{FALSE}, we shift edge weights by 1 from \verb{[-1, 1]} to \verb{[0, 2]}.
+Defaults to TRUE.}
 
 \item{similarity_metric}{This currently has just one allowed value, namely the
 Manhattan distance, which is the default.}
