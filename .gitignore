@@ -26,7 +26,7 @@ docs
 surveygraph.Rcheck/
 ..Rcheck/
 
-buildman.R
 clean.sh
 rcmdinstall.sh
 rcmdtest.sh
+rcmdbuild.sh
