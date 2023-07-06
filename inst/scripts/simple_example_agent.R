@@ -18,5 +18,4 @@ plot(
   vertex.label=NA,
   edge.width=0.2,
   layout=layout.fruchterman.reingold,
-  #main="agent layer"
 )

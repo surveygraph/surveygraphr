@@ -17,11 +17,14 @@ debug.*
 symbols.rds
 
 # ad hoc directories
-..Rcheck/
 .trash/
 .results/
+
+# development directories
 Meta/
 docs
+surveygraph.Rcheck/
+..Rcheck/
 
 buildman.R
 clean.sh
