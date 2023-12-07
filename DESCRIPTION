@@ -6,12 +6,14 @@ Authors@R: c(
     person("Alejandro", "Dinkelberg", role = "aut"),
     person("Pádraig", "MacCarron", role = "aut"),
     person("David", "O'Sullivan", role = "aut"),
+    person("Paul", "Maher", role = "aut"),
     person("Mike", "Quayle", role = "aut")
   )
 Author: Samuel Unicomb [aut, cre],
   Alejandro Dinkelberg [aut],
   Pádraig MacCarron [aut],
   David O'Sullivan [aut],
+  Paul Maher [aut]
   Mike Quayle [aut]
 Maintainer: Samuel Unicomb <samuel.l.unicomb@ul.ie>
 Description: surveygraph computes network representations of attitudes,
