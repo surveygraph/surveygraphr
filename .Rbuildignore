@@ -7,5 +7,3 @@
 ^\.trash$
 ^\.ipynb_checkpoints$
 ^\.results$
-^src/.o$
-^src/.so$
