@@ -63,6 +63,7 @@ void surveygraph::search_threshold_symbolic_ad()
 
     double addummy = g_symbolic.avg_degree / double(g_symbolic.network.size());
 
+    // hello Ana
     if(addummy > target_ad){
       tlower = g_symbolic.threshold;
     }else if(addummy < target_ad){
