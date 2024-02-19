@@ -41,6 +41,7 @@ SEXP archived_hwinteger(SEXP a, SEXP b)
 }
 
 // checks data type of each column in a dataframe 
+// commented-out lines caused warnings in windows build under R-CMD-check workflow
 SEXP archived_dftypes(SEXP x) 
 {
   int len = length(x);
