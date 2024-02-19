@@ -50,19 +50,19 @@ SEXP archived_dftypes(SEXP x)
     switch(TYPEOF(VECTOR_ELT(x, i))) {
       case(REALSXP):
         CHARACTER_POINTER(result)[i] = mkChar("numeric");
-        Rprintf("%f\n", VECTOR_ELT(x, i));
+        //Rprintf("%f\n", VECTOR_ELT(x, i));
         break;
       case(INTSXP):
         CHARACTER_POINTER(result)[i] = mkChar("integer");
-        Rprintf("%d\n", VECTOR_ELT(x, i));
+        //Rprintf("%d\n", VECTOR_ELT(x, i));
         break;
       case(LGLSXP):
         CHARACTER_POINTER(result)[i] = mkChar("logical");
-        Rprintf("%d\n", VECTOR_ELT(x, i));
+        //Rprintf("%d\n", VECTOR_ELT(x, i));
         break;
       case(STRSXP):
         CHARACTER_POINTER(result)[i] = mkChar("character");
-        Rprintf("%c\n", VECTOR_ELT(x, i));
+        //Rprintf("%c\n", VECTOR_ELT(x, i));
         break;
       case(VECSXP):
         CHARACTER_POINTER(result)[i] = mkChar("list");
