@@ -7,3 +7,5 @@
 ^\.trash$
 ^\.ipynb_checkpoints$
 ^\.results$
+^LICENSE\.md$
+^\.tmpbuild$

@@ -1,8 +1,8 @@
 Package: surveygraph
-Title: network representations of attitudes
+Title: Network Representations of Attitudes
 Version: 0.0.0.1
 Authors@R: c(
-    person("Samuel", "Unicomb", , "samuel.l.unicomb@ul.ie", role = c("aut", "cre")),
+    person("Samuel", "Unicomb", , "samuelunicomb@gmail.com", role = c("aut", "cre")),
     person("Alejandro", "Dinkelberg", role = "aut"),
     person("Pádraig", "MacCarron", role = "aut"),
     person("David", "O'Sullivan", role = "aut"),
@@ -13,14 +13,13 @@ Author: Samuel Unicomb [aut, cre],
   Alejandro Dinkelberg [aut],
   Pádraig MacCarron [aut],
   David O'Sullivan [aut],
-  Paul Maher [aut]
+  Paul Maher [aut],
   Mike Quayle [aut]
-Maintainer: Samuel Unicomb <samuel.l.unicomb@ul.ie>
-Description: surveygraph computes network representations of attitudes,
+Maintainer: Samuel Unicomb <samuelunicomb@gmail.com>
+Description: A tool for computing network representations of attitudes,
   extracted from tabular data such as sociological surveys.
 Depends: R (>= 2.15.1)
-URL: https://surveygraph.github.io/surveygraphr,
-    https://surveygraph.ie/
+URL: https://surveygraph.ie/
 BugReports: https://github.com/surveygraph/surveygraphr/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
