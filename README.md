@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/surveygraph/surveygraphr/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/surveygraph/surveygraphr/actions/workflows/check-standard.yaml)
-[![codecov](https://codecov.io/gh/surveygraph/surveygraphr/branch/main/graph/badge.svg?token=SHFUE2Z36X)](https://codecov.io/gh/surveygraph/surveygraphr)
+[![codecov](https://codecov.io/gh/surveygraph/surveygraphr/graph/badge.svg?token=SHFUE2Z36X)](https://app.codecov.io/gh/surveygraph/surveygraphr)
 <!-- badges: end -->
 
 ## Overview
