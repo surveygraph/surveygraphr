@@ -2,10 +2,9 @@
 title: "Agent and symbolic layer projections"
 output: rmarkdown::html_vignette
 description: >
-  Start here if this is your first time using surveygraph. You'll learn the basic   
-  idea of the bipartite network representation of surveys.
+  Start here if this is your first time computing bipartite projections.
 vignette: >
-  %\VignetteIndexEntry{Introduction to surveygraph}
+  %\VignetteIndexEntry{Computing projections with surveygraph}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
