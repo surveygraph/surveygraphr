@@ -1,6 +1,6 @@
 Package: surveygraph
 Title: Network Representations of Attitudes
-Version: 0.1.0
+Version: 0.1.0.5000
 Authors@R: c(
     person("Samuel", "Unicomb", , "samuelunicomb@gmail.com", role = c("aut", "cre")),
     person("Alejandro", "Dinkelberg", role = "aut"),
