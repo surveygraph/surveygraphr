@@ -5,7 +5,8 @@ articles:
   projections: projections.html
   surveygraph: surveygraph.html
   synthetic: synthetic.html
-last_built: 2024-03-07T15:16Z
+  thresholding: thresholding.html
+last_built: 2024-03-07T15:19Z
 urls:
   reference: https://surveygraph.ie/reference
   article: https://surveygraph.ie/articles
