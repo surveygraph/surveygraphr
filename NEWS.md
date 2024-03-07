@@ -1,5 +1,3 @@
-## surveygraph 0.0.1
+## surveygraph 0.1.0
 
-Additions
-
-* everything is new
+This version is our initial CRAN submission.
