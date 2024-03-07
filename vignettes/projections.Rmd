@@ -1,10 +1,10 @@
 ---
-title: "Agent and symbolic layer projections"
+title: "Survey projections"
 output: rmarkdown::html_vignette
 description: >
   Start here if this is your first time computing bipartite projections.
 vignette: >
-  %\VignetteIndexEntry{Agent and symbolic layer projections}
+  %\VignetteIndexEntry{Survey projections}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
