@@ -1,0 +1,28 @@
+---
+title: "Generating synthetic survey data"
+output: rmarkdown::html_vignette
+description: >
+  Start here if this is your first time generating synthetic survey data.
+vignette: >
+  %\VignetteIndexEntry{Generating synthetic survey data}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+### Using make_synthetic_data() to simulate surveys
+
+This will run examples of computing agent and symbolic layers. 
+
+We have included the very basic make_synthetic_data function to simulate data with varying degrees of polarisation. You can set the following parameters:
+* nrow = the number of agents in the simulated survey
+* ncol = the number of variables in the simulated survey
+* polarisation = the amount of multidimensional polarisation
+* minority = approximate proportion of the sample in one of the two groups
+
+Of course you can simulate data using your own algorithms as well.
+
+Here we will simulate a sample of 150 people answering 1 item in a survey with no intentional polarisation:
+
+```r
+testdata_unpolarised <- make_synthetic_data(nrow=150, ncol=1, polarisation=0, minority =0.5)
+```
