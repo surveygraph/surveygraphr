@@ -44,6 +44,6 @@ make_threshold_profile <- function(data, layer){
     tdata <- .Call("rmake_threshold_profile_symbolic", data)
     return(tdata)
   }else{
-    print("layer must be either agent or symbolic")
+    message("layer must be either agent or symbolic")
   }
 }

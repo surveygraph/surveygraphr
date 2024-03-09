@@ -15,12 +15,18 @@ This will run examples of computing agent and symbolic layers. We have included 
 
 | argument | meaning |
 |:---------|:--------|
-| `nrow` | the number of agents in survey |
-| `ncol` | the number of variables in survey |
+| `nrow` | number of agents in the survey |
+| `ncol` | number of variables in the survey |
 | `polarisation` | amount of multidimensional polarisation |
 | `minority` | fraction of agents in one of the two groups |
 
 Of course you can simulate data using your own algorithms as well.
+
+We'll start by loading surveygraph
+
+```r
+#library(surveygraph)
+```
 
 Here we will simulate a sample of 150 people answering 1 item in a survey with no intentional polarisation:
 

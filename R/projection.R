@@ -72,7 +72,7 @@ make_projection <- function(data,
 
   # check that layer is either agent or symbolic
   if(layer != "agent" && layer != "symbolic")
-    print("layer needs to be either agent or symbolic")
+    message("layer needs to be either agent or symbolic")
 
   # check the value of centre
   if(is.null(centre)){
@@ -97,7 +97,7 @@ make_projection <- function(data,
   }else if(similarity_metric == "manhattan"){
     similarity_metric <- as.integer(0)
   }else{
-    print("overriding similarity metric to manhattan distance") 
+    message("overriding similarity metric to manhattan distance") 
     similarity_metric <- as.integer(0)
   }
 
@@ -113,8 +113,8 @@ make_projection <- function(data,
         edgelist <- .Call("rmake_proj_agent_similar", data, method_value, centre, similarity_metric)
         return(edgelist)
       }else{
-        print("threshold_method must be target_lcc, target_ad, or raw_similarity")
-        print("defaulting to target_lcc with method_value = 1")
+        message("threshold_method must be target_lcc, target_ad, or raw_similarity")
+        message("defaulting to target_lcc with method_value = 1")
         edgelist <- .Call("rmake_proj_agent_lcc", data, 0.95, centre, similarity_metric)
         return(edgelist)
       }
@@ -136,8 +136,8 @@ make_projection <- function(data,
         edgelist <- .Call("rmake_proj_symbolic_similar", data, method_value, centre, similarity_metric)
         return(edgelist)
       }else{
-        print("threshold method must be one of [...]")
-        print("defaulting to target_ad with method_value = 1")
+        message("threshold method must be one of [...]")
+        message("defaulting to target_ad with method_value = 1")
         edgelist <- .Call("rmake_proj_symbolic_ad", data, 1, centre, similarity_metric)
         return(edgelist)
       }
