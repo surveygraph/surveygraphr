@@ -9,4 +9,5 @@
 ^\.results$
 ^LICENSE\.md$
 ^\.tmpbuild$
+^cran-comments\.md$
 ^inst/scripts$
