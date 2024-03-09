@@ -102,11 +102,11 @@ following parameters:</p>
 <tbody>
 <tr class="odd">
 <td align="left"><code>nrow</code></td>
-<td align="left">the number of agents in survey</td>
+<td align="left">number of agents in the survey</td>
 </tr>
 <tr class="even">
 <td align="left"><code>ncol</code></td>
-<td align="left">the number of variables in survey</td>
+<td align="left">number of variables in the survey</td>
 </tr>
 <tr class="odd">
 <td align="left"><code>polarisation</code></td>
@@ -120,9 +120,12 @@ following parameters:</p>
 </table>
 <p>Of course you can simulate data using your own algorithms as
 well.</p>
+<p>We’ll start by loading surveygraph</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#library(surveygraph)</span></span></code></pre></div>
 <p>Here we will simulate a sample of 150 people answering 1 item in a
 survey with no intentional polarisation:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">S</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_synthetic_data.html">make_synthetic_data</a></span><span class="op">(</span>nrow<span class="op">=</span><span class="fl">150</span>, ncol<span class="op">=</span><span class="fl">1</span>, polarisation<span class="op">=</span><span class="fl">0</span>, minority <span class="op">=</span><span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main>
