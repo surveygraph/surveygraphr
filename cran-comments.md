@@ -1,3 +1,11 @@
+## submission 27/03/2024
+
+This package was archived due to me being slow to address a comment by Brian Ripley, my apologies.
+
+Minor patch to address a R_NO_REMAP issue Brian Raised.
+
+There are two NOTEs, one saying the package was archived, the other minor html related documentation warnings, which according to CRAN mailing list discussions can be ignored.
+
 ### submission 9/03/2024
 
 This is a resubmission, I have responded to Benjamin Altmann's helpful comments in the following ways.

@@ -4,6 +4,7 @@
 [![CRAN status](https://www.r-pkg.org/badges/version/surveygraph)](https://cran.r-project.org/package=surveygraph)
 [![R-CMD-check](https://github.com/surveygraph/surveygraphr/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/surveygraph/surveygraphr/actions/workflows/check-standard.yaml)
 [![codecov](https://codecov.io/gh/surveygraph/surveygraphr/graph/badge.svg?token=SHFUE2Z36X)](https://app.codecov.io/gh/surveygraph/surveygraphr)
+[![DOI](https://zenodo.org/badge/520518516.svg)](https://zenodo.org/doi/10.5281/zenodo.10887909)
 <!-- badges: end -->
 
 ## Overview
