@@ -10,13 +10,13 @@ names2 <- data.frame(id=c(1:length(S)))
 e1 <- make_projection(S, "agent", threshold_method="target_lcc", method_value=0.99, centre=TRUE)
 e2 <- make_projection(S, "symbolic", threshold_method="raw_similarity", method_value=-1, centre=FALSE)
 
-g1 <- graph.data.frame(e1, vertices=names1, directed=FALSE)
-g2 <- graph.data.frame(e2, vertices=names2, directed=FALSE)
+g1 <- graph_from_data_frame(e1, vertices=names1, directed=FALSE)
+g2 <- graph_from_data_frame(e2, vertices=names2, directed=FALSE)
 
 V(g1)$color <- ifelse(V(g1)$group == 1, "blue", "red")
 
-g1 <- delete.vertices(g1, which(degree(g1)==0))
-g2 <- delete.vertices(g2, which(degree(g2)==0))
+g1 <- delete_vertices(g1, which(degree(g1)==0))
+g2 <- delete_vertices(g2, which(degree(g2)==0))
 
 #E(g2)$label= E(g2)$weight
 

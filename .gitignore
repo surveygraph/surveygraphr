@@ -26,6 +26,8 @@ docs
 surveygraph.Rcheck/
 ..Rcheck/
 
+src/archived.cc
+
 clean.sh
 rcmdinstall.sh
 rcmdtest.sh
