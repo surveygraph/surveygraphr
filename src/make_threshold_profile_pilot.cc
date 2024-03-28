@@ -14,7 +14,7 @@ void surveygraph::make_threshold_profile_agent()
   target_lcc = 1.00;
   search_threshold_agent_lcc();    // finds optimal threshold
 
-  double optimal_threshold_agent = g_agent.threshold;
+  //double optimal_threshold_agent = g_agent.threshold;
 
   int count = 200;
 
@@ -47,7 +47,7 @@ void surveygraph::make_threshold_profile_symbolic()
   target_lcc = 0.95;
   search_threshold_symbolic_lcc(); // sets threshold_symbolic to optimal threshold
 
-  double optimal_threshold_symbolic = g_symbolic.threshold;
+  //double optimal_threshold_symbolic = g_symbolic.threshold;
 
   int count = 200;
 

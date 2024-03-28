@@ -26,14 +26,14 @@ void graph::build_partition()
       sorted.erase(it);
     }
     partition.insert(comp);
-    if(comp.size() > lcc) lcc = int(comp.size());
+    if(int(comp.size()) > lcc) lcc = int(comp.size());
     if(comp.size() == 1) isols += 1;
     comps += 1;
   }
 
   int norm = 0;
   for(auto it : partition) norm += it.size();
-  if(norm != network.size()){
+  if(norm != int(network.size())){
     error("an internal test has failed, please report to package creators\n");
   }
 }
