@@ -31,20 +31,20 @@ class graph
         case 0:
           f = 0;
           layer = Layer::agent;
-          n = S.size();          
-          m = S[0].size();          
+          n = int(S.size());          
+          m = int(S[0].size());          
           break;
         case 1:
           f = 1;
           layer = Layer::symbolic;
-          m = S.size();          
-          n = S[0].size();          
+          m = int(S.size());
+          n = int(S[0].size());
           break;
         default:
           f = 0;
           layer = Layer::agent;
-          n = S.size();          
-          m = S[0].size();          
+          n = int(S.size());
+          m = int(S[0].size());
       }
       threshold = b;
 

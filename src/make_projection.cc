@@ -41,13 +41,13 @@ static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
     }
   }
 
-  int ncol = surveytmp.size();
-  int nrow = surveytmp[0].size();
+  unsigned int ncol = surveytmp.size();
+  unsigned int nrow = surveytmp[0].size();
 
   // take the transpose
   stmp = std::vector<std::vector<double>>(nrow, std::vector<double>(ncol));
-  for(int i = 0; i < surveytmp.size(); ++i){
-    for(int j = 0; j < surveytmp[i].size(); ++j){
+  for(unsigned int i = 0; i < surveytmp.size(); ++i){
+    for(unsigned int j = 0; j < surveytmp[i].size(); ++j){
       stmp[j][i] = surveytmp[i][j];
     }
   }
@@ -60,18 +60,18 @@ static void normalise_columns(std::vector<vector<double>> &s)
   // compute the max and min of each column
   vector<double> colmax(s[0].size(), -1e6);
   vector<double> colmin(s[0].size(),  1e6);
-  for(int j = 0; j < s[0].size(); ++j){
-    for(int i = 0; i < s.size(); ++i){
+  for(unsigned int j = 0; j < s[0].size(); ++j){
+    for(unsigned int i = 0; i < s.size(); ++i){
       if(s[i][j] > colmax[j]) colmax[j] = s[i][j];
       if(s[i][j] < colmin[j]) colmin[j] = s[i][j];
     }
   }
 
   // map column entries to the interval to [-1, 1]
-  for(int j = 0; j < s[0].size(); ++j){
+  for(unsigned int j = 0; j < s[0].size(); ++j){
     double m = 2 / (colmax[j] - colmin[j]);
     double b = -(colmax[j] + colmin[j]) / (colmax[j] - colmin[j]);
-    for(int i = 0; i < s.size(); ++i){
+    for(unsigned int i = 0; i < s.size(); ++i){
       s[i][j] = m * s[i][j] + b;
     }
   }

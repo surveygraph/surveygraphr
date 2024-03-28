@@ -26,7 +26,7 @@ void graph::build_partition()
       sorted.erase(it);
     }
     partition.insert(comp);
-    if(comp.size() > lcc) lcc = comp.size();
+    if(comp.size() > lcc) lcc = int(comp.size());
     if(comp.size() == 1) isols += 1;
     comps += 1;
   }

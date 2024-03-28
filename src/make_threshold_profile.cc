@@ -31,8 +31,8 @@ static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
     }
   }
 
-  int ncol = surveytmp.size();
-  int nrow = surveytmp[0].size();
+  unsigned int ncol = surveytmp.size();
+  unsigned int nrow = surveytmp[0].size();
 
   // take the transpose
   stmp = std::vector<std::vector<double>>(nrow, std::vector<double>(ncol));
@@ -50,8 +50,8 @@ static void normalise_columns(std::vector<vector<double>> &s)
   // compute the max and min of each column
   vector<double> colmax(s[0].size(), -1e6);
   vector<double> colmin(s[0].size(),  1e6);
-  for(int j = 0; j < s[0].size(); ++j){
-    for(int i = 0; i < s.size(); ++i){
+  for(unsigned int j = 0; j < s[0].size(); ++j){
+    for(unsigned int i = 0; i < s.size(); ++i){
       if(s[i][j] > colmax[j]) colmax[j] = s[i][j];
       if(s[i][j] < colmin[j]) colmin[j] = s[i][j];
     }
@@ -61,7 +61,7 @@ static void normalise_columns(std::vector<vector<double>> &s)
   for(int j = 0; j < s[0].size(); ++j){
     double m = 2 / (colmax[j] - colmin[j]);
     double b = -(colmax[j] + colmin[j]) / (colmax[j] - colmin[j]);
-    for(int i = 0; i < s.size(); ++i){
+    for(unsigned int i = 0; i < s.size(); ++i){
       s[i][j] = m * s[i][j] + b;
     }
   }
@@ -85,7 +85,7 @@ SEXP rmake_threshold_profile_agent(SEXP df)
   SEXP i_agent = PROTECT(allocVector(INTSXP, S.profile_agent.size()));  // isolated node count
   SEXP c_agent = PROTECT(allocVector(INTSXP, S.profile_agent.size()));  // component count
 
-  for(int i = 0; i < S.profile_agent.size(); ++i) {
+  for(unsigned int i = 0; i < S.profile_agent.size(); ++i) {
     REAL(t_agent)[i] = S.profile_agent[i][0];
     REAL(z_agent)[i] = S.profile_agent[i][1];
     REAL(l_agent)[i] = S.profile_agent[i][2];
@@ -135,7 +135,7 @@ SEXP rmake_threshold_profile_symbolic(SEXP df)
   SEXP i_symbolic = PROTECT(allocVector(INTSXP, S.profile_symbolic.size()));  // isolated node count
   SEXP c_symbolic = PROTECT(allocVector(INTSXP, S.profile_symbolic.size()));  // number of components
 
-  for(int i = 0; i < S.profile_symbolic.size(); ++i) {
+  for(unsigned int i = 0; i < S.profile_symbolic.size(); ++i) {
     REAL(t_symbolic)[i] = S.profile_symbolic[i][0];
     REAL(z_symbolic)[i] = S.profile_symbolic[i][1];
     REAL(l_symbolic)[i] = S.profile_symbolic[i][2];
