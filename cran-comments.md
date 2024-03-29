@@ -1,3 +1,17 @@
+## submission 29/03/2024
+
+Address helpful comments by Uwe Ligges, regarding the use of R_NO_REMAP.
+
+I simply remove the usage of error() from R_ext/Error.h which is not a necessity at the moment for the package.
+
+## submission 28/03/2024
+
+Addressed helpful comments raised by Uwe Ligges.
+
+* removed superfluous \*.o object files
+* removed superfluous \*.log file
+* removed VignetteBuilder field from DESCRIPTION
+
 ## submission 27/03/2024
 
 This package was archived due to me being slow to address a comment by Brian Ripley, my apologies.

@@ -11,3 +11,5 @@
 ^\.tmpbuild$
 ^cran-comments\.md$
 ^inst/scripts$
+^src/*\.o$
+^src/*\.so$
