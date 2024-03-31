@@ -1,9 +1,10 @@
-#include "R.h"
-#include "Rdefines.h"
-
 #include "surveygraph.h"
 
 #include <cmath>
+
+#define R_NO_REMAP
+#include "R.h"
+#include "Rdefines.h"
 
 using namespace std;
 
