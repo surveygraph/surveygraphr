@@ -20,20 +20,20 @@ static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
 {
   vector<vector<double>> surveytmp;
 
-  SEXP check = PROTECT(allocVector(VECSXP, length(df)));
-  for(int i = 0; i < length(df); ++i){
+  SEXP check = PROTECT(Rf_allocVector(VECSXP, Rf_length(df)));
+  for(int i = 0; i < Rf_length(df); ++i){
     check = VECTOR_ELT(df, i);
     if(TYPEOF(check) == STRSXP){
       // string column, do nothing
     }else if(TYPEOF(check) == REALSXP){
       vector<double> coltmp;
-      for(int j = 0; j < length(check); ++j){
+      for(int j = 0; j < Rf_length(check); ++j){
         coltmp.push_back(REAL(check)[j]);
       }
       surveytmp.push_back(coltmp);
     }else if(TYPEOF(check) == INTSXP){
       vector<double> coltmp;
-      for(int j = 0; j < length(check); ++j){
+      for(int j = 0; j < Rf_length(check); ++j){
         coltmp.push_back(double(INTEGER(check)[j]));
       }
       surveytmp.push_back(coltmp);
@@ -80,9 +80,9 @@ static void normalise_columns(std::vector<vector<double>> &s)
 
 static void vectors_to_df(const graph &g, SEXP &c, SEXP &df)
 {
-  SEXP u_vector = PROTECT(allocVector(INTSXP, g.e));  // u column
-  SEXP v_vector = PROTECT(allocVector(INTSXP, g.e));  // v column
-  SEXP w_vector = PROTECT(allocVector(REALSXP, g.e)); // weight column
+  SEXP u_vector = PROTECT(Rf_allocVector(INTSXP, g.e));  // u column
+  SEXP v_vector = PROTECT(Rf_allocVector(INTSXP, g.e));  // v column
+  SEXP w_vector = PROTECT(Rf_allocVector(REALSXP, g.e)); // weight column
 
   int i = 0;
   for(auto &it : g.network){
@@ -101,18 +101,18 @@ static void vectors_to_df(const graph &g, SEXP &c, SEXP &df)
   SET_VECTOR_ELT(df, 1, v_vector);
   SET_VECTOR_ELT(df, 2, w_vector);
 
-  SEXP names = PROTECT(allocVector(STRSXP, 3));
-  SET_STRING_ELT(names, 0, mkChar("u"));            // name first column u
-  SET_STRING_ELT(names, 1, mkChar("v"));            // name second column v
-  SET_STRING_ELT(names, 2, mkChar("weight"));       // name third column weight, required by igraph
+  SEXP names = PROTECT(Rf_allocVector(STRSXP, 3));
+  SET_STRING_ELT(names, 0, Rf_mkChar("u"));            // name first column u
+  SET_STRING_ELT(names, 1, Rf_mkChar("v"));            // name second column v
+  SET_STRING_ELT(names, 2, Rf_mkChar("weight"));       // name third column weight, required by igraph
 
-  SEXP rownames = PROTECT(allocVector(INTSXP, 2));
+  SEXP rownames = PROTECT(Rf_allocVector(INTSXP, 2));
   INTEGER(rownames)[0] = NA_INTEGER;                // default entry if size below too small
-  INTEGER(rownames)[1] = -length(u_vector);         // number of rows in agent edge list
+  INTEGER(rownames)[1] = -Rf_length(u_vector);         // number of rows in agent edge list
 
-  setAttrib(df, R_ClassSymbol, ScalarString(mkChar("data.frame")));
-  setAttrib(df, R_RowNamesSymbol, rownames);
-  setAttrib(df, R_NamesSymbol, names);
+  Rf_setAttrib(df, R_ClassSymbol, Rf_ScalarString(Rf_mkChar("data.frame")));
+  Rf_setAttrib(df, R_RowNamesSymbol, rownames);
+  Rf_setAttrib(df, R_NamesSymbol, names);
 
   UNPROTECT(5);
 }
@@ -126,7 +126,7 @@ SEXP rmake_proj_agent_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   surveygraph S{surveytmp, 0, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
   S.make_proj_agent_lcc();
 
-  SEXP e = PROTECT(allocVector(VECSXP, 3));
+  SEXP e = PROTECT(Rf_allocVector(VECSXP, 3));
   vectors_to_df(S.g_agent, c, e);
 
   UNPROTECT(1);
@@ -143,7 +143,7 @@ SEXP rmake_proj_agent_ad(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   surveygraph S{surveytmp, 1, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
   S.make_proj_agent_ad();
 
-  SEXP e = PROTECT(allocVector(VECSXP, 3));
+  SEXP e = PROTECT(Rf_allocVector(VECSXP, 3));
   vectors_to_df(S.g_agent, c, e);
 
   UNPROTECT(1);
@@ -160,7 +160,7 @@ SEXP rmake_proj_agent_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   surveygraph S{surveytmp, 2, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
   S.make_proj_agent_similar();
 
-  SEXP e = PROTECT(allocVector(VECSXP, 3));
+  SEXP e = PROTECT(Rf_allocVector(VECSXP, 3));
   vectors_to_df(S.g_agent, c, e);
 
   UNPROTECT(1);
@@ -177,7 +177,7 @@ SEXP rmake_proj_symbolic_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   surveygraph S{surveytmp, 0, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
   S.make_proj_symbolic_lcc();
 
-  SEXP e = PROTECT(allocVector(VECSXP, 3));
+  SEXP e = PROTECT(Rf_allocVector(VECSXP, 3));
   vectors_to_df(S.g_symbolic, c, e);
 
   UNPROTECT(1);
@@ -194,7 +194,7 @@ SEXP rmake_proj_symbolic_ad(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   surveygraph S{surveytmp, 1, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
   S.make_proj_symbolic_ad();
 
-  SEXP e = PROTECT(allocVector(VECSXP, 3));
+  SEXP e = PROTECT(Rf_allocVector(VECSXP, 3));
   vectors_to_df(S.g_symbolic, c, e);
 
   UNPROTECT(1);
@@ -211,7 +211,7 @@ SEXP rmake_proj_symbolic_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   surveygraph S{surveytmp, 2, REAL(mvalue)[0], INTEGER(sim_metric)[0]};
   S.make_proj_symbolic_similar();
 
-  SEXP e = PROTECT(allocVector(VECSXP, 3));
+  SEXP e = PROTECT(Rf_allocVector(VECSXP, 3));
   vectors_to_df(S.g_symbolic, c, e);
 
   UNPROTECT(1);

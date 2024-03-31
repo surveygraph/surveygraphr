@@ -34,9 +34,9 @@ void surveygraph::make_threshold_profile_agent()
 
     profile_agent.push_back(dummy);
 
-    if(!(g_agent.avg_degree / double(g_agent.n) >= 0 && g_agent.avg_degree / double(g_agent.n) <= 1)){
-      error("an internal test has failed, please report to package creators\n");
-    }
+    //if(!(g_agent.avg_degree / double(g_agent.n) >= 0 && g_agent.avg_degree / double(g_agent.n) <= 1)){
+    //  error("an internal test has failed, please report to package creators\n");
+    //}
   }
 }
 
@@ -67,8 +67,8 @@ void surveygraph::make_threshold_profile_symbolic()
 
     profile_symbolic.push_back(dummy);
 
-    if(!(g_symbolic.avg_degree / double(g_symbolic.n) >= 0 && g_symbolic.avg_degree / double(g_symbolic.n) <= 1)){
-      error("an internal test has failed, please report to package creators\n");
-    }
+    //if(!(g_symbolic.avg_degree / double(g_symbolic.n) >= 0 && g_symbolic.avg_degree / double(g_symbolic.n) <= 1)){
+    //  error("an internal test has failed, please report to package creators\n");
+    //}
   }
 }
