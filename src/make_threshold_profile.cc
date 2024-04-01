@@ -1,7 +1,5 @@
 #include "surveygraph.h"
 
-//#include <vector>
-
 #define R_NO_REMAP
 #include <R.h>
 #include <Rdefines.h>

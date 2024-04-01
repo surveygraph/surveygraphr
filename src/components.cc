@@ -1,6 +1,3 @@
-//#include "R.h"
-//#include "Rdefines.h"
-
 #include "surveygraph.h"
 
 #include <queue>
