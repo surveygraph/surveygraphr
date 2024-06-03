@@ -1,3 +1,9 @@
+## submission 1/4/2024
+
+I've included `#define R_NO_REMAP` and manually remapped `methodname` to `Rf_methodname`, and included R API headers after system headers.
+
+Many thanks to Uwe who has been patient and helpful, hopefully this finally works.
+
 ## submission 29/03/2024
 
 Address helpful comments by Uwe Ligges, regarding the use of R_NO_REMAP.
