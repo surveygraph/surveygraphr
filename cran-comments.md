@@ -1,3 +1,15 @@
+## submission 4/6/2024
+
+Previous submission failed due to the WARNING 'Insufficient package version'.
+
+Increment package version from 0.1.1 to 0.1.2.
+
+## submission 3/6/2024
+
+Add acknowledgement of funding source in DESCRIPTION.
+
+R CMD check --as-cran returns neither errors nor warnings, only a single note regarding html validation. A google search of this note returns R forum comments saying it can be safely ignored.
+
 ## submission 1/4/2024
 
 I've included `#define R_NO_REMAP` and manually remapped `methodname` to `Rf_methodname`, and included R API headers after system headers.
