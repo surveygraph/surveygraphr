@@ -26,14 +26,20 @@ By plotting these networks with tools such as igraph, we obtain accessible and v
 
 ## Installation
 
-Still in the development stage, the surveygraph package  is not yet available on CRAN, but can be installed from [GitHub](https://github.com/surveygraph/surveygraphr/) via the devtools package as follows.
+The surveygraph package can be installed via [CRAN](https://cran.r-project.org/web/packages/surveygraph/index.html) as follows.
+
+```
+install.packages("surveygraph")
+```
+
+It can also be installed from [GitHub](https://github.com/surveygraph/surveygraphr/) via the devtools package as follows.
 
 ```
 library("devtools")
 devtools::install_github("surveygraph/surveygraphr")
 ```
 
-The package can then be loaded in an R session as follows.
+After it has been installed, the package can be loaded in an R session using the command
 
 ```
 library("surveygraph")
