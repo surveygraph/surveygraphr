@@ -1,0 +1,13 @@
+This is where I'll keep high-level notes on the C++ source files
+
+* surveygraph.h
+* graph.h
+* build_graphs.cc
+* components.cc
+* make_projection_pilot.cc
+* make_projection_agent.cc
+* make_projection_symbolic.cc
+* make_threshold_profile_pilot.cc
+* make_threshold_profile_agent.cc
+* make_threshold_profile_symbolic.cc
+* init.cc
