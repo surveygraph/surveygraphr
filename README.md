@@ -32,7 +32,7 @@ The surveygraph package can be installed via [CRAN](https://cran.r-project.org/w
 install.packages("surveygraph")
 ```
 
-It can also be installed from [GitHub](https://github.com/surveygraph/surveygraphr/) via the devtools package as follows.
+It can also be installed via [GitHub](https://github.com/surveygraph/surveygraphr/) using the devtools package as follows.
 
 ```
 library("devtools")

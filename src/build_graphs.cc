@@ -26,26 +26,50 @@ void graph::build_graph(const surveydef &S)
       }
     }
   }
-  // want average degree to be between 0 and 1
+
+  // use normalised average degree
   avg_degree /= double(n);
 }
 
 // Manhattan distance between rows or columns u and v
+// compcount counts comparisons of entries that aren't NaNs.
 void graph::man_distance(const surveydef &S, const int &u, const int &v, double &w)
 {
   switch(layer){
+    int compcount;
     case Layer::agent:
       w = 0;
+      compcount = 0;  
       for(int i = 0; i < m; ++i){
-        w += abs(S[u][i] - S[v][i]);
+        if(!isnan(S[u][i]) && !isnan(S[v][i])){
+          w += abs(S[u][i] - S[v][i]);
+          ++compcount;
+        }
       }
       w = (double(m) - w) / double(m);
+
+      if(compcount < m / 2){
+        w = -1;
+      }
+
       break;
     case Layer::symbolic:
       w = 0;
-      for(int i = 0; i < m; ++i)
-        w += abs(S[i][u] - S[i][v]);
+      compcount = 0;
+      // FIXME shouldn't this be n? why isn't it?
+      for(int i = 0; i < m; ++i){
+        if(!isnan(S[u][i]) && !isnan(S[v][i])){
+          w += abs(S[i][u] - S[i][v]);
+          ++compcount;
+        }
+      }
+      // FIXME this really should be double(n) right?
       w = (double(m) - w) / double(m);
+
+      if(compcount < n / 2){
+        w = -1;
+      }
+
       break;
   }
 }
