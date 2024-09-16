@@ -9,8 +9,8 @@ using namespace std;
 // build graph using Euclidean distance or cosine similarity
 void graph::build_graph(const surveydef &S)
 {
-  network = map<int, set<neighbour>>{};
-  for(int i = 0; i < n; ++i) network[i] = set<neighbour>{};
+  network = std::map<int, std::set<neighbour>>{};
+  for(int i = 0; i < n; ++i) network[i] = std::set<neighbour>{};
 
   e = 0;
   avg_degree = 0;

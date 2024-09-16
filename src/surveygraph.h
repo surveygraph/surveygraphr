@@ -8,18 +8,18 @@
 #include <set>
 #include <cmath>
 
-using namespace std;
+//using namespace std;
 
 class surveygraph
 {
   public :
-    surveygraph(vector<vector<double>> &a){
+    surveygraph(std::vector<std::vector<double>> &a){
       survey = a;
       nrow = int(survey.size());
       ncol = int(survey[0].size());  // will have verified dimensions in R routines
     }
 
-    surveygraph(vector<vector<double>> &a, int b, double c, int d){
+    surveygraph(std::vector<std::vector<double>> &a, int b, double c, int d){
       survey = a;
       nrow = int(survey.size());
       ncol = int(survey[0].size());  // verify dimensions in R routines
@@ -44,12 +44,13 @@ class surveygraph
 
     int nrow, ncol;  // number of agent, symbolic
 
-    vector<vector<double>> survey, surveysample;  // survey, small sample of survey
+    // survey, small sample of survey
+    std::vector<std::vector<double>> survey, surveysample;
 
     graph g_agent, g_symbolic;
 
-    vector<vector<double>> profile_agent;     // agent threshold data
-    vector<vector<double>> profile_symbolic;  // symbolic threshold data
+    std::vector<std::vector<double>> profile_agent;     // agent threshold data
+    std::vector<std::vector<double>> profile_symbolic;  // symbolic threshold data
     
     void search_threshold_agent_lcc();
     void search_threshold_agent_ad();

@@ -7,7 +7,7 @@
 
 using namespace std;
 
-typedef vector<vector<double>> surveydef;
+typedef std::vector<std::vector<double>> surveydef;
 enum class Layer{agent, symbolic};
 
 struct neighbour
@@ -60,14 +60,14 @@ class graph
     double avg_degree;
     double threshold;
 
-    map<int, set<neighbour>> network;  // neighbour list
+    std::map<int, std::set<neighbour>> network;  // neighbour list
 
     int lcc, isols, comps;
-    set<vector<int>> partition;
+    std::set<std::vector<int>> partition;
 
     void build_graph(const surveydef&);
     void build_partition();  // computes distribution of component sizes
-    void bfs(const int&, vector<int>&);   // breadth-first search
+    void bfs(const int&, std::vector<int>&);   // breadth-first search
 
     void man_distance(const surveydef&, const int&, const int&, double&);
     void euclid_distance(const surveydef&, const int&, const int&, double&);

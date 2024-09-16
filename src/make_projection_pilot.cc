@@ -7,7 +7,7 @@
 /* 
 
 This is where we should handle data cleaning, checking for a 'group' column, type 
-checking etc.
+checking etc.j
 
 FIXME wouldn't it be easiest to assume that every column provided is to be used
 to find similarity? ie drop group column before we input it
@@ -17,9 +17,15 @@ TODO: currently assuming df is a data.frame... do not do this
 Use numeric coercion to read deta. If not coercable (returns NULL?) skip column.
 
 */
-static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
+static void df_to_cppvector(const SEXP &df, std::vector<std::vector<double>> &stmp)
 {
-  vector<vector<double>> surveytmp;
+  // check if the input is a data frame
+  if (!Rf_isFrame(df)) {
+    Rf_error("Input is not a data frame.");
+    return;
+  }
+
+  std::vector<std::vector<double>> surveytmp;
 
   SEXP check = PROTECT(Rf_allocVector(VECSXP, Rf_length(df)));
   for(int i = 0; i < Rf_length(df); ++i){
@@ -27,55 +33,55 @@ static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
 
     Rprintf("checking types, i : %d (%d)\n", i, TYPEOF(check));
 
-    if(TYPEOF(check) == STRSXP) {
-      vector<double> coltmp;
-      for(int j = 0; j < Rf_length(check); ++j) {
+    if(TYPEOF(check) == STRSXP){         // convert STRSXP to double
+      std::vector<double> coltmp;
+      for(int j = 0; j < Rf_length(check); ++j){
         const char* str_value = CHAR(STRING_ELT(check, j));
-        // Coerce string to number or set to NaN
-        double numeric_value = std::nan("");  // default to NaN
-        if(std::isdigit(str_value[0])) {      // simple check for numeric string
-          numeric_value = atof(str_value);    // convert string to double
+        double numeric_value = std::nan("");
+        if(std::isdigit(str_value[0])){
+          numeric_value = atof(str_value);
         }
         coltmp.push_back(numeric_value);
-        Rprintf("%f\n", numeric_value);
       }
       surveytmp.push_back(coltmp);
-    }else if(TYPEOF(check) == REALSXP){
-      vector<double> coltmp;
+    }else if(TYPEOF(check) == REALSXP){  // convert REALSXP to double
+      std::vector<double> coltmp;
       for(int j = 0; j < Rf_length(check); ++j){
-        coltmp.push_back(REAL(check)[j]);
-        Rprintf("%d %d %f\n", i, j, REAL(check)[j]);
-        //Rprintf("have you found an NA? %d %d %f\n", i, j, REAL(check)[j]);
-        //Rprintf("%d\n", ISNA(REAL(check)[j]));
-        //if(ISNA(check)){
-        //  Rprintf("you've found an NA: %d %d\n", i, j);
-        //}
+        double value = REAL(check)[j];
+        if(ISNA(value)){
+          value = std::nan("");
+        }
+        coltmp.push_back(value);
       }
       surveytmp.push_back(coltmp);
-    }else if(TYPEOF(check) == INTSXP){
-      vector<double> coltmp;
+    }else if(TYPEOF(check) == INTSXP){   // convert INTSXP to double
+      std::vector<double> coltmp;
       for(int j = 0; j < Rf_length(check); ++j){
-        coltmp.push_back(double(INTEGER(check)[j]));
+        int value = INTEGER(check)[j];
+        if(value == NA_INTEGER){
+          coltmp.push_back(std::nan(""));
+        }else{
+          coltmp.push_back(static_cast<double>(value));
+        }
       }
       surveytmp.push_back(coltmp);
-    }else if(TYPEOF(check) == LGLSXP){
-      vector<double> coltmp;
+    }else if(TYPEOF(check) == LGLSXP){   // convert LGLSXP to double
+      std::vector<double> coltmp;
       for(int j = 0; j < Rf_length(check); ++j){
         int value = LOGICAL(check)[j];
         if(value == NA_LOGICAL){
-          coltmp.push_back(std::nan(""));  // Set NA logicals to NaN
+          coltmp.push_back(std::nan(""));
         }else{
-          coltmp.push_back(static_cast<double>(value));  // Coerce logical to double
+          coltmp.push_back(static_cast<double>(value));
         }
       }
       surveytmp.push_back(coltmp);
     }else{
-      // TODO set bools to numerical value
-      /*
-      TODO: ouput a warning message if df contains none of the above types
-      */
+      Rprintf("Warning: Unsupported type at column %d\n", i);
     }
   }
+
+  stmp = surveytmp;
 
   unsigned int ncol = surveytmp.size();
   unsigned int nrow = surveytmp[0].size();
@@ -90,11 +96,11 @@ static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
 }
 
 // TODO take into account optional Likert scale range
-static void normalise_columns(std::vector<vector<double>> &s)
+static void normalise_columns(std::vector<std::vector<double>> &s)
 {
   // compute the max and min of each column
-  vector<double> colmax(s[0].size(), -1e6);
-  vector<double> colmin(s[0].size(),  1e6);
+  std::vector<double> colmax(s[0].size(), -1e6);
+  std::vector<double> colmin(s[0].size(),  1e6);
   for(unsigned int j = 0; j < s[0].size(); ++j){
     for(unsigned int i = 0; i < s.size(); ++i){
       if(s[i][j] > colmax[j]) colmax[j] = s[i][j];
@@ -262,3 +268,56 @@ SEXP rmake_proj_symbolic_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
 
   return e;
 }
+
+//    Rprintf("checking types, i : %d (%d)\n", i, TYPEOF(check));
+//
+//    if(TYPEOF(check) == STRSXP){
+//      vector<double> coltmp;
+//      for(int j = 0; j < Rf_length(check); ++j){
+//        const char* str_value = CHAR(STRING_ELT(check, j));
+//        double numeric_value = std::nan("");  // default to nan
+//        if(std::isdigit(str_value[0])){       // simple check for numeric string
+//          numeric_value = atof(str_value);    // coerce or convert string to double
+//        }
+//        coltmp.push_back(numeric_value);
+//        Rprintf("%f\n", numeric_value);
+//      }
+//      surveytmp.push_back(coltmp);
+//    }else if(TYPEOF(check) == REALSXP){
+//      vector<double> coltmp;
+//      for(int j = 0; j < Rf_length(check); ++j){
+//        const char* real_value = REAL(check, j);
+//				double numeric_value = std::nan("");  // default to nan
+//        coltmp.push_back(REAL(check)[j]);
+//        Rprintf("%d %d %f\n", i, j, REAL(check)[j]);
+//        //Rprintf("have you found an NA? %d %d %f\n", i, j, REAL(check)[j]);
+//        //Rprintf("%d\n", ISNA(REAL(check)[j]));
+//        //if(ISNA(check)){
+//        //  Rprintf("you've found an NA: %d %d\n", i, j);
+//        //}
+//      }
+//      surveytmp.push_back(coltmp);
+//    }else if(TYPEOF(check) == INTSXP){
+//      vector<double> coltmp;
+//      for(int j = 0; j < Rf_length(check); ++j){
+//        coltmp.push_back(double(INTEGER(check)[j]));
+//      }
+//      surveytmp.push_back(coltmp);
+//    }else if(TYPEOF(check) == LGLSXP){
+//      vector<double> coltmp;
+//      for(int j = 0; j < Rf_length(check); ++j){
+//        int value = LOGICAL(check)[j];
+//        if(value == NA_LOGICAL){
+//          coltmp.push_back(std::nan(""));  // Set NA logicals to NaN
+//        }else{
+//          coltmp.push_back(static_cast<double>(value));  // Coerce logical to double
+//        }
+//      }
+//      surveytmp.push_back(coltmp);
+//    }else{
+//      // TODO set bools to numerical value
+//      /*
+//      TODO: ouput a warning message if df contains none of the above types
+//      */
+//    }
+//  }

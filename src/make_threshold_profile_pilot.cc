@@ -4,9 +4,9 @@
 #include <R.h>
 #include <Rdefines.h>
 
-static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
+static void df_to_cppvector(const SEXP &df, std::vector<std::vector<double>> &stmp)
 {
-  vector<vector<double>> surveytmp;
+  std::vector<std::vector<double>> surveytmp;
 
   SEXP check = PROTECT(Rf_allocVector(VECSXP, Rf_length(df)));
   for(int i = 0; i < Rf_length(df); ++i){
@@ -14,13 +14,13 @@ static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
     if(TYPEOF(check) == STRSXP){
       // string column, do nothing
     }else if(TYPEOF(check) == REALSXP){
-      vector<double> coltmp;
+      std::vector<double> coltmp;
       for(int j = 0; j < Rf_length(check); ++j){
         coltmp.push_back(REAL(check)[j]);
       }
       surveytmp.push_back(coltmp);
     }else if(TYPEOF(check) == INTSXP){
-      vector<double> coltmp;
+      std::vector<double> coltmp;
       for(int j = 0; j < Rf_length(check); ++j){
         coltmp.push_back(double(INTEGER(check)[j]));
       }
@@ -44,11 +44,11 @@ static void df_to_cppvector(const SEXP &df, std::vector<vector<double>> &stmp)
   UNPROTECT(1);
 }
 
-static void normalise_columns(std::vector<vector<double>> &s)
+static void normalise_columns(std::vector<std::vector<double>> &s)
 {
   // compute the max and min of each column
-  vector<double> colmax(s[0].size(), -1e6);
-  vector<double> colmin(s[0].size(),  1e6);
+  std::vector<double> colmax(s[0].size(), -1e6);
+  std::vector<double> colmin(s[0].size(),  1e6);
   for(unsigned int j = 0; j < s[0].size(); ++j){
     for(unsigned int i = 0; i < s.size(); ++i){
       if(s[i][j] > colmax[j]) colmax[j] = s[i][j];

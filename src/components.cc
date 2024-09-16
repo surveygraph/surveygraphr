@@ -7,15 +7,15 @@ using namespace std;
 // partitions network by connected components
 void graph::build_partition() 
 {
-  partition = set<vector<int>>{};
+  partition = std::set<std::vector<int>>{};
 
-  set<int> sorted;
+  std::set<int> sorted;
   for(auto &it : network) sorted.insert(it.first);
 
   lcc = 0;
   isols = 0;
   comps = 0;
-  vector<int> comp;
+  std::vector<int> comp;
   while(sorted.size() > 0) {
     int u = *sorted.begin();
     bfs(u, comp);
@@ -37,12 +37,12 @@ void graph::build_partition()
 }
 
 // get all nodes in connected component of u
-void graph::bfs(const int &u, vector<int> &occupied) 
+void graph::bfs(const int &u, std::vector<int> &occupied) 
 {
-  occupied = vector<int>{};
+  occupied = std::vector<int>{};
 
-  set<int> visited;
-  queue<int> adjacent;
+  std::set<int> visited;
+  std::queue<int> adjacent;
 
   occupied.push_back(u);
   visited.insert(u);

@@ -9,7 +9,7 @@ using namespace std;
 // pilots the process of constructing respondent and item graphs
 void surveygraph::make_threshold_profile_symbolic()
 {
-  profile_symbolic = vector<vector<double>>{};
+  profile_symbolic = std::vector<std::vector<double>>{};
 
   target_lcc = 0.95;
   search_threshold_symbolic_lcc(); // sets threshold_symbolic to optimal threshold
@@ -24,7 +24,7 @@ void surveygraph::make_threshold_profile_symbolic()
 
     g_symbolic = graph(1, threshold, survey);
 
-    vector<double> dummy;
+    std::vector<double> dummy;
     dummy.push_back(threshold);
     dummy.push_back(g_symbolic.avg_degree / double(g_symbolic.n));
     dummy.push_back(g_symbolic.lcc / double(g_symbolic.n));

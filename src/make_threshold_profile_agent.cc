@@ -8,7 +8,7 @@ using namespace std;
 
 void surveygraph::make_threshold_profile_agent()
 {
-  profile_agent = vector<vector<double>>{};
+  profile_agent = std::vector<std::vector<double>>{};
 
   target_lcc = 1.00;
   search_threshold_agent_lcc();    // finds optimal threshold
@@ -23,7 +23,7 @@ void surveygraph::make_threshold_profile_agent()
 
     g_agent = graph(0, threshold, survey);
 
-    vector<double> dummy;
+    std::vector<double> dummy;
     dummy.push_back(threshold);
     dummy.push_back(g_agent.avg_degree / double(g_agent.n));
     dummy.push_back(g_agent.lcc / double(g_agent.n));
