@@ -8,8 +8,6 @@
 #include <set>
 #include <cmath>
 
-//using namespace std;
-
 class surveygraph
 {
   public :
