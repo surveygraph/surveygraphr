@@ -31,7 +31,7 @@ to a survey, i.e. the row or column projection."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Outputs the survey projection onto the agent or symbolic layer</h1>
-      <small class="dont-index">Source: <a href="https://github.com/surveygraph/surveygraphr/blob/main/R/projection.R" class="external-link"><code>R/projection.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/surveygraph/surveygraphr/blob/main/R/make-projection.R" class="external-link"><code>R/make-projection.R</code></a></small>
       <div class="d-none name"><code>make_projection.Rd</code></div>
     </div>
 
@@ -48,6 +48,7 @@ to a survey, i.e. the row or column projection.</p>
 <span>  threshold_method <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  method_value <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  centre <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  likert <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  similarity_metric <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -102,6 +103,10 @@ possible edge.</p></li>
 <dt id="arg-centre">centre<a class="anchor" aria-label="anchor" href="#arg-centre"></a></dt>
 <dd><p>If <code>FALSE</code>, we shift edge weights by 1 from <code>[-1, 1]</code> to <code>[0, 2]</code>.
 Defaults to TRUE.</p></dd>
+
+
+<dt id="arg-likert">likert<a class="anchor" aria-label="anchor" href="#arg-likert"></a></dt>
+<dd><p>Specifies the range of the Likert scale contained in <code>data</code>.</p></dd>
 
 
 <dt id="arg-similarity-metric">similarity_metric<a class="anchor" aria-label="anchor" href="#arg-similarity-metric"></a></dt>
