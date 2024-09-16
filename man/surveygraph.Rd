@@ -2,10 +2,14 @@
 % Please edit documentation in R/surveygraph.R
 \docType{package}
 \name{surveygraph}
+\alias{surveygraph-package}
 \alias{surveygraph}
 \title{surveygraph: network representations of attitudes}
 \description{
-The surveygraph package provides the following functions....
+This page is a work in progress.
+}
+\details{
+The surveygraph package functions can be summarised as follows.
 }
 \section{reading functions}{
 
@@ -15,6 +19,29 @@ passed to C++ routines. A bunch of file formats need to be accounted for.
 
 \section{network generating functions}{
 
-The network functions are implemented in C++, and blah blah blah.
+The network functions are implemented in C++.
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/surveygraph/surveygraphr}
+  \item \url{https://surveygraph.ie/}
+  \item Report bugs at \url{https://github.com/surveygraph/surveygraphr/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Samuel Unicomb \email{samuelunicomb@gmail.com}
+
+Authors:
+\itemize{
+  \item Ana Jovancevic
+  \item Alejandro Dinkelberg
+  \item Pádraig MacCarron
+  \item David O'Sullivan
+  \item Paul Maher
+  \item Mike Quayle
+}
+
+}

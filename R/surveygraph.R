@@ -15,5 +15,5 @@
 #' @name surveygraph
 #' @importFrom stats runif
 #' @importFrom stats rpois
-#' @useDynLib surveygraph
+#' @useDynLib surveygraph, .registration = TRUE
 NULL

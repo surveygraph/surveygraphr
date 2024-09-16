@@ -13,3 +13,4 @@
 ^inst/scripts$
 ^src/*\.o$
 ^src/*\.so$
+^src/README*
