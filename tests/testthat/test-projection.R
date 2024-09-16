@@ -1,5 +1,8 @@
 test_that("correct edge list", {
-  S <- data.frame(group = c("0", "0", "1", "1"), item_1 = c(1, 2, 5, 4), item_2 = c(1, 3, 2, 2))
+  S <- data.frame(group = c("0", "0", "1", "1"),
+                  item_1 = c(1, 2, 5, 4),
+                  item_2 = c(1, 3, 2, 2),
+                  item_3 = c(1, 5, 3, 2))
 
   fn <- function(m){
     make_projection(
@@ -15,30 +18,30 @@ test_that("correct edge list", {
     data.frame(
       u = c(1, 1, 1, 2, 2, 3),
       v = c(2, 3, 4, 3, 4, 4),
-      weight = c(-0.25, -0.5, -0.25, -0.25, 0, 0.75)
+      weight = c(-0.125, -0.5, -0.25, -0.375, -0.375, 0.75)
     )
   )
 
   expect_equal(
-    fn(-0.50),
+    fn(-0.40),
     data.frame(
       u = c(1, 1, 2, 2, 3),
       v = c(2, 4, 3, 4, 4),
-      weight = c(-0.25, -0.25, -0.25, 0, 0.75)
+      weight = c(-0.125, -0.25, -0.375, -0.375, 0.75)
     )
   )
 
   expect_equal(
-    fn(-0.25),
+    fn(-0.30),
     data.frame(
-      u = c(2, 3),
-      v = c(4, 4),
-      weight = c(0, 0.75)
+      u = c(1, 1, 3),
+      v = c(2, 4, 4),
+      weight = c(-0.125, -0.25, 0.75)
     )
   )
 
   expect_equal(
-    fn(0.00),
+    fn(0),
     data.frame(
       u = c(3),
       v = c(4),
@@ -47,11 +50,12 @@ test_that("correct edge list", {
   )
 
   expect_equal(
-    fn(0.75),
-    data.frame(
-      u = as.integer(c()),
-      v = as.integer(c()),
-      weight = as.numeric(c())
-    )
+    fn(0.8),
+		data.frame(
+			u = numeric(0),
+			v = numeric(0),
+			weight = numeric(0),
+			stringsAsFactors = FALSE
+		)
   )
 })

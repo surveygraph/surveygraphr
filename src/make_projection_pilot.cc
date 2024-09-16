@@ -11,29 +11,26 @@
 This is where we should handle data cleaning, checking for a 'group' column, type 
 checking etc.j
 
-FIXME wouldn't it be easiest to assume that every column provided is to be used
-to find similarity? ie drop group column before we input it
+TODO: currently assuming df is a data.frame... do not do this (why?)
 
-TODO: currently assuming df is a data.frame... do not do this
-
-Use numeric coercion to read deta. If not coercable (returns NULL?) skip column.
+Use numeric coercion to read data. If not coercable (returns NULL?) throw
+error. Or, make sure every column in the dataframe is REAL, LGL, STR, INT
+before it gets to here.
 
 */
 static void df_to_cppvector(const SEXP &df, std::vector<std::vector<double>> &stmp)
 {
   // check if the input is a data frame
-  if (!Rf_isFrame(df)) {
-    Rf_error("Input is not a data frame.");
-    return;
-  }
+  //if(!Rf_isFrame(df)){
+  //  Rf_error("Input is not a data frame.");
+  //  return;
+  //}
 
   std::vector<std::vector<double>> surveytmp;
 
   SEXP check = PROTECT(Rf_allocVector(VECSXP, Rf_length(df)));
   for(int i = 0; i < Rf_length(df); ++i){
     check = VECTOR_ELT(df, i);
-
-    Rprintf("checking types, i : %d (%d)\n", i, TYPEOF(check));
 
     if(TYPEOF(check) == STRSXP){         // convert STRSXP to double
       std::vector<double> coltmp;
@@ -88,7 +85,7 @@ static void df_to_cppvector(const SEXP &df, std::vector<std::vector<double>> &st
   unsigned int ncol = surveytmp.size();
   unsigned int nrow = surveytmp[0].size();
 
-  // TODO take the transpose, but I forget why...
+  // take the transpose, as each row is currently a user, not an item
   stmp = std::vector<std::vector<double>>(nrow, std::vector<double>(ncol));
   for(unsigned int i = 0; i < surveytmp.size(); ++i)
     for(unsigned int j = 0; j < surveytmp[i].size(); ++j)
@@ -116,11 +113,12 @@ static void normalise_columns(std::vector<std::vector<double>> &s)
     double b = -(colmax[j] + colmin[j]) / (colmax[j] - colmin[j]);
     for(unsigned int i = 0; i < s.size(); ++i){
       s[i][j] = m * s[i][j] + b;
+			//Rprintf("%d %d %f\n", i, j, s[i][j]);
     }
   }
 }
 
-static void vectors_to_df(const graph &g, SEXP &c, SEXP &df)
+static void cppvector_to_df(const graph &g, SEXP &c, SEXP &df)
 {
   SEXP u_vector = PROTECT(Rf_allocVector(INTSXP, g.e));  // u column
   SEXP v_vector = PROTECT(Rf_allocVector(INTSXP, g.e));  // v column
@@ -132,7 +130,8 @@ static void vectors_to_df(const graph &g, SEXP &c, SEXP &df)
       if(it.first < jt.u){
         INTEGER(u_vector)[i] = it.first + 1;
         INTEGER(v_vector)[i] = jt.u + 1;
-        REAL(w_vector)[i] = int(100.0 * jt.w) / 100.0;
+				// round to four decimal places
+        REAL(w_vector)[i] = int(10000.0 * jt.w) / 10000.0;
         if(INTEGER(c)[0] == 0) REAL(w_vector)[i] += 1.0;
         i += 1;
       }
@@ -179,7 +178,7 @@ SEXP rmake_proj_agent_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   S.make_proj_agent_lcc();
 
   SEXP e = PROTECT(Rf_allocVector(VECSXP, 3));
-  vectors_to_df(S.g_agent, c, e);
+  cppvector_to_df(S.g_agent, c, e);
 
   UNPROTECT(1);
 
@@ -196,7 +195,7 @@ SEXP rmake_proj_agent_ad(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   S.make_proj_agent_ad();
 
   SEXP e = PROTECT(Rf_allocVector(VECSXP, 3));
-  vectors_to_df(S.g_agent, c, e);
+  cppvector_to_df(S.g_agent, c, e);
 
   UNPROTECT(1);
 
@@ -213,7 +212,7 @@ SEXP rmake_proj_agent_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   S.make_proj_agent_similar();
 
   SEXP e = PROTECT(Rf_allocVector(VECSXP, 3));
-  vectors_to_df(S.g_agent, c, e);
+  cppvector_to_df(S.g_agent, c, e);
 
   UNPROTECT(1);
 
@@ -230,7 +229,7 @@ SEXP rmake_proj_symbolic_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   S.make_proj_symbolic_lcc();
 
   SEXP e = PROTECT(Rf_allocVector(VECSXP, 3));
-  vectors_to_df(S.g_symbolic, c, e);
+  cppvector_to_df(S.g_symbolic, c, e);
 
   UNPROTECT(1);
 
@@ -247,7 +246,7 @@ SEXP rmake_proj_symbolic_ad(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   S.make_proj_symbolic_ad();
 
   SEXP e = PROTECT(Rf_allocVector(VECSXP, 3));
-  vectors_to_df(S.g_symbolic, c, e);
+  cppvector_to_df(S.g_symbolic, c, e);
 
   UNPROTECT(1);
 
@@ -264,62 +263,9 @@ SEXP rmake_proj_symbolic_similar(SEXP df, SEXP mvalue, SEXP c, SEXP sim_metric)
   S.make_proj_symbolic_similar();
 
   SEXP e = PROTECT(Rf_allocVector(VECSXP, 3));
-  vectors_to_df(S.g_symbolic, c, e);
+  cppvector_to_df(S.g_symbolic, c, e);
 
   UNPROTECT(1);
 
   return e;
 }
-
-//    Rprintf("checking types, i : %d (%d)\n", i, TYPEOF(check));
-//
-//    if(TYPEOF(check) == STRSXP){
-//      vector<double> coltmp;
-//      for(int j = 0; j < Rf_length(check); ++j){
-//        const char* str_value = CHAR(STRING_ELT(check, j));
-//        double numeric_value = std::nan("");  // default to nan
-//        if(std::isdigit(str_value[0])){       // simple check for numeric string
-//          numeric_value = atof(str_value);    // coerce or convert string to double
-//        }
-//        coltmp.push_back(numeric_value);
-//        Rprintf("%f\n", numeric_value);
-//      }
-//      surveytmp.push_back(coltmp);
-//    }else if(TYPEOF(check) == REALSXP){
-//      vector<double> coltmp;
-//      for(int j = 0; j < Rf_length(check); ++j){
-//        const char* real_value = REAL(check, j);
-//				double numeric_value = std::nan("");  // default to nan
-//        coltmp.push_back(REAL(check)[j]);
-//        Rprintf("%d %d %f\n", i, j, REAL(check)[j]);
-//        //Rprintf("have you found an NA? %d %d %f\n", i, j, REAL(check)[j]);
-//        //Rprintf("%d\n", ISNA(REAL(check)[j]));
-//        //if(ISNA(check)){
-//        //  Rprintf("you've found an NA: %d %d\n", i, j);
-//        //}
-//      }
-//      surveytmp.push_back(coltmp);
-//    }else if(TYPEOF(check) == INTSXP){
-//      vector<double> coltmp;
-//      for(int j = 0; j < Rf_length(check); ++j){
-//        coltmp.push_back(double(INTEGER(check)[j]));
-//      }
-//      surveytmp.push_back(coltmp);
-//    }else if(TYPEOF(check) == LGLSXP){
-//      vector<double> coltmp;
-//      for(int j = 0; j < Rf_length(check); ++j){
-//        int value = LOGICAL(check)[j];
-//        if(value == NA_LOGICAL){
-//          coltmp.push_back(std::nan(""));  // Set NA logicals to NaN
-//        }else{
-//          coltmp.push_back(static_cast<double>(value));  // Coerce logical to double
-//        }
-//      }
-//      surveytmp.push_back(coltmp);
-//    }else{
-//      // TODO set bools to numerical value
-//      /*
-//      TODO: ouput a warning message if df contains none of the above types
-//      */
-//    }
-//  }

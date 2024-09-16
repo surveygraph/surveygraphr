@@ -23,6 +23,7 @@ void graph::build_graph(const surveydef &S)
         network[j].insert(neighbour{int(i), w});
         avg_degree += 2;
         e += 1;
+        //Rprintf("%d %d %f\n", i, j, w);
       }
     }
   }
