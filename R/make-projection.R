@@ -58,6 +58,10 @@
 #' @param centre If `FALSE`, we shift edge weights by 1 from `[-1, 1]` to `[0, 2]`. 
 #'   Defaults to TRUE.
 #' @param likert Specifies the range of the Likert scale contained in `data`.  
+#' @param mincomparisons The minimum number of valid comparisons that must be
+#' made when computing the similarity between rows or columns in the `data`. If at
+#' least one of the entries in the fields being compared is NA, then the
+#' comparison is invalid.
 #' @param similarity_metric This currently has just one allowed value, namely the
 #'   Manhattan distance, which is the default.
 #' 
@@ -65,19 +69,27 @@
 #' @examples
 #' S <- make_synthetic_data(20, 5)
 make_projection <- function(data, 
-                            layer, 
+                            layer = NULL,
                             threshold_method = NULL, 
                             method_value = NULL, 
                             centre = NULL, 
                             likert = NULL,
+                            mincomparisons = NULL,
                             similarity_metric = NULL){
 
   # note, call a data verification and cleaning method for `data`
   # note, allow a parameter saying how many valid comparisons we need, will be at least one, and at most the number of columns
 
+  
+  message("hello world")
+  #message("Warning: some generic problem you want to mention in a paper")
   # check that layer is either agent or symbolic
-  if(layer != "agent" && layer != "symbolic")
-    message("layer needs to be either agent or symbolic")
+  if(is.null(layer)){
+    layer = "agent"
+  }else if(layer != "agent" && layer != "symbolic"){
+    message("layer needs to be either agent or symbolic, defaulting to agent")
+    layer = "agent"
+  }
 
   # check the value of centre
   if(is.null(centre)){
@@ -108,8 +120,8 @@ make_projection <- function(data,
 
   # check the likert flag
   if(is.null(likert)){
-    message("you haven't provided a likert scale, so we'll infer one based on the max and min")
-    # likert <- rep(NA_integer_, ncol(data))
+    #message("you haven't provided a likert scale, so we'll infer one based on the max and min")
+    likert <- rep(NA_integer_, ncol(data))
   }else{
     # we accept a couple of formats
     # 1. full list. after checking dimensions match survey,
@@ -117,6 +129,12 @@ make_projection <- function(data,
     #   b. pairs of integers specifying range, e.g. (0, 3), meaning 0, 1, 2, 3
     # 2. dictionary. after checking that keys are valid column indices, values can be same as a. and b., above.
     # once a format is specified, verify that the ranges actually match the ranges of the items.
+    if(length(likert) != ncol(data)){
+      message("likert needs to have as many entries as there are columns in `data`. Ignoring.")
+      likert <- rep(NA_integer_, ncol(data))
+    }else{
+      # hello
+    }
   }
 
   if(layer == "agent"){

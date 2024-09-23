@@ -6,11 +6,12 @@
 \usage{
 make_projection(
   data,
-  layer,
+  layer = NULL,
   threshold_method = NULL,
   method_value = NULL,
   centre = NULL,
   likert = NULL,
+  mincomparisons = NULL,
   similarity_metric = NULL
 )
 }
@@ -60,6 +61,11 @@ possible edge.
 Defaults to TRUE.}
 
 \item{likert}{Specifies the range of the Likert scale contained in \code{data}.}
+
+\item{mincomparisons}{The minimum number of valid comparisons that must be
+made when computing the similarity between rows or columns in the \code{data}. If at
+least one of the entries in the fields being compared is NA, then the
+comparison is invalid.}
 
 \item{similarity_metric}{This currently has just one allowed value, namely the
 Manhattan distance, which is the default.}
