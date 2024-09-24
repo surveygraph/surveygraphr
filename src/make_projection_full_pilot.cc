@@ -255,7 +255,29 @@ static void clean_data(std::vector<std::vector<double>> &data, const std::vector
   }
 
   // Step 4: Replace original data with the cleaned version
-  data = cleandata;
+  unsigned int ncol = data.size();
+  unsigned int nrow = data[0].size();
+
+  //data = cleandata;
+
+  // take the transpose, as each row is currently a user, not an item
+  data = std::vector<std::vector<double>>(ncol, std::vector<double>(nrow));
+  for(unsigned int i = 0; i < cleandata.size(); ++i){
+    for(unsigned int j = 0; j < cleandata[i].size(); ++j){
+      data[j][i] = cleandata[i][j];
+      Rprintf("%9f ", data[i][j]);
+    }
+    Rprintf("\n");
+  }
+
+  Rprintf("data after :\n");
+  for(int i = 0; i < data.size(); ++i){
+    for(int j = 0; j < data[i].size(); ++j){
+      Rprintf("%f ", data[i][j]);
+    }
+    Rprintf("\n");
+  }
+  Rprintf("\n");
 }
 
 static void cppvector_to_rdf(const graph &g, SEXP &c, SEXP &df)
@@ -325,19 +347,12 @@ SEXP rmake_projection(
   rdf_to_cppvector(rdata, data);
 
   int layer, method, centre, dummycode, mincomps, similarity;
-  Rprintf("convert1\n");
   rint_to_cppint(rlayer, layer);
-  Rprintf("convert2\n");
   rint_to_cppint(rmethod, method);
-  Rprintf("convert3\n");
   rint_to_cppint(rcentre, centre);
-  Rprintf("convert4\n");
   rint_to_cppint(rdummycode, dummycode);
-  Rprintf("convert5\n");
   rint_to_cppint(rmincomps, mincomps);
-  Rprintf("convert6\n");
   rint_to_cppint(rsimilarity, similarity);
-  Rprintf("convert7\n");
 
   double methodval;
   rdouble_to_cppdouble(rmethodval, methodval);
