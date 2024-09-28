@@ -44,11 +44,12 @@ to a survey, i.e. the row or column projection.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">make_projection</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
-<span>  <span class="va">layer</span>,</span>
+<span>  layer <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  threshold_method <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  method_value <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  centre <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  likert <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mincomparisons <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  similarity_metric <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -109,6 +110,13 @@ Defaults to TRUE.</p></dd>
 <dd><p>Specifies the range of the Likert scale contained in <code>data</code>.</p></dd>
 
 
+<dt id="arg-mincomparisons">mincomparisons<a class="anchor" aria-label="anchor" href="#arg-mincomparisons"></a></dt>
+<dd><p>The minimum number of valid comparisons that must be
+made when computing the similarity between rows or columns in the <code>data</code>. If at
+least one of the entries in the fields being compared is NA, then the
+comparison is invalid.</p></dd>
+
+
 <dt id="arg-similarity-metric">similarity_metric<a class="anchor" aria-label="anchor" href="#arg-similarity-metric"></a></dt>
 <dd><p>This currently has just one allowed value, namely the
 Manhattan distance, which is the default.</p></dd>
@@ -136,7 +144,7 @@ contains three columns named</p><ul><li><p><code>u</code>, the first node adjace
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>
