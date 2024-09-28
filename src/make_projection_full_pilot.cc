@@ -2,7 +2,6 @@
 
 #include <cctype>
 #include <algorithm>
-#include <unordered_set>
 
 #define R_NO_REMAP
 #include <R.h>
@@ -62,7 +61,7 @@ static void rdf_to_cppvector(const SEXP &rdata, std::vector<std::vector<double>>
       }
       data.push_back(coltmp);
     }else{
-      Rprintf("Warning: Unsupported type at column %d\n", i);
+      Rprintf("Warning: unsupported type at column %d\n", i);
     }
   }
 
@@ -158,39 +157,40 @@ This function cleans the contents of `data`. It works as follows.
 static void clean_data(std::vector<std::vector<double>> &data, const std::vector<std::vector<double>> &likert, const int &dummycode)
 {
   // Step 1: Verify likert.size() equals data[0].size()
-  if(likert.size() != data[0].size()){
-    Rf_error("Mismatch between likert size and data column count.");
+  if(likert[0].size() != data[0].size()){
+    Rf_error("Error: mismatch between likert size and data column count.");
   }
 
-  Rprintf("data before :\n");
-  for(int i = 0; i < data.size(); ++i){
-    for(int j = 0; j < data[i].size(); ++j){
-      Rprintf("%f ", data[i][j]);
-    }
-    Rprintf("\n");
-  }
-  Rprintf("\n");
+  //Rprintf("data before :\n");
+  //for(int i = 0; i < data.size(); ++i){
+  //  for(int j = 0; j < data[i].size(); ++j){
+  //    Rprintf("%10f ", data[i][j]);
+  //  }
+  //  Rprintf("\n");
+  //}
+  //Rprintf("\n");
 
-  Rprintf("likert specification :\n");
-  for(int i = 0; i < likert.size(); ++i){
-    for(int j = 0; j < likert[i].size(); ++j){
-      Rprintf("%f ", likert[i][j]);
-    }
-    Rprintf("\n");
-  }
-  Rprintf("\n");
+  //Rprintf("likert specification :\n");
+  //for(int i = 0; i < likert.size(); ++i){
+  //  for(int j = 0; j < likert[i].size(); ++j){
+  //    Rprintf("%f ", likert[i][j]);
+  //  }
+  //  Rprintf("\n");
+  //}
+  //Rprintf("\n");
 
-  Rprintf("dummycode : %d\n", dummycode);
-  Rprintf("\n");
+  //Rprintf("dummycode : %d\n", dummycode);
+  //Rprintf("\n");
 
-  // Step 2: Prepare a temporary container for cleaned data
+  // Step 2: prepare a temporary container for cleaned data
   std::vector<std::vector<double>> cleandata;
   
-  // Step 3: Process each column in data
-  for(size_t j = 0; j < data[0].size(); ++j){
+  // Step 3: process each column in data
+  for(int j = 0; j < data[0].size(); ++j){
     // If likert[j][0] is NaN
     if(std::isnan(likert[j][0])){
       if(dummycode == 0){
+        // Case 1: no Likert scale, no dummy coding.
         // Find bounds on entries in column j.
         double dhi = data[0][j];
         double dlo = data[0][j];
@@ -200,7 +200,7 @@ static void clean_data(std::vector<std::vector<double>> &data, const std::vector
         }
         
         std::vector<double> normalised_column(data.size());
-        for(size_t i = 0; i < data.size(); ++i){
+        for(int i = 0; i < data.size(); ++i){
           if(dhi != dlo){
             normalised_column[i] = (2 / (dhi - dlo)) * data[i][j] + (dlo + dhi) / (dlo - dhi);
           }else{
@@ -209,14 +209,15 @@ static void clean_data(std::vector<std::vector<double>> &data, const std::vector
         }
         cleandata.push_back(normalised_column);
       }else{
-        // Case 2: Apply dummy coding (one-hot encoding)
-        std::unordered_set<double> distinct_values;
+        // Case 2: no Likert scale, dummy code (one-hot encoding) everything.
+        std::set<double> distinct_values;
         for(const auto &row : data){
           distinct_values.insert(row[j]);
         }
+
         for(double value : distinct_values){
           std::vector<double> dummy_column(data.size(), 0.0);
-          for(size_t i = 0; i < data.size(); ++i){
+          for(int i = 0; i < data.size(); ++i){
             if(data[i][j] == value){
               dummy_column[i] = 1.0;
             }
@@ -231,8 +232,8 @@ static void clean_data(std::vector<std::vector<double>> &data, const std::vector
       std::vector<double> normalised_column(data.size());
 
       // Step 3a: Gather distinct values outside the likert range
-      std::unordered_set<double> outside_values;
-      for(size_t i = 0; i < data.size(); ++i){
+      std::set<double> outside_values;
+      for(int i = 0; i < data.size(); ++i){
         if(data[i][j] >= lower && data[i][j] <= upper){
           normalised_column[i] = (2 / (upper - lower)) * (data[i][j] - lower) - 1;
         }else if(dummycode == 1){
@@ -244,7 +245,7 @@ static void clean_data(std::vector<std::vector<double>> &data, const std::vector
       // Step 3b: Apply dummy coding to distinct values outside the range
       for(double value : outside_values){
         std::vector<double> dummy_column(data.size(), 0.0);
-        for(size_t i = 0; i < data.size(); ++i){
+        for(int i = 0; i < data.size(); ++i){
           if(data[i][j] == value){
             dummy_column[i] = 1.0;
           }
@@ -254,30 +255,28 @@ static void clean_data(std::vector<std::vector<double>> &data, const std::vector
     }
   }
 
-  // Step 4: Replace original data with the cleaned version
-  unsigned int ncol = data.size();
-  unsigned int nrow = data[0].size();
+  //Rprintf("cleandata :\n");
+  //for(int i = 0; i < cleandata.size(); ++i){
+  //  for(int j = 0; j < cleandata[i].size(); ++j){
+  //    Rprintf("%9f ", cleandata[i][j]);
+  //  }
+  //  Rprintf("\n");
+  //}
+  //Rprintf("\n");
 
-  //data = cleandata;
+  // Step 4: replace original data with the cleaned version
+  // take the transpose of cleandata, ncol and nrow are the column and row count
+  // of the transpose of cleandata
+  unsigned int ncol = cleandata.size();
+  unsigned int nrow = cleandata[0].size();
 
-  // take the transpose, as each row is currently a user, not an item
-  data = std::vector<std::vector<double>>(ncol, std::vector<double>(nrow));
+  data = std::vector<std::vector<double>>(nrow, std::vector<double>(ncol));
   for(unsigned int i = 0; i < cleandata.size(); ++i){
     for(unsigned int j = 0; j < cleandata[i].size(); ++j){
       data[j][i] = cleandata[i][j];
-      Rprintf("%9f ", data[i][j]);
     }
-    Rprintf("\n");
   }
 
-  Rprintf("data after :\n");
-  for(int i = 0; i < data.size(); ++i){
-    for(int j = 0; j < data[i].size(); ++j){
-      Rprintf("%f ", data[i][j]);
-    }
-    Rprintf("\n");
-  }
-  Rprintf("\n");
 }
 
 static void cppvector_to_rdf(const graph &g, SEXP &c, SEXP &df)
