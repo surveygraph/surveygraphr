@@ -48,8 +48,9 @@ to a survey, i.e. the row or column projection.</p>
 <span>  threshold_method <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  method_value <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  centre <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  dummycode <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  likert <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  mincomparisons <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mincomps <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  similarity_metric <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -106,11 +107,15 @@ possible edge.</p></li>
 Defaults to TRUE.</p></dd>
 
 
+<dt id="arg-dummycode">dummycode<a class="anchor" aria-label="anchor" href="#arg-dummycode"></a></dt>
+<dd><p>flag that indicates whether we dummycode data.</p></dd>
+
+
 <dt id="arg-likert">likert<a class="anchor" aria-label="anchor" href="#arg-likert"></a></dt>
 <dd><p>Specifies the range of the Likert scale contained in <code>data</code>.</p></dd>
 
 
-<dt id="arg-mincomparisons">mincomparisons<a class="anchor" aria-label="anchor" href="#arg-mincomparisons"></a></dt>
+<dt id="arg-mincomps">mincomps<a class="anchor" aria-label="anchor" href="#arg-mincomps"></a></dt>
 <dd><p>The minimum number of valid comparisons that must be
 made when computing the similarity between rows or columns in the <code>data</code>. If at
 least one of the entries in the fields being compared is NA, then the
