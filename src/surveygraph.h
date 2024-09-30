@@ -1,6 +1,10 @@
 #ifndef SURVEYGRAPH_H_
 #define SURVEYGRAPH_H_
 
+//#define R_NO_REMAP            // FIXME temporary
+//#include <Rinternals.h>       // FIXME temporary
+//#include <R_ext/Rdynload.h>   // FIXME temporary
+
 #include "graph.h"
 
 #include <vector>
@@ -34,8 +38,6 @@ class surveygraph
         
       nrow = int(survey.size());
       ncol = int(survey[0].size());
-
-      //std::cout << "hellooooooo mr bush" << std::endl;
 
       if(method == 0) target_lcc = methodval;
       if(method == 1) target_ad  = methodval;

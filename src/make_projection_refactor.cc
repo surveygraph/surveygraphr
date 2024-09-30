@@ -197,6 +197,7 @@ static void clean_data(
       if(dummycode == 0){
         // Case 1: no Likert scale, no dummy coding.
         // Find bounds on entries in column j.
+        // TODO what if dhi and or dlo are nan?
         double dhi = data[0][j];
         double dlo = data[0][j];
         for(int i = 1; i < data.size(); ++i){
@@ -207,9 +208,17 @@ static void clean_data(
         std::vector<double> normalised_column(data.size());
         for(int i = 0; i < data.size(); ++i){
           if(dhi != dlo){
-            normalised_column[i] = (data[i][j] - dlo) / (dhi - dlo);
+            if(!std::isnan(data[i][j])){
+              normalised_column[i] = (data[i][j] - dlo) / (dhi - dlo);
+              Rprintf("I'm here 1\n");
+            }else{
+              normalised_column[i] = std::nan("");
+              Rprintf("I'm here 2\n");
+            }
           }else{
-            normalised_column[i] = 0;
+            //normalised_column[i] = 0;
+            normalised_column[i] = std::nan("");
+            Rprintf("I'm here 3\n");
           }
         }
         cleandata.push_back(normalised_column);
@@ -239,10 +248,21 @@ static void clean_data(
       // Step 3a: Gather distinct values outside the likert range
       std::set<double> outside_values;
       for(int i = 0; i < data.size(); ++i){
-        if(data[i][j] >= dlo && data[i][j] <= dhi){
-          normalised_column[i] = (data[i][j] - dlo) / (dhi - dlo);
-        }else if(dummycode == 1){
-          outside_values.insert(data[i][j]);
+        if(!std::isnan(data[i][j])){
+          if(data[i][j] >= dlo && data[i][j] <= dhi){
+            if(!std::isnan(data[i][j])){
+              normalised_column[i] = (data[i][j] - dlo) / (dhi - dlo);
+            }else{
+              normalised_column[i] = std::nan("");
+            }
+          }else if(dummycode == 0){
+            normalised_column[i] = std::nan("");
+          }else if(dummycode == 1){
+            normalised_column[i] = std::nan("");
+            outside_values.insert(data[i][j]);
+          }
+        }else{
+          normalised_column[i] = std::nan("");
         }
       }
       cleandata.push_back(normalised_column);
@@ -373,7 +393,27 @@ SEXP rmake_projection(
   std::vector<std::vector<double>> likert;
   rdf_to_cppvector(rlikert, likert);
 
+  //Rprintf("before, hellooo mister bush\n");
+  //for(int i = 0; i < data.size(); ++i){
+  //  for(int j = 0; j < data[i].size(); ++j){
+  //    Rprintf("%d ", i);
+  //    Rprintf("%d ", j);
+  //    Rprintf("%f ", data[i][j]);
+  //    Rprintf("\n");
+  //  }
+  //}
+
   clean_data(data, likert, dummycode);
+
+  //Rprintf("after, hellooo mister bush\n");
+  //for(int i = 0; i < data.size(); ++i){
+  //  for(int j = 0; j < data[i].size(); ++j){
+  //    Rprintf("%d ", i);
+  //    Rprintf("%d ", j);
+  //    Rprintf("%f ", data[i][j]);
+  //    Rprintf("\n");
+  //  }
+  //}
 
   surveygraph S{
     data, 

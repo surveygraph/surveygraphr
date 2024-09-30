@@ -1,3 +1,16 @@
+test_that("correct likert", {
+  S <- data.frame(item_1 = c(1, -99),
+                  item_2 = c(1, 3),
+                  item_3 = c(1, 2))
+
+	l <- data.frame(c(1, 1, 1), c(3, 3, 3))
+
+  expect_equal(
+		make_projection(S, likert = l),
+    data.frame(u = c(1), v = c(2), weight = c(0.25))
+  )
+})
+
 test_that("correct edge list", {
   S <- data.frame(group = c("0", "0", "1", "1"),
                   item_1 = c(1, 2, 5, 4),
@@ -7,7 +20,6 @@ test_that("correct edge list", {
   fn <- function(m){
     make_projection(
       S,
-      layer = "agent",
       threshold_method = "raw_similarity",
       method_value = m
     )

@@ -41,13 +41,16 @@ void graph::man_distance(const surveydef &S, const int &u, const int &v, double 
       w = 0;
       compcount = 0;  
       for(int i = 0; i < m; ++i){
+        //Rprintf("%d %d %f %f is comparison\n", u, v, S[u][i], S[v][i]);
         if(!isnan(S[u][i]) && !isnan(S[v][i])){
           w += abs(S[u][i] - S[v][i]);
           ++compcount;
         }
       }
       //w = (double(m) - w) / double(m);
-      w = 1.0 - w / double(m);
+      // FIXME need to normalise by compcount rather than m
+      //w = 1.0 - w / double(m);
+      w = 1.0 - w / double(compcount);
 
       // FIXME need to implement mincomps
       //if(compcount < m / 2){
