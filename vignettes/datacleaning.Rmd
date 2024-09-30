@@ -1,5 +1,5 @@
 ---
-title: "Handling irregular data"
+title: "Data cleaning"
 description: >
   To understand how surveygraph handles irregular data...
 output: rmarkdown::html_vignette
@@ -28,4 +28,5 @@ The most important grouping verb is `group_by()`: it takes a data frame and one 
 
 ```{r}
 df <- data.frame(item1 = c(1, 2, 3), item2 = c(4, 5, 7))
+df
 ```
