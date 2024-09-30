@@ -10,8 +10,9 @@ make_projection(
   threshold_method = NULL,
   method_value = NULL,
   centre = NULL,
+  dummycode = NULL,
   likert = NULL,
-  mincomparisons = NULL,
+  mincomps = NULL,
   similarity_metric = NULL
 )
 }
@@ -60,9 +61,11 @@ possible edge.
 \item{centre}{If \code{FALSE}, we shift edge weights by 1 from \verb{[-1, 1]} to \verb{[0, 2]}.
 Defaults to TRUE.}
 
+\item{dummycode}{flag that indicates whether we dummycode data.}
+
 \item{likert}{Specifies the range of the Likert scale contained in \code{data}.}
 
-\item{mincomparisons}{The minimum number of valid comparisons that must be
+\item{mincomps}{The minimum number of valid comparisons that must be
 made when computing the similarity between rows or columns in the \code{data}. If at
 least one of the entries in the fields being compared is NA, then the
 comparison is invalid.}

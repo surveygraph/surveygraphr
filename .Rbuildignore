@@ -14,5 +14,6 @@
 ^src/*\.o$
 ^src/*\.so$
 ^src/README*
-README.development*
-Makefile
+^.RDataTmp$
+^README.development.md$
+^Makefile$

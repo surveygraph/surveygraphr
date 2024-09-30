@@ -9,11 +9,11 @@ extern SEXP rmake_projection(
   SEXP rlayer,      // layer flag
   SEXP rmethod,     // sparsification method
   SEXP rmethodval,  // method value
-  SEXP rcentre,     // centering flag
-  SEXP rlikert,     // likert scale specification
   SEXP rdummycode,  // dummy coding flag
+  SEXP rlikert,     // likert scale specification
   SEXP rmincomps,   // minimum comparisons
-  SEXP rsimilarity  // similarity metric
+  SEXP rsimilarity, // similarity metric
+  SEXP rcentre      // centering flag
 );
 
 extern SEXP rmake_proj_agent_lcc(SEXP df, SEXP mvalue, SEXP c, SEXP sm);

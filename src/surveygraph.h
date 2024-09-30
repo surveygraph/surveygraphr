@@ -8,9 +8,51 @@
 #include <set>
 #include <cmath>
 
+#include <iostream> // FIXME temporary
+
 class surveygraph
 {
   public :
+    surveygraph(
+      const std::vector<std::vector<double>> &rdata,
+      const int &rlayer,
+      const int &rmethod,
+      const double &rmethodval,
+      const int &rdummycode,
+      const std::vector<std::vector<double>> &rlikert,
+      const int &rmincomps,
+      const int &rsimilarity
+    ){
+      survey = rdata;
+      layer = rlayer;
+      method = rmethod;
+      methodval = rmethodval;
+      likert = rlikert;
+      dummycode = rdummycode;
+      mincomps = rmincomps;
+      similarity = rsimilarity;
+        
+      nrow = int(survey.size());
+      ncol = int(survey[0].size());
+
+      //std::cout << "hellooooooo mr bush" << std::endl;
+
+      if(method == 0) target_lcc = methodval;
+      if(method == 1) target_ad  = methodval;
+      if(method == 2) raw_similarity = methodval;
+
+      if(layer == 0 && method == 0) make_proj_agent_lcc();
+      if(layer == 0 && method == 1) make_proj_agent_ad();
+      if(layer == 0 && method == 2) make_proj_agent_similar();
+
+      if(layer == 1 && method == 0) make_proj_symbolic_lcc();
+      if(layer == 1 && method == 1) make_proj_symbolic_ad();
+      if(layer == 1 && method == 2) make_proj_symbolic_similar();
+
+      if(layer == 0) g_dummy = g_agent;
+      if(layer == 1) g_dummy = g_symbolic;
+    }
+
     surveygraph(std::vector<std::vector<double>> &a){
       survey = a;
       nrow = int(survey.size());
@@ -38,14 +80,15 @@ class surveygraph
     }
 
     double target_lcc, target_ad, raw_similarity;
-    int metric;
+    int layer, method, mincomps, dummycode, similarity, metric;
+    double methodval;
 
     int nrow, ncol;  // number of agent, symbolic
 
     // survey, small sample of survey
-    std::vector<std::vector<double>> survey, surveysample;
+    std::vector<std::vector<double>> survey, surveysample, likert;
 
-    graph g_agent, g_symbolic;
+    graph g_agent, g_symbolic, g_dummy;
 
     std::vector<std::vector<double>> profile_agent;     // agent threshold data
     std::vector<std::vector<double>> profile_symbolic;  // symbolic threshold data

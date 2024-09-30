@@ -23,7 +23,6 @@ void graph::build_graph(const surveydef &S)
         network[j].insert(neighbour{int(i), w});
         avg_degree += 2;
         e += 1;
-        //Rprintf("%d %d %f\n", i, j, w);
       }
     }
   }
@@ -47,11 +46,13 @@ void graph::man_distance(const surveydef &S, const int &u, const int &v, double 
           ++compcount;
         }
       }
-      w = (double(m) - w) / double(m);
+      //w = (double(m) - w) / double(m);
+      w = 1.0 - w / double(m);
 
-      if(compcount < m / 2){
-        w = -1;
-      }
+      // FIXME need to implement mincomps
+      //if(compcount < m / 2){
+      //  w = -1;
+      //}
 
       break;
     case Layer::symbolic:

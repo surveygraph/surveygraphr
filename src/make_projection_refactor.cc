@@ -3,6 +3,8 @@
 #include <cctype>
 #include <algorithm>
 
+#include <iostream> // TODO temporary
+
 #define R_NO_REMAP
 #include <R.h>
 #include <Rdefines.h>
@@ -154,13 +156,11 @@ This function cleans the contents of `data`. It works as follows.
   with the cleaned version.
 
 */
-static void clean_data(std::vector<std::vector<double>> &data, const std::vector<std::vector<double>> &likert, const int &dummycode)
-{
-  // Step 1: Verify likert.size() equals data[0].size()
-  if(likert[0].size() != data[0].size()){
-    Rf_error("Error: mismatch between likert size and data column count.");
-  }
-
+static void clean_data(
+  std::vector<std::vector<double>> &data,
+  const std::vector<std::vector<double>> &likert,
+  const int &dummycode
+){
   //Rprintf("data before :\n");
   //for(int i = 0; i < data.size(); ++i){
   //  for(int j = 0; j < data[i].size(); ++j){
@@ -182,6 +182,11 @@ static void clean_data(std::vector<std::vector<double>> &data, const std::vector
   //Rprintf("dummycode : %d\n", dummycode);
   //Rprintf("\n");
 
+  // Step 1: Verify likert.size() equals data[0].size()
+  if(likert.size() != data[0].size()){
+    Rf_error("Mismatch between likert size and data column count");
+  }
+
   // Step 2: prepare a temporary container for cleaned data
   std::vector<std::vector<double>> cleandata;
   
@@ -202,7 +207,7 @@ static void clean_data(std::vector<std::vector<double>> &data, const std::vector
         std::vector<double> normalised_column(data.size());
         for(int i = 0; i < data.size(); ++i){
           if(dhi != dlo){
-            normalised_column[i] = (2 / (dhi - dlo)) * data[i][j] + (dlo + dhi) / (dlo - dhi);
+            normalised_column[i] = (data[i][j] - dlo) / (dhi - dlo);
           }else{
             normalised_column[i] = 0;
           }
@@ -227,15 +232,15 @@ static void clean_data(std::vector<std::vector<double>> &data, const std::vector
       }
     }else{
       // Case 3: Normalise within the range [likert[j][0], likert[j][1]], dummy code outside range
-      double lower = likert[j][0];
-      double upper = likert[j][1];
+      double dlo = likert[j][0];
+      double dhi = likert[j][1];
       std::vector<double> normalised_column(data.size());
 
       // Step 3a: Gather distinct values outside the likert range
       std::set<double> outside_values;
       for(int i = 0; i < data.size(); ++i){
-        if(data[i][j] >= lower && data[i][j] <= upper){
-          normalised_column[i] = (2 / (upper - lower)) * (data[i][j] - lower) - 1;
+        if(data[i][j] >= dlo && data[i][j] <= dhi){
+          normalised_column[i] = (data[i][j] - dlo) / (dhi - dlo);
         }else if(dummycode == 1){
           outside_values.insert(data[i][j]);
         }
@@ -277,9 +282,18 @@ static void clean_data(std::vector<std::vector<double>> &data, const std::vector
     }
   }
 
+  //Rprintf("data after :\n");
+  //for(int i = 0; i < data.size(); ++i){
+  //  for(int j = 0; j < data[i].size(); ++j){
+  //    Rprintf("%10f ", data[i][j]);
+  //  }
+  //  Rprintf("\n");
+  //}
+  //Rprintf("\n");
+
 }
 
-static void cppvector_to_rdf(const graph &g, SEXP &c, SEXP &df)
+static void cppedgelist_to_rdf(const graph &g, const int &centre, SEXP &df)
 {
   SEXP u_vector = PROTECT(Rf_allocVector(INTSXP, g.e));  // u column
   SEXP v_vector = PROTECT(Rf_allocVector(INTSXP, g.e));  // v column
@@ -292,7 +306,7 @@ static void cppvector_to_rdf(const graph &g, SEXP &c, SEXP &df)
         INTEGER(u_vector)[i] = it.first + 1;
         INTEGER(v_vector)[i] = jt.u + 1;
         REAL(w_vector)[i] = int(10000.0 * jt.w) / 10000.0;
-        if(INTEGER(c)[0] == 0) REAL(w_vector)[i] += 1.0;
+        if(centre == 1) REAL(w_vector)[i] = (REAL(w_vector)[i] - 0.5) * 2.0;
         i += 1;
       }
     }  
@@ -324,11 +338,11 @@ SEXP rmake_projection(
   SEXP rlayer,      // layer flag, agent or symbolic
   SEXP rmethod,     // sparsification method, lcc, average_degree, raw_similarity
   SEXP rmethodval,  // method value, utility variable
-  SEXP rcentre,     // centering flag, 0 or 1
   SEXP rlikert,     // likert scale specification
   SEXP rdummycode,  // dummy coding boolean
   SEXP rmincomps,   // minimum comparisons
-  SEXP rsimilarity) // similarity metric
+  SEXP rsimilarity, // similarity metric
+  SEXP rcentre)     // centering flag, 0 or 1
 {
   /* 
   The following methods convert SEXP objects to the relevant C++ types.
@@ -348,27 +362,35 @@ SEXP rmake_projection(
   int layer, method, centre, dummycode, mincomps, similarity;
   rint_to_cppint(rlayer, layer);
   rint_to_cppint(rmethod, method);
-  rint_to_cppint(rcentre, centre);
   rint_to_cppint(rdummycode, dummycode);
   rint_to_cppint(rmincomps, mincomps);
   rint_to_cppint(rsimilarity, similarity);
+  rint_to_cppint(rcentre, centre);
 
   double methodval;
   rdouble_to_cppdouble(rmethodval, methodval);
 
   std::vector<std::vector<double>> likert;
-  rlist_to_cppvector(rlikert, likert);
+  rdf_to_cppvector(rlikert, likert);
 
   clean_data(data, likert, dummycode);
 
-  // FIXME we could avoid providing layer, and simply provide the transpose of the survey?
-  //surveygraph S{data, layer, method, methodval, mincomps, rsimilarity};
-  //S.make_proj();
+  surveygraph S{
+    data, 
+    layer, 
+    method, 
+    methodval, 
+    dummycode, 
+    likert, 
+    mincomps, 
+    similarity
+  };
 
-  SEXP e = PROTECT(Rf_allocVector(VECSXP, 3));
-  //cppvector_to_rdf(S.g_agent, c, e);
+  //Rf_error("Ambre is sexy.");
 
+  SEXP redgelist = PROTECT(Rf_allocVector(VECSXP, 3));
+  cppedgelist_to_rdf(S.g_dummy, centre, redgelist);
   UNPROTECT(1);
 
-  return e;
+  return redgelist;
 }

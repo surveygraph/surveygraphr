@@ -15,3 +15,6 @@ clean:
 
 run:
 	@Rscript eg.R
+
+doc:
+	Rscript -e "library('roxygen2'); roxygenise()"

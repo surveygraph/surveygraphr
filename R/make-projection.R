@@ -57,8 +57,9 @@
 #'   possible edge.
 #' @param centre If `FALSE`, we shift edge weights by 1 from `[-1, 1]` to `[0, 2]`. 
 #'   Defaults to TRUE.
+#' @param dummycode flag that indicates whether we dummycode data.
 #' @param likert Specifies the range of the Likert scale contained in `data`.  
-#' @param mincomparisons The minimum number of valid comparisons that must be
+#' @param mincomps The minimum number of valid comparisons that must be
 #' made when computing the similarity between rows or columns in the `data`. If at
 #' least one of the entries in the fields being compared is NA, then the
 #' comparison is invalid.
@@ -68,47 +69,172 @@
 #' @export
 #' @examples
 #' S <- make_synthetic_data(20, 5)
-make_projection <- function(data, 
-                            layer = NULL,
-                            threshold_method = NULL, 
-                            method_value = NULL, 
-                            centre = NULL, 
-                            likert = NULL,
-                            mincomparisons = NULL,
-                            similarity_metric = NULL){
+make_projection <- function(
+  data, 
+  layer = NULL,
+  threshold_method = NULL, 
+  method_value = NULL, 
+  centre = NULL, 
+  dummycode = NULL,
+  likert = NULL,
+  mincomps = NULL,
+  similarity_metric = NULL
+){
 
-  # note, call a data verification and cleaning method for `data`
-  # note, allow a parameter saying how many valid comparisons we need, will be at least one, and at most the number of columns
-
-  
-  message("hello world")
-  #message("Warning: some generic problem you want to mention in a paper")
-  # check that layer is either agent or symbolic
-  if(is.null(layer)){
-    layer = "agent"
-  }else if(layer != "agent" && layer != "symbolic"){
-    message("layer needs to be either agent or symbolic, defaulting to agent")
-    layer = "agent"
+  # TODO do cleaning of data, ie coerce to numeric etc, set strings to NA
+  if(!is.data.frame(data)){
+    stop("Data must be in a data frame.")
+  }else if(ncol(data) == 0 || nrow(data) == 0){
+    stop("Dataframe must contain some data.")
   }
 
-  # check the value of centre
-  if(is.null(centre)){
-    if(layer == "agent"){
-      centre <- as.integer(1)
-    }else if(layer == "symbolic"){
-      centre <- as.integer(0)
+  # check that layer is either agent or symbolic
+  # 0 agent
+  # 1 symbolic
+  if(is.null(layer)){
+    layer = as.integer(0)
+  }else if(layer == "agent"){
+    layer = as.integer(0)
+  }else if(layer == "symbolic"){
+    layer = as.integer(1)
+  }else if(layer != "agent" && layer != "symbolic"){
+    layer = as.integer(0)
+    message("Warning: `layer` needs to be either \"agent\" or \"symbolic\". Defaulting to \"agent\".")
+  }
+
+  # set threshold method
+  # 0 lcc
+  # 1 average degree
+  # 2 raw similarity
+  if(is.null(threshold_method)){
+    threshold_method = as.integer(0)
+  }else if(threshold_method == "target_lcc"){
+    threshold_method = as.integer(0)
+  }else if(threshold_method == "target_ad"){
+    threshold_method = as.integer(1)
+  }else if(threshold_method == "raw_similarity"){
+    threshold_method = as.integer(2)
+  }else{
+    threshold_method = as.integer(0)
+    message("Warning: `threshold_method` needs to be either \"target_lcc\", \"target_ad\" or \"raw_similarity\". Defaulting to \"target_lcc\".")
+  }
+
+  # method value
+  if(is.null(method_value)){
+    if(threshold_method == 0){
+      method_value <- as.numeric(1)
+    }else if(threshold_method == 1){
+      method_value <- as.numeric(1)
+    }else{
+      method_value <- as.numeric(1)
     }
+  }
+
+  # Centre edge weights about zero, default to false.
+  if(is.null(centre)){
+    centre <- as.integer(0)
   }else if(centre == TRUE){
     centre <- as.integer(1)
   }else if(centre == FALSE){
     centre <- as.integer(0)
+  }else{
+    warning("`centre` must either be TRUE or FALSE. Defaulting to FALSE.")
+  }
+
+  # dummycode
+  if(is.null(dummycode)){
+    dummycode = as.integer(0)
+  }else if(dummycode == 0){
+    dummycode = as.integer(0)
+  }else{
+    dummycode = as.integer(1)
+  }
+
+  # check the likert flag
+  if(is.null(likert)){
+    # TODO if dummycode is set, dummy code everything
+    if(dummycode == 0){
+      likert <- data.frame(
+        # TODO need to make sure data has already been coerced to numeric
+        apply(data, 2, min, na.rm = TRUE),
+        apply(data, 2, max, na.rm = TRUE)
+      )
+    }else{
+      likert <- NA
+    }
+  }else{
+    # dimension of likert must match data
+    if(nrow(likert) != ncol(data))
+      stop("Likert and data dimensions incompatible (likert ", nrow(likert), ", data ", ncol(data), ")")
+
+    if(!is.data.frame(likert))
+      stop("Likert must be a data frame.")
+
+    if(ncol(likert) != 2)
+      stop("Likert must contain two columns, the min and max respectively of each data column.")
+
+    # TODO check that first column is min and second max.
+
+    if(!all(sapply(likert, is.numeric))){
+      # print out this info?
+      #if(any(is.character(likert)))
+      #if(any(is.na(likert)))
+      #if(any(is.logical(likert)))
+      stop("Likert must only contain numerical values.")
+    }
+     
+    tmplikert <- data.frame(
+      minval = apply(data, 2, min, na.rm = TRUE),
+      maxval = apply(data, 2, max, na.rm = TRUE)
+    )
+
+    outlt <- which(tmplikert$minval < likert[[1]])
+    outgt <- which(tmplikert$maxval > likert[[2]])
+    outofrangeind <- unique(c(outlt, outgt))
+
+    outofrange <- as.integer(0)
+    if(length(outofrangeind) > 0)
+      outofrange <- as.integer(1)
+
+    # if outofrange and not dummycode, report that we're setting outliers to NA.
+    if(outofrange && !dummycode){
+      message("Note: columns ", paste(outofrangeind, collapse = ", ")," contain entries outside the specified range. Setting them to NA.")
+      lapply(outofrangeind, function(col){
+        outofrangevals <- data[
+          data[, col] < likert[[1]][col] | data[, col] > likert[[2]][col], col
+        ]
+        message("  ", col, ": ", paste(outofrangevals, collapse = ", "))
+      })
+      data[data < likert[[1]][col(data)] | data > likert[[2]][col(data)]] <- NA
+    }
+
+    # if outofrange and dummycode, report which columns and entries will be affected.
+    if(outofrange && dummycode){
+      message("Columns ", paste(outofrangeind, collapse = ", ")," contain entries outside the specified range, and will be dummy-coded.")
+      lapply(outofrangeind, function(col){
+        outofrangevals <- data[
+          data[, col] < likert[[1]][col] | data[, col] > likert[[2]][col], col
+        ]
+        message(col, ": ", paste(outofrangevals, collapse = ", "))
+      })
+    }
+
+    # if not outofrange and dummycode, report that no dummy coding will take place.
+    if(!outofrange && dummycode){
+      warning("No dummy coding will take place, as no data lies outside the acceptable range.")
+    }
+  }
+
+  # minimum comparisons
+  if(is.null(mincomps)){
+    mincomps = as.integer(ncol(data) / 2)
   }
 
   # check the value of similarity_matric
   if(is.null(similarity_metric)){
-    if(layer == "agent"){
+    if(layer == 0){
       similarity_metric <- as.integer(0)
-    }else if(layer == "symbolic"){
+    }else if(layer == 1){
       similarity_metric <- as.integer(0)
     }
   }else if(similarity_metric == "manhattan"){
@@ -118,68 +244,14 @@ make_projection <- function(data,
     similarity_metric <- as.integer(0)
   }
 
-  # check the likert flag
-  if(is.null(likert)){
-    #message("you haven't provided a likert scale, so we'll infer one based on the max and min")
-    likert <- rep(NA_integer_, ncol(data))
-  }else{
-    # we accept a couple of formats
-    # 1. full list. after checking dimensions match survey,
-    #   a. single integer >= 2, 
-    #   b. pairs of integers specifying range, e.g. (0, 3), meaning 0, 1, 2, 3
-    # 2. dictionary. after checking that keys are valid column indices, values can be same as a. and b., above.
-    # once a format is specified, verify that the ranges actually match the ranges of the items.
-    if(length(likert) != ncol(data)){
-      message("likert needs to have as many entries as there are columns in `data`. Ignoring.")
-      likert <- rep(NA_integer_, ncol(data))
-    }else{
-      # hello
-    }
-  }
-
-  if(layer == "agent"){
-    if(!is.null(threshold_method) && !is.null(method_value)){
-      if(threshold_method == "target_lcc"){
-        edgelist <- .Call("rmake_proj_agent_lcc", data, method_value, centre, similarity_metric)
-        return(edgelist)
-      }else if(threshold_method == "target_ad"){
-        edgelist <- .Call("rmake_proj_agent_ad", data, method_value, centre, similarity_metric)
-        return(edgelist)
-      }else if(threshold_method == "raw_similarity"){
-        edgelist <- .Call("rmake_proj_agent_similar", data, method_value, centre, similarity_metric)
-        return(edgelist)
-      }else{
-        message("threshold_method must be target_lcc, target_ad, or raw_similarity")
-        message("defaulting to target_lcc with method_value = 1")
-        edgelist <- .Call("rmake_proj_agent_lcc", data, 0.95, centre, similarity_metric)
-        return(edgelist)
-      }
-    }else{
-      edgelist <- .Call("rmake_proj_agent_lcc", data, 0.97, centre, similarity_metric)
-      return(edgelist)
-    }
-  }
-
-  if(layer == "symbolic"){
-    if(!is.null(threshold_method) && !is.null(method_value)){
-      if(threshold_method == "target_lcc"){
-        edgelist <- .Call("rmake_proj_symbolic_lcc", data, method_value, centre, similarity_metric)
-        return(edgelist)
-      }else if(threshold_method == "target_ad"){
-        edgelist <- .Call("rmake_proj_symbolic_ad", data, method_value, centre, similarity_metric)
-        return(edgelist)
-      }else if(threshold_method == "raw_similarity"){
-        edgelist <- .Call("rmake_proj_symbolic_similar", data, method_value, centre, similarity_metric)
-        return(edgelist)
-      }else{
-        message("threshold method must be one of [...]")
-        message("defaulting to target_ad with method_value = 1")
-        edgelist <- .Call("rmake_proj_symbolic_ad", data, 1, centre, similarity_metric)
-        return(edgelist)
-      }
-    }else{
-      edgelist <- .Call("rmake_proj_agent_lcc", data, 0.97, centre, similarity_metric)
-      return(edgelist)
-    }
-  }
+  e <- .Call("rmake_projection", 
+             data, 
+             layer,
+             threshold_method,
+             method_value, 
+             likert,
+             dummycode,
+             mincomps,
+             similarity_metric,
+             centre)
 }
