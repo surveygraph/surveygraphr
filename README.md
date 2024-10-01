@@ -9,11 +9,6 @@
 <!-- badges: end -->
 
 
-|   |  |
-| ------------- | ------------- |
-| ![ERC Logo](https://erc.europa.eu/sites/default/files/inline-images/LOGO_ERC-FLAG_FP.png) | Development of surveygraph software and training materials was initially funded by the European Union under the ERC Proof-of-concept programme (ERC,  Attitude-Maps-4-All, project number: 101069264). Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or the European Research Council Executive Agency. Neither the European Union nor the granting authority can be held responsible for them.   |
-|   |  |
-
 ## Overview
 surveygraph is a lightweight library used to produce network representations of attitudes, as they emerge in tabular sociological data such as surveys.
 
@@ -67,3 +62,9 @@ e <- make_projection(S, layer="agent")
 ## Getting help
 
 Please contact samuel.l.unicomb@ul.ie for support, and report bugs with a minimal illustrative example on [GitHub](https://github.com/surveygraph/surveygraphr/issues/). Since the package is in its infancy, we welcome feature requests and general feedback.
+
+|   |  |
+| ------------- | ------------- |
+| ![ERC Logo](https://erc.europa.eu/sites/default/files/inline-images/LOGO_ERC-FLAG_FP.png) | Development of surveygraph software and training materials was initially funded by the European Union under the ERC Proof-of-concept programme (ERC,  Attitude-Maps-4-All, project number: 101069264). Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or the European Research Council Executive Agency. Neither the European Union nor the granting authority can be held responsible for them.   |
+|   |  |
+
