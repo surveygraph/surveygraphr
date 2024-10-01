@@ -1,7 +1,8 @@
 # Notes on package development
 
 In the following I outline the basic workflow that I follow when developing the
-surveygraph package. The basic development commands are
+surveygraph package. The basic development commands as contained in `Makefile`
+are
 
 * `R CMD install .`
 * `R CMD build .`

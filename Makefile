@@ -20,7 +20,7 @@ doc:
 	Rscript -e "library('roxygen2'); roxygenise()"
 
 knit:
-	Rscript -e "rmarkdown::render('vignettes/datacleaning.Rmd', params=list(args = myarg))"
-	Rscript -e "rmarkdown::render('vignettes/surveygraph.Rmd', params=list(args = myarg))"
-	Rscript -e "rmarkdown::render('vignettes/syntheticdata.Rmd', params=list(args = myarg))"
-	Rscript -e "rmarkdown::render('vignettes/projections.Rmd', params=list(args = myarg))"
+	@Rscript -e "rmarkdown::render('vignettes/datacleaning.Rmd', params=list(args = myarg))"
+	@#Rscript -e "rmarkdown::render('vignettes/surveygraph.Rmd', params=list(args = myarg))"
+	@#Rscript -e "rmarkdown::render('vignettes/syntheticdata.Rmd', params=list(args = myarg))"
+	@#Rscript -e "rmarkdown::render('vignettes/projections.Rmd', params=list(args = myarg))"

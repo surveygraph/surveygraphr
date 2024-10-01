@@ -55,8 +55,9 @@
 #'   the range `[0, 1]` When `method_value = 0`, then no nodes are connected, and
 #'   if `method_value = 1`, the network is complete, meaning it contains every
 #'   possible edge.
-#' @param centre If `FALSE`, we shift edge weights by 1 from `[-1, 1]` to `[0, 2]`. 
-#'   Defaults to TRUE.
+#' @param centre If `TRUE`, we shift edge weights from `[0, 1]` to `[-1, 1]`. 
+#'   Defaults to FALSE, as most network analysis applications require positive
+#'   edge weights.
 #' @param dummycode flag that indicates whether we dummycode data.
 #' @param likert Specifies the range of the Likert scale contained in `data`.  
 #' @param mincomps The minimum number of valid comparisons that must be
@@ -65,6 +66,9 @@
 #' comparison is invalid.
 #' @param similarity_metric This currently has just one allowed value, namely the
 #'   Manhattan distance, which is the default.
+#' @param showdata This is a debugging flag that prints out survey data after a
+#' pre-processing step, but before being supplied to the C++ routines that compute
+#' the network representation.
 #' 
 #' @export
 #' @examples
@@ -78,14 +82,15 @@ make_projection <- function(
   dummycode = NULL,
   likert = NULL,
   mincomps = NULL,
-  similarity_metric = NULL
+  similarity_metric = NULL,
+  showdata = NULL
 ){
 
   # TODO do cleaning of data, ie coerce to numeric etc, set strings to NA
   if(!is.data.frame(data)){
-    stop("Data must be in a data frame.")
+    stop("Input data must be provided as a data frame.")
   }else if(ncol(data) == 0 || nrow(data) == 0){
-    stop("Dataframe must contain some data.")
+    stop("Data frame cannot be empty.")
   }
 
   # check that layer is either agent or symbolic
@@ -182,7 +187,7 @@ make_projection <- function(
       #if(any(is.logical(likert)))
       stop("Likert must only contain numerical values.")
     }
-     
+
     tmplikert <- data.frame(
       minval = apply(data, 2, min, na.rm = TRUE),
       maxval = apply(data, 2, max, na.rm = TRUE)
@@ -223,6 +228,11 @@ make_projection <- function(
     if(!outofrange && dummycode){
       warning("No dummy coding will take place, as no data lies outside the acceptable range.")
     }
+  }
+
+  if(!is.null(showdata)){
+    if(showdata)
+      print(data)
   }
 
   # minimum comparisons

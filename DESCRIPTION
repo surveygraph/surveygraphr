@@ -4,6 +4,7 @@ Version: 0.1.3
 Authors@R: c(
     person("Samuel", "Unicomb", , "samuelunicomb@gmail.com", role = c("aut", "cre")),
     person("Ana", "Jovancevic", role = "aut"),
+    person("Caoimhe", "O'Reilly", role = "aut"),
     person("Alejandro", "Dinkelberg", role = "aut"),
     person("Pádraig", "MacCarron", role = "aut"),
     person("David", "O'Sullivan", role = "aut"),
@@ -12,6 +13,7 @@ Authors@R: c(
   )
 Author: Samuel Unicomb [aut, cre],
   Ana Jovancevic [aut],
+  Caoimhe O'Reilly [aut],
   Alejandro Dinkelberg [aut],
   Pádraig MacCarron [aut],
   David O'Sullivan [aut],

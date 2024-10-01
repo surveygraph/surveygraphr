@@ -14,19 +14,78 @@ knitr::opts_chunk$set(collapse = T, comment = "#>")
 options(tibble.print_min = 4L, tibble.print_max = 4L)
 ```
 
-_This page is under development. Stay tuned._
+_This page is under development. Stay tuned!_
 
-We'll start by loading surveygraph:
+This vignette gives an overview of how data is preprocessed by the surveygraph
+package, following a number of optional arguments that specify how certain data
+is to be handled.
+
+We'll start by loading surveygraph,
 
 ```{r, message = FALSE}
 library(surveygraph)
 ```
 
-## Coercion
-
-The most important grouping verb is `group_by()`: it takes a data frame and one or more variables to group by:
+and assume data `S` that we attempt to supply to surveygraph.
 
 ```{r}
-df <- data.frame(item1 = c(1, 2, 3), item2 = c(4, 5, 7))
+df <- data.frame(
+	item1 = c(2, -99, 1,   1, 100, 5),
+	item2 = c(1,   3, 1,   2,   4, 3), 
+	item3 = c(2,   1, 3, -99,   5, 4)
+)
+
 df
+```
+
+## Data frame input
+
+The first this we check is that the input data `S` is a dataframe. If it's not
+the program is halted and an error is output. Future versions may attempt to 
+coerce other formats to dataframes.
+
+For instance, if we attempt to run the `make_projection()` routine on a list,
+we get the following error.
+
+```{r error = TRUE}
+make_projection(list(c(1, 2, 3)))
+```
+
+Similarly, an error is output if an empty data frame is provided.
+
+```{r error = TRUE}
+make_projection(data.frame())
+```
+
+## Coercion
+
+Our approach is to coerce all data to floating point types, and to set them to NA
+otherwise.
+
+### Character strings
+
+If columns happen to string literals of numeric data, these are coerced to 
+floating point numbers, otherwise they are set to `NA`.
+
+### Logical values
+
+If survey entries contain `TRUE` or `FALSE`, then these are coerced to 1 and 0,
+respectively.
+
+## Dummy coding
+
+This is a flag that if set to `TRUE`, dummy codes everything that falls outside
+the range specified by the `likert` flag.
+
+## Likert range
+
+The `likert` optional argument allows us to specify the range of the values
+that we are to interpret as valid input data. The idea is that anything that
+falls outside of this range is set to `NA`, or is dummy coded.
+
+```{r}
+data.frame(
+	minval = apply(df, 2, min, na.rm = TRUE),
+	maxval = apply(df, 2, max, na.rm = TRUE)
+)
 ```

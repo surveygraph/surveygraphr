@@ -1,10 +1,10 @@
 ---
-title: "Survey projections"
+title: "Data projections"
 description: >
   To understand how surveygraph handles irregular data...
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Projections}
+  %\VignetteIndexEntry{Data projections}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
