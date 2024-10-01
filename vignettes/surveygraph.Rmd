@@ -1,0 +1,32 @@
+---
+title: "surveygraph"
+description: >
+  getting started
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Data cleaning}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(collapse = T, comment = "#>")
+options(tibble.print_min = 4L, tibble.print_max = 4L)
+```
+
+hellooo mister bush!
+
+We'll start by loading surveygraph:
+
+```{r, message = FALSE}
+library(surveygraph)
+```
+
+## Coercion
+
+The most important grouping verb is `group_by()`: it takes a data frame and one or more variables to group by:
+
+```{r}
+df <- data.frame(item1 = c(1, 2, 3), item2 = c(4, 5, 7))
+df
+```
