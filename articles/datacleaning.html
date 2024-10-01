@@ -39,7 +39,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/datacleaning.html">Data cleaning</a></li>
-    <li><a class="dropdown-item" href="../articles/projections.html">Survey projections</a></li>
+    <li><a class="dropdown-item" href="../articles/projections.html">Data projections</a></li>
     <li><a class="dropdown-item" href="../articles/syntheticdata.html">Synthetic data</a></li>
   </ul>
 </li>
@@ -72,30 +72,97 @@
 
     
     
-<p><em>This page is under development. Stay tuned.</em></p>
-<p>We’ll start by loading surveygraph:</p>
+<p><em>This page is under development. Stay tuned!</em></p>
+<p>This vignette gives an overview of how data is preprocessed by the
+surveygraph package, following a number of optional arguments that
+specify how certain data is to be handled.</p>
+<p>We’ll start by loading surveygraph,</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/surveygraph/surveygraphr" class="external-link">surveygraph</a></span><span class="op">)</span></span></code></pre></div>
+<p>and assume data <code>S</code> that we attempt to supply to
+surveygraph.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>    item1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="op">-</span><span class="fl">99</span>, <span class="fl">1</span>,   <span class="fl">1</span>, <span class="fl">100</span>, <span class="fl">5</span><span class="op">)</span>,</span>
+<span>    item2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,   <span class="fl">3</span>, <span class="fl">1</span>,   <span class="fl">2</span>,   <span class="fl">4</span>, <span class="fl">3</span><span class="op">)</span>, </span>
+<span>    item3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,   <span class="fl">1</span>, <span class="fl">3</span>, <span class="op">-</span><span class="fl">99</span>,   <span class="fl">5</span>, <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df</span></span>
+<span><span class="co">#&gt;   item1 item2 item3</span></span>
+<span><span class="co">#&gt; 1     2     1     2</span></span>
+<span><span class="co">#&gt; 2   -99     3     1</span></span>
+<span><span class="co">#&gt; 3     1     1     3</span></span>
+<span><span class="co">#&gt; 4     1     2   -99</span></span>
+<span><span class="co">#&gt; 5   100     4     5</span></span>
+<span><span class="co">#&gt; 6     5     3     4</span></span></code></pre></div>
+<div class="section level2">
+<h2 id="data-frame-input">Data frame input<a class="anchor" aria-label="anchor" href="#data-frame-input"></a>
+</h2>
+<p>The first this we check is that the input data <code>S</code> is a
+dataframe. If it’s not the program is halted and an error is output.
+Future versions may attempt to coerce other formats to dataframes.</p>
+<p>For instance, if we attempt to run the <code><a href="../reference/make_projection.html">make_projection()</a></code>
+routine on a list, we get the following error.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/make_projection.html">make_projection</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in make_projection(list(c(1, 2, 3))): Input data must be provided as a data frame.</span></span></code></pre></div>
+<p>Similarly, an error is output if an empty data frame is provided.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/make_projection.html">make_projection</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in make_projection(data.frame()): Data frame cannot be empty.</span></span></code></pre></div>
+</div>
 <div class="section level2">
 <h2 id="coercion">Coercion<a class="anchor" aria-label="anchor" href="#coercion"></a>
 </h2>
-<p>The most important grouping verb is <code>group_by()</code>: it takes
-a data frame and one or more variables to group by:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>item1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>, item2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">df</span></span>
-<span><span class="co">#&gt;   item1 item2</span></span>
-<span><span class="co">#&gt; 1     1     4</span></span>
-<span><span class="co">#&gt; 2     2     5</span></span>
-<span><span class="co">#&gt; 3     3     7</span></span></code></pre></div>
+<p>Our approach is to coerce all data to floating point types, and to
+set them to NA otherwise.</p>
+<div class="section level3">
+<h3 id="character-strings">Character strings<a class="anchor" aria-label="anchor" href="#character-strings"></a>
+</h3>
+<p>If columns happen to string literals of numeric data, these are
+coerced to floating point numbers, otherwise they are set to
+<code>NA</code>.</p>
 </div>
-  </main>
+<div class="section level3">
+<h3 id="logical-values">Logical values<a class="anchor" aria-label="anchor" href="#logical-values"></a>
+</h3>
+<p>If survey entries contain <code>TRUE</code> or <code>FALSE</code>,
+then these are coerced to 1 and 0, respectively.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="dummy-coding">Dummy coding<a class="anchor" aria-label="anchor" href="#dummy-coding"></a>
+</h2>
+<p>This is a flag that if set to <code>TRUE</code>, dummy codes
+everything that falls outside the range specified by the
+<code>likert</code> flag.</p>
+</div>
+<div class="section level2">
+<h2 id="likert-range">Likert range<a class="anchor" aria-label="anchor" href="#likert-range"></a>
+</h2>
+<p>The <code>likert</code> optional argument allows us to specify the
+range of the values that we are to interpret as valid input data. The
+idea is that anything that falls outside of this range is set to
+<code>NA</code>, or is dummy coded.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>    minval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">df</span>, <span class="fl">2</span>, <span class="va">min</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>    maxval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">df</span>, <span class="fl">2</span>, <span class="va">max</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;       minval maxval</span></span>
+<span><span class="co">#&gt; item1    -99    100</span></span>
+<span><span class="co">#&gt; item2      1      4</span></span>
+<span><span class="co">#&gt; item3    -99      5</span></span></code></pre></div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Samuel Unicomb, Ana Jovancevic, Alejandro Dinkelberg, Pádraig MacCarron, David O’Sullivan, Paul Maher, Mike Quayle.</p>
+  <p>Developed by Samuel Unicomb, Ana Jovancevic, Caoimhe O’Reilly, Alejandro Dinkelberg, Pádraig MacCarron, David O’Sullivan, Paul Maher, Mike Quayle.</p>
 </div>
 
 <div class="pkgdown-footer-right">
