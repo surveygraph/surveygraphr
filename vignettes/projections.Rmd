@@ -1,0 +1,27 @@
+---
+title: "Agent and symbolic layer projections"
+description: >
+  To understand how surveygraph handles irregular data...
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Projections}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(collapse = T, comment = "#>")
+options(tibble.print_min = 4L, tibble.print_max = 4L)
+```
+
+We'll start by loading surveygraph:
+
+```{r, message = FALSE}
+library(surveygraph)
+```
+
+Initialising a data frame.
+
+```{r}
+df <- data.frame(item1 = c(1, 2, 3), item2 = c(4, 5, 7))
+```

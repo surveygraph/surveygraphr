@@ -1,10 +1,10 @@
 ---
-title: "surveygraph"
+title: "Introduction to surveygraph"
 description: >
-  getting started
+  Getting started with surveygraph.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Data cleaning}
+  %\VignetteIndexEntry{Get started}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -14,7 +14,9 @@ knitr::opts_chunk$set(collapse = T, comment = "#>")
 options(tibble.print_min = 4L, tibble.print_max = 4L)
 ```
 
-hellooo mister bush!
+This is an introduction to the surveygraph package, a lightweight package that
+produces network representations of sociological data. We assume that this data
+is presented in a rectangular array like a survey.
 
 We'll start by loading surveygraph:
 
@@ -22,7 +24,11 @@ We'll start by loading surveygraph:
 library(surveygraph)
 ```
 
-## Coercion
+# Similarity measure
+## Another heading
+## Yet another heading
+### Agent layer projection
+### Symbolic layer projection
 
 The most important grouping verb is `group_by()`: it takes a data frame and one or more variables to group by:
 
