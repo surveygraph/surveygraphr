@@ -1,5 +1,5 @@
 ---
-title: "Generating synthetic data"
+title: "Synthetic data"
 description: >
   To understand how surveygraph handles irregular data...
 output: rmarkdown::html_vignette
@@ -13,6 +13,8 @@ vignette: >
 knitr::opts_chunk$set(collapse = T, comment = "#>")
 options(tibble.print_min = 4L, tibble.print_max = 4L)
 ```
+
+_This page is under development. Stay tuned._
 
 We include in surveygraph the routine `make_synthetic_data()` that produces simple model survey data.
 

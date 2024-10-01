@@ -14,7 +14,7 @@ knitr::opts_chunk$set(collapse = T, comment = "#>")
 options(tibble.print_min = 4L, tibble.print_max = 4L)
 ```
 
-hellooo mister bush!
+_This page is under development. Stay tuned._
 
 We'll start by loading surveygraph:
 
