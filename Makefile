@@ -19,6 +19,9 @@ run:
 doc:
 	Rscript -e "library('roxygen2'); roxygenise()"
 
+test:
+	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-projection.R')"
+
 knit:
 	@Rscript -e "rmarkdown::render('vignettes/datacleaning.Rmd', params=list(args = myarg))"
 	@#Rscript -e "rmarkdown::render('vignettes/surveygraph.Rmd', params=list(args = myarg))"

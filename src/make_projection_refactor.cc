@@ -358,8 +358,8 @@ SEXP rmake_projection(
   SEXP rlayer,      // layer flag, agent or symbolic
   SEXP rmethod,     // sparsification method, lcc, average_degree, raw_similarity
   SEXP rmethodval,  // method value, utility variable
-  SEXP rlikert,     // likert scale specification
-  SEXP rdummycode,  // dummy coding boolean
+  SEXP rlikert,     // likert scale specification   // TODO shouldn't require this
+  SEXP rdummycode,  // dummy coding boolean         // TODO shouldn't require this
   SEXP rmincomps,   // minimum comparisons
   SEXP rsimilarity, // similarity metric
   SEXP rcentre)     // centering flag, 0 or 1
@@ -420,13 +420,11 @@ SEXP rmake_projection(
     layer, 
     method, 
     methodval, 
-    dummycode, 
-    likert, 
+    dummycode, // TODO shouldn't require this
+    likert,    // TODO shouldn't require this
     mincomps, 
     similarity
   };
-
-  //Rf_error("Ambre is sexy.");
 
   SEXP redgelist = PROTECT(Rf_allocVector(VECSXP, 3));
   cppedgelist_to_rdf(S.g_dummy, centre, redgelist);

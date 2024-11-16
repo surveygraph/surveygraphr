@@ -66,7 +66,7 @@
 #' comparison is invalid.
 #' @param similarity_metric This currently has just one allowed value, namely the
 #'   Manhattan distance, which is the default.
-#' @param showdata This is a debugging flag that prints out survey data after a
+#' @param verbose This is a debugging flag that prints out survey data after a
 #' pre-processing step, but before being supplied to the C++ routines that compute
 #' the network representation.
 #' 
@@ -83,7 +83,7 @@ make_projection <- function(
   likert = NULL,
   mincomps = NULL,
   similarity_metric = NULL,
-  showdata = NULL
+  verbose = NULL
 ){
 
   # TODO do cleaning of data, ie coerce to numeric etc, set strings to NA
@@ -92,6 +92,7 @@ make_projection <- function(
   }else if(ncol(data) == 0 || nrow(data) == 0){
     stop("Data frame cannot be empty.")
   }
+
 
   # check that layer is either agent or symbolic
   # 0 agent
@@ -106,6 +107,7 @@ make_projection <- function(
     layer = as.integer(0)
     message("Warning: `layer` needs to be either \"agent\" or \"symbolic\". Defaulting to \"agent\".")
   }
+
 
   # set threshold method
   # 0 lcc
@@ -124,6 +126,7 @@ make_projection <- function(
     message("Warning: `threshold_method` needs to be either \"target_lcc\", \"target_ad\" or \"raw_similarity\". Defaulting to \"target_lcc\".")
   }
 
+
   # method value
   if(is.null(method_value)){
     if(threshold_method == 0){
@@ -134,6 +137,7 @@ make_projection <- function(
       method_value <- as.numeric(1)
     }
   }
+
 
   # Centre edge weights about zero, default to false.
   if(is.null(centre)){
@@ -146,6 +150,7 @@ make_projection <- function(
     warning("`centre` must either be TRUE or FALSE. Defaulting to FALSE.")
   }
 
+
   # dummycode
   if(is.null(dummycode)){
     dummycode = as.integer(0)
@@ -154,6 +159,7 @@ make_projection <- function(
   }else{
     dummycode = as.integer(1)
   }
+
 
   # check the likert flag
   if(is.null(likert)){
@@ -230,15 +236,18 @@ make_projection <- function(
     }
   }
 
-  if(!is.null(showdata)){
-    if(showdata)
+
+  if(!is.null(verbose)){
+    if(verbose)
       print(data)
   }
+
 
   # minimum comparisons
   if(is.null(mincomps)){
     mincomps = as.integer(ncol(data) / 2)
   }
+
 
   # check the value of similarity_matric
   if(is.null(similarity_metric)){
@@ -254,14 +263,16 @@ make_projection <- function(
     similarity_metric <- as.integer(0)
   }
 
-  e <- .Call("rmake_projection", 
-             data, 
-             layer,
-             threshold_method,
-             method_value, 
-             likert,
-             dummycode,
-             mincomps,
-             similarity_metric,
-             centre)
+
+  e <- .Call(
+    "rmake_projection", 
+    data, 
+    layer,
+    threshold_method,
+    method_value, 
+    likert,     ############## shouldn't require this
+    dummycode,  ############## shouldn't require this
+    mincomps,
+    similarity_metric,
+    centre)
 }

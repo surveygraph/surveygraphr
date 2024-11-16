@@ -59,6 +59,15 @@ e <- make_projection(S, layer="agent")
 
 <a><img src="man/figures/eg1.jpg" align="center" height="238" /></a>
 
+## References
+
+Dinkelberg, A., O’Reilly, C., MacCarron, P., Maher, P. J., & Quayle, M. (2021). Multidimensional polarization dynamics in US election data in the long term (2012–2020) and in the 2020 election cycle. Analyses of Social Issues and Public Policy, 21(1), 284–311. https://doi.org/10.1111/asap.12278
+
+MacCarron, P., Maher, P. J., & Quayle, M. (2020). Identifying opinion-based groups from survey data: A bipartite network approach. arXiv. http://arxiv.org/abs/2012.11392
+
+Maher, P. J., MacCarron, P., & Quayle, M. (2020). Mapping public health responses with attitude networks: The emergence of opinion‐based groups in the UK’s early COVID‐19 response phase. British Journal of Social Psychology, 59(3), 641–652. https://doi.org/10.1111/bjso.12396
+
+
 ## Getting help
 
 Please contact samuel.l.unicomb@ul.ie for support, and report bugs with a minimal illustrative example on [GitHub](https://github.com/surveygraph/surveygraphr/issues/). Since the package is in its infancy, we welcome feature requests and general feedback.

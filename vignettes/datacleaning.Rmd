@@ -111,5 +111,6 @@ l
 Now, we provide the Likert specification `l` to `make_projection` to tell surveygraph
 how to handle the outliers.
 ```{r}
+# verbose = T
 make_projection(df, likert=l, showdata=T)
 ```
