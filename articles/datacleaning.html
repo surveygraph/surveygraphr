@@ -8,8 +8,8 @@
 <title>Data cleaning • surveygraph</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Data cleaning">
 <meta name="description" content="To understand how surveygraph handles irregular data...
 ">
@@ -182,20 +182,8 @@ set</p>
 <code>make_projection</code> to tell surveygraph how to handle the
 outliers.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/make_projection.html">make_projection</a></span><span class="op">(</span><span class="va">df</span>, likert<span class="op">=</span><span class="va">l</span>, showdata<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Note: columns 1, 3 contain entries outside the specified range. Setting them to NA.</span></span>
-<span><span class="co">#&gt;   1: -99, 100</span></span>
-<span><span class="co">#&gt;   3: -99</span></span>
-<span><span class="co">#&gt;   item1 item2 item3</span></span>
-<span><span class="co">#&gt; 1     2     1     2</span></span>
-<span><span class="co">#&gt; 2    NA     3     1</span></span>
-<span><span class="co">#&gt; 3     1     1     3</span></span>
-<span><span class="co">#&gt; 4     1     2    NA</span></span>
-<span><span class="co">#&gt; 5    NA     4     5</span></span>
-<span><span class="co">#&gt; 6     5     3     6</span></span>
-<span><span class="co">#&gt; 7     5     4     8</span></span>
-<span><span class="co">#&gt; 8     4     5     4</span></span>
-<span><span class="co">#&gt; 9     3     4    10</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># verbose = T</span></span>
+<span><span class="co">#make_projection(df, likert=l, showdata=T)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
