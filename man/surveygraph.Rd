@@ -37,6 +37,7 @@ Useful links:
 Authors:
 \itemize{
   \item Ana Jovancevic
+  \item Caoimhe O'Reilly
   \item Alejandro Dinkelberg
   \item Pádraig MacCarron
   \item David O'Sullivan

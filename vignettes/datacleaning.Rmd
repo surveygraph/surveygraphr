@@ -112,5 +112,5 @@ Now, we provide the Likert specification `l` to `make_projection` to tell survey
 how to handle the outliers.
 ```{r}
 # verbose = T
-make_projection(df, likert=l, showdata=T)
+#make_projection(df, likert=l, showdata=T)
 ```

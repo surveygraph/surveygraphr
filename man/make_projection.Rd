@@ -13,7 +13,8 @@ make_projection(
   dummycode = NULL,
   likert = NULL,
   mincomps = NULL,
-  similarity_metric = NULL
+  similarity_metric = NULL,
+  verbose = NULL
 )
 }
 \arguments{
@@ -58,8 +59,9 @@ if \code{method_value = 1}, the network is complete, meaning it contains every
 possible edge.
 }}
 
-\item{centre}{If \code{FALSE}, we shift edge weights by 1 from \verb{[-1, 1]} to \verb{[0, 2]}.
-Defaults to TRUE.}
+\item{centre}{If \code{TRUE}, we shift edge weights from \verb{[0, 1]} to \verb{[-1, 1]}.
+Defaults to FALSE, as most network analysis applications require positive
+edge weights.}
 
 \item{dummycode}{flag that indicates whether we dummycode data.}
 
@@ -72,6 +74,10 @@ comparison is invalid.}
 
 \item{similarity_metric}{This currently has just one allowed value, namely the
 Manhattan distance, which is the default.}
+
+\item{verbose}{This is a debugging flag that prints out survey data after a
+pre-processing step, but before being supplied to the C++ routines that compute
+the network representation.}
 }
 \value{
 A data frame corresponding to the edge list of the specified network. It
