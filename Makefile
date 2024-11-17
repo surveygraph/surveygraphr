@@ -5,6 +5,7 @@ build:
 	R CMD build .
 
 check:
+	R CMD build .
 	R CMD check surveygraph_*.tar.gz
 
 checkcran:
