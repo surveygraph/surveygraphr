@@ -30,6 +30,8 @@ named
 }
 }
 \description{
+\strong{Note that a major update to the surveygraph package, as well as documentation here, is planned for July 2025.}
+
 \code{make_threshold_profile()} outputs properties of the agent or symbolic network
 as a function of similarity threshold.
 }

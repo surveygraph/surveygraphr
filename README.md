@@ -5,9 +5,10 @@
 [![R-CMD-check](https://github.com/surveygraph/surveygraphr/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/surveygraph/surveygraphr/actions/workflows/check-standard.yaml)
 [![codecov](https://codecov.io/gh/surveygraph/surveygraphr/graph/badge.svg?token=SHFUE2Z36X)](https://app.codecov.io/gh/surveygraph/surveygraphr)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10887909.svg)](https://doi.org/10.5281/zenodo.10887909)
-
 <!-- badges: end -->
 
+
+**Note that a major update to the surveygraph package, as well as documentation here, is planned for July 2025.**
 
 ## Overview
 surveygraph is a lightweight library used to produce network representations of attitudes, as they emerge in tabular sociological data such as surveys.
