@@ -8,7 +8,7 @@
 <!-- badges: end -->
 
 
-**Note that a major update to the surveygraph package, as well as documentation on this page, is planned for July 2025.**
+**Note that a major update to the surveygraph package, as well as documentation on this page, is planned for ~~July~~ August 2025.**
 
 ## Overview
 surveygraph is a lightweight library used to produce network representations of attitudes, as they emerge in tabular sociological data such as surveys.
