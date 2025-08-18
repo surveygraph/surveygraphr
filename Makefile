@@ -17,11 +17,13 @@ clean:
 run:
 	@Rscript eg.R
 
+# need to run this in order to update NAMESPACE, necessary if adding new functions
 doc:
 	Rscript -e "library('roxygen2'); roxygenise()"
 
 test:
 	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-projection.R')"
+	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-data-handling.R')"
 
 knit:
 	@Rscript -e "rmarkdown::render('vignettes/datacleaning.Rmd', params=list(args = myarg))"
