@@ -3,17 +3,65 @@
 # The principle is that our C++ code should do the absolute minimum of testing
 # itself, if any. It should throw an error if it can't compute edges naively.
 # 
-# check if dataframe
-# coerce to numeric
-# are likert scale specifications correct, consistent?
-# dummy coding
-# NA versus NULL versus Inf versus numeric(0)
-# check if empty, require one row, one column?
+# check that program...
+# ===============================================
+# outputs error if not dataframe
+# outputs warning if dataframe is empty
+# coerces non-numeric data to numeric using example dataframe
+# sets Inf and -Inf to NA
+# handles Likert scale specifications consistently
+# handles dummy coding consistently
 
 
-test_that("data needs to be in a data frame", {
-
+test_that("output an error if data is not a dataframe", {
+  expect_error(data_handling(list()), "Input data must be a dataframe.")
 })
+
+test_that("output a warning if dataframe is empty", {
+  expect_warning(data_handling(data.frame()), "Input dataframe is empty.")
+})
+
+test_that("coercion to numeric for a bunch of test cases", {
+	S <- data.frame(
+		item1 = c(1.2, 3.4, 5),
+		item2 = c(TRUE, FALSE, TRUE),
+		item3 = factor(c("low", "medium", "high")),
+		item4 = c("1", "2.5", "-3"),
+		item5 = c("3.14", "pi", "42"),
+		item6 = c("NA", "NA", "NA"),
+		item7 = as.Date(c("2002-03-02", "2008-12-14", "1955-02-23")),
+		item8 = as.POSIXct(c("2002-03-02", "2008-12-14", "1955-02-23"), tz="UTC"),
+		stringsAsFactors = FALSE
+	)
+
+	Sclean <- data.frame(
+		item1 = c(1.2, 3.4, 5),
+		item2 = c(1, 0, 1),
+		item3 = as.numeric(c(NA, NA, NA)),
+		item4 = c(1, 2.5, -3),
+		item5 = c(3.14, NA, 42.0),
+		item6 = as.numeric(c(NA, NA, NA)),
+		item7 = c(11748, 14227, -5426),
+		item8 = c(1015027200, 1229212800, -468806400)
+	)
+
+	expect_warning(S <- data_handling(S), regexp = "NAs introduced by coercion")
+	expect_equal(Sclean, S);
+})
+
+
+test_that("set Inf and -Inf to NA", {
+	S <- data.frame(c(NA, Inf, -Inf))
+
+	Sclean <- data.frame(as.numeric(c(NA, NA, NA)))
+	S <- data_handling(S)
+
+	colnames(S) <- NULL
+	colnames(Sclean) <- NULL
+
+	expect_equal(Sclean, S)	
+})
+
 
 test_that("likert scale dataframe is consistent", {
   S <- data.frame(item_1 = c(1, -99),
@@ -27,29 +75,3 @@ test_that("likert scale dataframe is consistent", {
     data.frame(u = c(1), v = c(2), weight = c(0.25))
   )
 })
-
-
-# make this an example showing everything that happens upon coercion to numeric
-# really just a sanity check, showing that base R as.numeric() works as expected
-test_that("example dataframe showing coercion from string to NA works as expected", {
-
-  S <- data.frame(c(1, "two", "3"), c(4, 5, "6"))
-
-  Sclean <- data.frame(as.numeric(c(1, NA, 3)), as.numeric(c(4, 5, 6)))
-
-  expect_warning(S <- data_handling(S))
-
-  colnames(S) <- NULL
-  colnames(Sclean) <- NULL
-
-  expect_equal(S, Sclean) 
-})
-
-
-# TODO 
-# test incorrect likert specification, e.g. min greater than max
-# handling of NA
-# likert incorrect dimensions, 
-# different ways of constructing likert dataframe
-
-# TODO in documentation, explain what's happening upon coercion to numeric
