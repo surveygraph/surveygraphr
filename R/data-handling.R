@@ -39,10 +39,16 @@ data_handling <- function(
     stop("Input dataframe cannot be empty.")
   }
 
-  # Set Inf entries to NA. We could allow them to be dummy coded, but don't.
-	nums <- sapply(data, is.numeric)
-	if (length(nums) > 0){
-		data[nums] <- lapply(data[nums], function(col){col[is.infinite(col)] <- NA; col})
+  # Set infinite value entries to NA.
+	colsnumeric <- sapply(data, is.numeric)
+	if(length(colsnumeric) > 0){
+		data[colsnumeric] <- lapply(
+			data[colsnumeric], 
+			function(col){
+				col[is.infinite(col)] <- NA
+				col
+			}
+		)
 	}
 
 	# Verify dummycode input.
@@ -75,22 +81,17 @@ data_handling <- function(
 			warning("each column in likert should be non-decreasing")
 	}
 
-	#data <- data.frame(as.numeric(numeric_handling(data[[1]]), likert))
-	if(is.numeric(data[[1]]))
-		data <- numeric_handling(data[[1]], likert = likert[[1]])
 
-	# In the following, we process each column according to its type, returning a
-	# dataframe that refactors it according to likert and dummycode flags.
+  datacopy <- as.data.frame(
+    lapply(
+      seq_along(data),
+      function(i){
+        if(is.numeric(data[[i]])) numeric_handling(data[[i]], likert = likert[[i]])
+      }
+    )
+  )
 
-  #data[] <- lapply(data, function(col){
-  #  # if columns are factors, set to them to their character values
-  #  # should we put a warning if factors are being converted?
-  #  if(is.factor(col)) col <- as.character(col)
-  #  as.numeric(col)
-  #})
-
-
-  data
+	datacopy
 }
 
 
@@ -99,11 +100,20 @@ numeric_handling <- function(
   dummycode = NULL,
   likert = NULL
 ){
-	if(!is.vector(data) || !is.numeric(data)) stop("need to pass numeric vector")
+	if(!is.vector(data) || !is.numeric(data)) 
+		stop("data here needs to be a vector, and it needs to be numeric")
 
 	if(is.null(dummycode) && !is.null(likert)){
-		if(!is.vector(likert)) stop("need to pass vector")
+		if(!is.vector(likert)) 
+			stop("likert here needs to be a vector")
+
 		data[data < likert[1] | data > likert[2]] <- NA
 	}
-	data < data.frame(as.numeric(data))
+
+	#if(!is.null(dummycode) && is.null(likert)){
+	#	# warn about decimal points if there are any
+	#	#model.matrix(~ f - 1)
+	#}
+
+	data <- data.frame(as.numeric(data))
 }

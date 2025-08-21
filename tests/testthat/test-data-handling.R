@@ -25,17 +25,6 @@ test_that("set Inf and -Inf to NA", {
   S2 <- data.frame(as.numeric(c(NA, NA, NA)))
 	colnames(S1) <- NULL
 	colnames(S2) <- NULL
-	rownames(S1) <- NULL
-	rownames(S2) <- NULL
-
-	print("")
-	print(S1)
-	print(ncol(S1))
-	print(typeof(S1))
-	print("")
-	print(S2)
-	print(ncol(S2))
-	print(typeof(S2))
 
 	expect_equal(S1, S2)
 })
@@ -89,27 +78,38 @@ test_that("likert should be ordered", {
 })
 
 
+# TODO
+# likert comparisons fail on NAs, returns logicals
+# one or both entries in likert should be able to be NA
+
 test_that("numeric with likert", {
 	df1 <- data_handling(data.frame(c(1, 2, 3)), likert = data.frame(c(1, 2)))
 	df2 <- data.frame(c(1, 2, NA))
-
 	colnames(df1) <- NULL
 	colnames(df2) <- NULL
 
-	#print("")
-	#print(df1)
-	#print("")
-	#print(df2)
-	#print("")
-
-	#expect_equal(unname(as.matrix(df1), unname(as.matrix(df2))))
-	#print("")
-	#print(df1)
-	#print("")
-	#print(df2)
-	#print("")
-	#expect_equal(df1, df2)
+	expect_equal(df1, df2)
 })
+
+
+test_that("numeric with likert, multiple columns", {
+	df1 <- data_handling(data.frame(c(1, 2, 3), c(2, 3, 4)), likert = data.frame(c(1, 2), c(1, 2)))
+	df2 <- data.frame(c(1, 2, NA), c(2, NA, NA))
+	colnames(df1) <- NULL
+	colnames(df2) <- NULL
+
+	expect_equal(df1, df2)
+})
+
+
+#test_that("numeric with dummycode", {
+#	df1 <- data_handling(data.frame(c(1, 2, 3, 1)), dummycode = 1)
+#	df2 <- data.frame(c(1, 0, 0, 1), c(0, 1, 0, 0), c(0, 0, 1, 0))
+#	colnames(df1) <- NULL
+#	colnames(df2) <- NULL
+#
+#	expect_equal(df1, df2)
+#})
 
 
 #test_that("numeric with likert", {
