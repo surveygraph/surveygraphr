@@ -30,14 +30,7 @@ test_that("set Inf and -Inf to NA", {
 })
 
 
-test_that("dummycode should be null, or be coercible to 0 or 1", {
-	expect_error(
-		data_handling(data.frame(1), dummycode = 2), 
-		regexp = "dummycode should equal 0 or 1, or be coercible to those values."
-	)
-})
-
-
+# TODO specify in warnings which columns of likert and dummycode are affected
 test_that("likert must be a dataframe if it's not null", {
 	expect_error(
 		data_handling(data.frame(1), likert = list()),
@@ -62,46 +55,94 @@ test_that("likert must have as many columns as the survey dataframe", {
 })
 
 
-test_that("each column in likert should be numeric", {
+test_that("likert should be numeric or logical, set to c(NA, NA) otherwise", {
 	expect_warning(
-		data_handling(data.frame(1), likert = data.frame(c(F, T))),
-		regexp = "each column in likert should be numeric"
+		data_handling(data.frame(1), likert = data.frame(c("a", "b"))),
+	  regexp = "setting likert columns that aren't numeric or logical to logical NA"
 	)
 })
 
 
-test_that("likert should be ordered", {
+test_that("if a likert column is numeric, both values must be finite", {
+	expect_warning(
+		data_handling(data.frame(1), likert = data.frame(c(1, NA))),
+		regexp = "at least one numerical likert column invalid, setting to logical NA"
+	)
+})
+
+
+test_that("if a likert column is logical, both values must be NA", {
+	expect_warning(
+		data_handling(data.frame(1), likert = data.frame(c(T, F))),
+		regexp = "at least one logical likert column contains non NA entries, setting to NA"
+	)
+})
+
+
+test_that("numerical columns of likert should be non-decreasing", {
 	expect_warning(
 		data_handling(data.frame(1), likert = data.frame(c(2, 1))),
-		regexp = "each column in likert should be non-decreasing"
+		regexp = "each numerical column in likert should be non-decreasing, setting to NA"
+	)
+})
+
+
+#test_that("dummycode should be null, or be coercible to 0 or 1", {
+#	expect_error(
+#		data_handling(data.frame(1), dummycode = 2), 
+#		regexp = "dummycode should equal 0 or 1, or be coercible to those values."
+#	)
+#})
+
+
+test_that("dummycode must be a vector if it's not null", {
+	expect_error(
+		data_handling(data.frame(1), dummycode = list()),
+		regexp = "dummycode must be a vector"
+	)
+})
+
+
+test_that("dummycode must have as many entries as the survey dataframe as columns", {
+	expect_error(
+		data_handling(data.frame(1), dummycode = c(1, 2)),
+		regexp = "dummycode must have as many columns as the survey dataframe"
+	)
+})
+
+
+test_that("dummycode must be logical", {
+	expect_error(
+		data_handling(data.frame(1), dummycode = c(1)),
+		regexp = "dummycode must be logical"
 	)
 })
 
 
 # TODO
 # likert comparisons fail on NAs, returns logicals
-# one or both entries in likert should be able to be NA
-
-test_that("numeric with likert", {
-	df1 <- data_handling(data.frame(c(1, 2, 3)), likert = data.frame(c(1, 2)))
-	df2 <- data.frame(c(1, 2, NA))
-	colnames(df1) <- NULL
-	colnames(df2) <- NULL
-
-	expect_equal(df1, df2)
-})
 
 
-test_that("numeric with likert, multiple columns", {
-	df1 <- data_handling(data.frame(c(1, 2, 3), c(2, 3, 4)), likert = data.frame(c(1, 2), c(1, 2)))
-	df2 <- data.frame(c(1, 2, NA), c(2, NA, NA))
-	colnames(df1) <- NULL
-	colnames(df2) <- NULL
-
-	expect_equal(df1, df2)
-})
-
-
+#test_that("numeric with likert", {
+#	df1 <- data_handling(data.frame(c(1, 2, 3)), likert = data.frame(c(1, 2)))
+#	df2 <- data.frame(c(1, 2, NA))
+#	colnames(df1) <- NULL
+#	colnames(df2) <- NULL
+#
+#	expect_equal(df1, df2)
+#})
+#
+#
+#test_that("numeric with likert, multiple columns", {
+#	df1 <- data_handling(data.frame(c(1, 2, 3), c(2, 3, 4)), likert = data.frame(c(1, 2), c(1, 2)))
+#	df2 <- data.frame(c(1, 2, NA), c(2, NA, NA))
+#	colnames(df1) <- NULL
+#	colnames(df2) <- NULL
+#
+#	expect_equal(df1, df2)
+#})
+#
+#
 #test_that("numeric with dummycode", {
 #	df1 <- data_handling(data.frame(c(1, 2, 3, 1)), dummycode = 1)
 #	df2 <- data.frame(c(1, 0, 0, 1), c(0, 1, 0, 0), c(0, 0, 1, 0))
@@ -125,9 +166,7 @@ test_that("numeric with likert, multiple columns", {
 #test_that("numeric with likert and dummycode")
 
 # need to test coercions here too
-#test_that("logical with likert")
+#test_that("logical with likert... likert doesn't make sense")
 #test_that("logical with dummycode")
-#test_that("logical with dummycode, warning about decimals")
-#test_that("logical with likert and dummycode")
-
+#test_that("logical with dummycode")
 
