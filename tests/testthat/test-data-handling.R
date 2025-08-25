@@ -2,7 +2,17 @@
 #
 # The principle is that our C++ code should do the absolute minimum of testing
 # itself, if any. It should throw an error if it can't compute edges naively.
+#
+# Note to self, there's room for improvement in how we're approaching tests. That is, 
+# there is a sensitivity to the order in which these tests are carried out, and 
+# the order of the implementation in R/data-handling.R. It feels like this
+# shouldn't be the case. That is, if we rearrange the tests, the errors might
+# not match up with what's wrong... (is that right?) need to think about logic.
 
+# TODO
+# in general, specify in warnings which columns of data are relevant, ideally pluralising columns correctly 
+# test the `verbose` flag
+# get the names of the dataframes right... now it's doing bullshit. name the input dframes in all your tests
 
 test_that("output an error if data is not a dataframe", {
   expect_error(
@@ -30,7 +40,6 @@ test_that("set Inf and -Inf to NA", {
 })
 
 
-# TODO specify in warnings which columns of likert and dummycode are affected
 test_that("likert must be a dataframe if it's not null", {
 	expect_error(
 		data_handling(data.frame(1), likert = list()),
@@ -87,18 +96,18 @@ test_that("numerical columns of likert should be non-decreasing", {
 })
 
 
-#test_that("dummycode should be null, or be coercible to 0 or 1", {
-#	expect_error(
-#		data_handling(data.frame(1), dummycode = 2), 
-#		regexp = "dummycode should equal 0 or 1, or be coercible to those values."
-#	)
-#})
-
-
-test_that("dummycode must be a vector if it's not null", {
+test_that("dummycode must be an atomic vector if it's not null", {
 	expect_error(
 		data_handling(data.frame(1), dummycode = list()),
-		regexp = "dummycode must be a vector"
+		regexp = "dummycode must be an atomic vector"
+	)
+})
+
+
+test_that("dummycode vector must be numeric or logical", {
+	expect_error(
+		data_handling(data.frame(1), dummycode = c("a")),
+		regexp = "dummycode must be numeric or logical"
 	)
 })
 
@@ -106,45 +115,49 @@ test_that("dummycode must be a vector if it's not null", {
 test_that("dummycode must have as many entries as the survey dataframe as columns", {
 	expect_error(
 		data_handling(data.frame(1), dummycode = c(1, 2)),
-		regexp = "dummycode must have as many columns as the survey dataframe"
+		regexp = "dummycode length must equal number of columns in survey dataframe"
 	)
 })
 
 
-test_that("dummycode must be logical", {
-	expect_error(
-		data_handling(data.frame(1), dummycode = c(1)),
-		regexp = "dummycode must be logical"
+test_that("if dummycode is logical, NA entries are set to FALSE", {
+	expect_warning(
+		data_handling(data.frame(1, 2), dummycode = c(T, NA)),
+		regexp = "setting NA entries of dummycode to FALSE"
 	)
 })
 
 
-# TODO
-# likert comparisons fail on NAs, returns logicals
+test_that("if dummycode is numeric, setting entries that aren't 1 or 0 to 0", {
+	expect_warning(
+		data_handling(data.frame(1, 2), dummycode = c(1, 2)),
+		regexp = "setting entries of dummycode that aren't 1 or 0 to 0"
+	)
+})
 
 
-#test_that("numeric with likert", {
-#	df1 <- data_handling(data.frame(c(1, 2, 3)), likert = data.frame(c(1, 2)))
-#	df2 <- data.frame(c(1, 2, NA))
-#	colnames(df1) <- NULL
-#	colnames(df2) <- NULL
-#
-#	expect_equal(df1, df2)
-#})
-#
-#
-#test_that("numeric with likert, multiple columns", {
-#	df1 <- data_handling(data.frame(c(1, 2, 3), c(2, 3, 4)), likert = data.frame(c(1, 2), c(1, 2)))
-#	df2 <- data.frame(c(1, 2, NA), c(2, NA, NA))
-#	colnames(df1) <- NULL
-#	colnames(df2) <- NULL
-#
-#	expect_equal(df1, df2)
-#})
-#
-#
+test_that("likert scale on numerical data behaves as expected", {
+	df1 <- data_handling(data.frame(c(1, 3)), likert = data.frame(c(1, 2)))
+	df2 <- data.frame(c(1, NA))
+	colnames(df1) <- NULL
+	colnames(df2) <- NULL
+
+	expect_equal(df1, df2)
+})
+
+
+test_that("as above, but with multiple columns", {
+	df1 <- data_handling(data.frame(c(1, 3), c(3, 4)), likert = data.frame(c(1, 2), c(1, 2)))
+	df2 <- data.frame(c(1, NA), c(NA_real_, NA_real_))
+	colnames(df1) <- NULL
+	colnames(df2) <- NULL
+
+	expect_equal(df1, df2)
+})
+
+
 #test_that("numeric with dummycode", {
-#	df1 <- data_handling(data.frame(c(1, 2, 3, 1)), dummycode = 1)
+#	df1 <- data_handling(data.frame(c(1, 2, 3, 1)), dummycode = c(1))
 #	df2 <- data.frame(c(1, 0, 0, 1), c(0, 1, 0, 0), c(0, 0, 1, 0))
 #	colnames(df1) <- NULL
 #	colnames(df2) <- NULL
@@ -153,12 +166,8 @@ test_that("dummycode must be logical", {
 #})
 
 
-#test_that("numeric with likert", {
-#	expect_equal(
-#		expect_warning(data_handling(data.frame(c(1, 2, 3), likert = data.frame(c(2, 1))))),
-#		data.frame(c(NA, NA, NA))
-#	)
-#})
+
+#data_handling(data.frame(c(1, 2, 3)), likert = data.frame(c(1, 2)), dummycode = c(T))
 
 
 #test_that("numeric with dummycode")

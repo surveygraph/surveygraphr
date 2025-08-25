@@ -52,7 +52,9 @@ data_handling <- function(
   }
 
   # Verify likert input.
-  if(!is.null(likert)){
+  if(is.null(likert)){
+		likert <- as.data.frame(matrix(NA_real_, nrow = 2, ncol = ncol(data)))
+	}else{
     # Must be a dataframe
     if(!is.data.frame(likert))
       stop("likert must be a dataframe")
@@ -124,66 +126,91 @@ data_handling <- function(
 
 
   # Verify dummycode input.
-  if(!is.null(dummycode)){
+  if(is.null(dummycode)){
+		dummycode <- logical(ncol(data))
+	}else{
     # Verify that dummycode is a vector
-    if(!is.vector(dummycode))
-      stop("dummycode must be a vector")
+    if(!is.atomic(dummycode))
+      stop("dummycode must be an atomic vector")
+
+    if(!(is.numeric(dummycode) || is.logical(dummycode)))
+      stop("dummycode must be numeric or logical")
 
     # Verify that dimensions match survey
     if(length(dummycode) != ncol(data))
       stop("dummycode length must equal number of columns in survey dataframe")
   
-    # Verify that dummycode is logical
-    if(!is.logical(dummycode))
-      stop("dummycode must be logical")
-  }
+    # If dummycode is logical and NA entries present, set them to false
+    if(is.logical(dummycode) && anyNA(dummycode)){
+      warning("setting NA entries of dummycode to FALSE")
+      dummycode[is.na(dummycode)] <- FALSE
+    }
 
-  data
+    # If dummycode is numeric, set any entry that is not 1 to 0
+    if(is.numeric(dummycode) && any(!(dummycode %in% c(0, 1)))){
+      warning("setting entries of dummycode that aren't 1 or 0 to 0")
+      dummycode[dummycode != 1] <- 0
 
-  #datacopy <- as.data.frame(
-  #  lapply(
-  #    seq_along(data),
-  #    function(i){
-  #      if(is.numeric(data[[i]])){
-  #        if(is.null(likert) && is.null(dummycode))
-  #          numeric_handling(data[[i]])
+      # Coerce to logical vector.
+      dummycode <- as.logical(dummycode)
+    }
+	}
 
-  #        if(!is.null(likert) && is.null(dummycode))
-  #          numeric_handling(data[[i]], likert = likert[[i]])
-
-  #        if(is.null(likert) && !is.null(dummycode))
-  #          numeric_handling(data[[i]], dummycode = dummycode[[i]])
-
-  #        if(!is.null(likert) && !is.null(dummycode))
-  #          numeric_handling(data[[i]], likert = likert[[i]], dummycode = dummycode[[i]])
-  #      }
-  #    }
-  #  )
-  #)
-
-  #datacopy
+	datacopy <- do.call(
+		cbind,
+		lapply(seq_along(data), function(i){
+			if(is.numeric(data[[i]]))
+				numeric_handling(data[i], likert[[i]], dummycode[[i]])
+		})
+	)
+	datacopy
 }
 
 
-numeric_handling <- function(
-  data, 
-  likert = NULL,
-  dummycode = NULL
-){
-  if(!is.vector(data) || !is.numeric(data)) 
-    stop("data here needs to be a vector, and it needs to be numeric")
-
-  if(is.null(dummycode) && !is.null(likert)){
-    if(!is.vector(likert)) 
-      stop("likert here needs to be a vector")
-
-    data[data < likert[1] | data > likert[2]] <- NA
+numeric_handling <- function(data, likert, dummycode){
+	if(ncol(data) != 1)
+		stop("need to pass a data frame consisting of one column")
+	
+  datacopy <- data
+  dummyset <- character(0)
+  for(i in seq_along(data[[1]])){
+    if(!is.na(data[[1]][[i]])){
+      if(!is.na(likert[[1]])){
+        if(data[[1]][[i]] < likert[[1]] || data[[1]][[i]] > likert[[2]]){
+          datacopy[[1]][[i]] <- NA
+          if(dummycode)
+            dummyset <- c(dummyset, as.character(data[[1]][[i]]))
+        }else{
+          if(dummycode)
+            dummyset <- c(dummyset, as.character("intercept"))
+				}
+      }else{
+        if(dummycode)
+          dummyset <- c(dummyset, as.character(data[[1]][[i]]))
+      }
+    }
   }
 
-  #if(!is.null(dummycode) && is.null(likert)){
-  # # warn about decimal points if there are any
-  # #model.matrix(~ f - 1)
-  #}
+	# construct dummy-coding matrix
+  # NOTE need to warn about decimal points if there are any
+	dcode <- as.data.frame(matrix(nrow = nrow(data), ncol = 0))
+	for(i in unique(dummyset)){
+		if(i != "intercept"){
+			m <- match(dummyset, i)
+			m[is.na(m)] <- 0
 
-  data <- data.frame(as.numeric(data))
+			dcode <- data.frame(dcode, m)
+		}
+	}
+
+	#print("dummyset is:")
+	#print(dummyset)
+	#print("")
+	#print("factor is:")
+	#print(factor(dummyset))
+	#print("dcode is:")
+	#print(dcode)
+
+  datareturn <- data.frame(datacopy, dcode)
+  datareturn
 }
