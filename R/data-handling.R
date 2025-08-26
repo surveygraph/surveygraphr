@@ -168,49 +168,46 @@ data_handling <- function(
 
 
 numeric_handling <- function(data, likert, dummycode){
-	if(ncol(data) != 1)
-		stop("need to pass a data frame consisting of one column")
-	
   datacopy <- data
-  dummyset <- character(0)
+  dummyvals <- character(0)
   for(i in seq_along(data[[1]])){
     if(!is.na(data[[1]][[i]])){
       if(!is.na(likert[[1]])){
         if(data[[1]][[i]] < likert[[1]] || data[[1]][[i]] > likert[[2]]){
           datacopy[[1]][[i]] <- NA
           if(dummycode)
-            dummyset <- c(dummyset, as.character(data[[1]][[i]]))
+            dummyvals <- c(dummyvals, as.character(data[[1]][[i]]))
         }else{
           if(dummycode)
-            dummyset <- c(dummyset, as.character("intercept"))
+            dummyvals <- c(dummyvals, as.character("tmp"))
 				}
       }else{
         if(dummycode)
-          dummyset <- c(dummyset, as.character(data[[1]][[i]]))
+          dummyvals <- c(dummyvals, as.character(data[[1]][[i]]))
       }
     }
   }
 
-	# construct dummy-coding matrix
   # NOTE need to warn about decimal points if there are any
+	udummyvals <- unique(dummyvals)
 	dcode <- as.data.frame(matrix(nrow = nrow(data), ncol = 0))
-	for(i in unique(dummyset)){
-		if(i != "intercept"){
-			m <- match(dummyset, i)
+	dcodenames <- character(0)
+	for(i in udummyvals){
+		if(i != "tmp"){
+			m <- match(dummyvals, i)
 			m[is.na(m)] <- 0
 
 			dcode <- data.frame(dcode, m)
+			dcodenames <- c(dcodenames, paste(colnames(data[1]), i, sep = ""))
 		}
 	}
+	colnames(dcode) <- dcodenames
 
-	#print("dummyset is:")
-	#print(dummyset)
-	#print("")
-	#print("factor is:")
-	#print(factor(dummyset))
-	#print("dcode is:")
-	#print(dcode)
+	datareturn <- as.data.frame(matrix(nrow = nrow(data), ncol = 0))
+	if(is.na(likert[[1]]) && dummycode)
+  	datareturn <- data.frame(dcode)
+	else
+  	datareturn <- data.frame(datacopy, dcode)
 
-  datareturn <- data.frame(datacopy, dcode)
   datareturn
 }

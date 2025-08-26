@@ -17,7 +17,6 @@ clean:
 run:
 	@Rscript eg.R
 
-# need to run this in order to update NAMESPACE, necessary if adding new functions
 doc:
 	Rscript -e "library('roxygen2'); roxygenise()"
 

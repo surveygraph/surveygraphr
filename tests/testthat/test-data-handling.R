@@ -31,12 +31,10 @@ test_that("output an error if dataframe is empty", {
 
 
 test_that("set Inf and -Inf to NA", {
- 	S1 <- data_handling(data.frame(c(NA, Inf, -Inf)))
-  S2 <- data.frame(as.numeric(c(NA, NA, NA)))
-	colnames(S1) <- NULL
-	colnames(S2) <- NULL
-
-	expect_equal(S1, S2)
+	expect_equal(
+		data_handling(data.frame(a = c(NA, Inf, -Inf))),
+		data.frame(a = as.numeric(c(NA, NA, NA)))
+	)
 })
 
 
@@ -137,45 +135,49 @@ test_that("if dummycode is numeric, setting entries that aren't 1 or 0 to 0", {
 
 
 test_that("likert scale on numerical data behaves as expected", {
-	df1 <- data_handling(data.frame(c(1, 3)), likert = data.frame(c(1, 2)))
-	df2 <- data.frame(c(1, NA))
-	colnames(df1) <- NULL
-	colnames(df2) <- NULL
-
-	expect_equal(df1, df2)
+	expect_equal(
+	  data_handling(data.frame(a = c(1, 3)), likert = data.frame(c(1, 2))),
+	  data.frame(a = c(1, NA))
+	)
 })
 
 
 test_that("as above, but with multiple columns", {
-	df1 <- data_handling(data.frame(c(1, 3), c(3, 4)), likert = data.frame(c(1, 2), c(1, 2)))
-	df2 <- data.frame(c(1, NA), c(NA_real_, NA_real_))
-	colnames(df1) <- NULL
-	colnames(df2) <- NULL
-
-	expect_equal(df1, df2)
+	expect_equal(
+	  data_handling(
+			data.frame(a = c(1, 3), b = c(3, 4)),
+			likert = data.frame(c(1, 2), c(1, 2))
+		),
+	  data.frame(a = c(1, NA), b = as.numeric(c(NA, NA)))
+	)
 })
 
 
-#test_that("numeric with dummycode", {
-#	df1 <- data_handling(data.frame(c(1, 2, 3, 1)), dummycode = c(1))
-#	df2 <- data.frame(c(1, 0, 0, 1), c(0, 1, 0, 0), c(0, 0, 1, 0))
-#	colnames(df1) <- NULL
-#	colnames(df2) <- NULL
-#
-#	expect_equal(df1, df2)
-#})
+test_that("numeric with dummycode", {
+	expect_equal(
+	  data_handling(data.frame(a = c(1, 2, 3, 1)), dummycode = c(1)),
+	  data.frame(a1 = c(1, 0, 0, 1), a2 = c(0, 1, 0, 0), a3 = c(0, 0, 1, 0))
+	)
+})
 
 
+# NOTE https://stat.ethz.ch/pipermail/r-help/2013-January/345928.html
+# hypen in column names replaced by periods, eg if dummycoding negative integers
+test_that("numeric with likert and dummycode", {
+	expect_equal(
+	  data_handling(
+			data.frame(a = c(1, 2, 3, -99)), 
+			likert = data.frame(c(1, 3)), 
+			dummycode = c(1)
+		),
+	  data.frame(a = c(1, 2, 3, NA), a.99 = c(0, 0, 0, 1))
+	)
+})
 
-#data_handling(data.frame(c(1, 2, 3)), likert = data.frame(c(1, 2)), dummycode = c(T))
 
-
-#test_that("numeric with dummycode")
-#test_that("numeric with dummycode, warning about decimals")
-#test_that("numeric with likert and dummycode")
-
-# need to test coercions here too
-#test_that("logical with likert... likert doesn't make sense")
-#test_that("logical with dummycode")
-#test_that("logical with dummycode")
-
+# test characters
+# test factors
+# test logicals
+# test dates
+# test verbose
+# UCD nostalgic
