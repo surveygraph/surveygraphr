@@ -159,8 +159,13 @@ data_handling <- function(
 	datacopy <- do.call(
 		cbind,
 		lapply(seq_along(data), function(i){
-			if(is.numeric(data[[i]]))
+			if(is.numeric(data[[i]])){
 				numeric_handling(data[i], likert[[i]], dummycode[[i]])
+			}else if(is.character(data[[i]])){
+				character_handling(data[i], likert[[i]], dummycode[[i]])
+			}else if(is.logical(data[[i]])){
+				logical_handling(data[i], likert[[i]], dummycode[[i]])
+			}
 		})
 	)
 	datacopy
@@ -198,7 +203,8 @@ numeric_handling <- function(data, likert, dummycode){
 			m[is.na(m)] <- 0
 
 			dcode <- data.frame(dcode, m)
-			dcodenames <- c(dcodenames, paste(colnames(data[1]), i, sep = ""))
+			#dcodenames <- c(dcodenames, paste(colnames(data[1]), i, sep = ""))
+			dcodenames <- c(dcodenames, paste(paste(colnames(data[1]), "_", sep = ""), i, sep = ""))
 		}
 	}
 	colnames(dcode) <- dcodenames
@@ -210,4 +216,62 @@ numeric_handling <- function(data, likert, dummycode){
   	datareturn <- data.frame(datacopy, dcode)
 
   datareturn
+}
+
+
+character_handling <- function(data, likert, dummycode){
+  datacopy <- data
+  dummyvals <- character(0)
+
+	if(!is.na(likert[[1]]))
+		warning("ignoring likert flag for character vector")
+
+	if(!dummycode){
+		warning("dummycode flag not set for character vector, coercing to numeric")
+
+		datacopy[[1]] <- as.numeric(datacopy[[1]])
+	}else{
+		for(i in seq_along(data[[1]])){
+			if(!is.na(data[[1]][[i]]))
+				dummyvals <- c(dummyvals, as.character(data[[1]][[i]]))
+		}
+	}
+
+	# dummycoding
+	uniquedummyvals <- unique(dummyvals)
+	dcode <- as.data.frame(matrix(nrow = nrow(data), ncol = 0))
+	dcodenames <- character(0)
+	for(i in uniquedummyvals){
+		if(i != "tmp"){
+			m <- match(dummyvals, i)
+			m[is.na(m)] <- 0
+
+			dcode <- data.frame(dcode, m)
+			dcodenames <- c(dcodenames, paste(paste(colnames(data[1]), "_", sep = ""), i, sep = ""))
+		}
+	}
+	colnames(dcode) <- dcodenames
+
+	datareturn <- as.data.frame(matrix(nrow = nrow(data), ncol = 0))
+	if(dummycode){
+  	datareturn <- dcode
+	}else{
+  	datareturn <- datacopy
+	}
+
+  datareturn
+}
+
+
+logical_handling <- function(data, likert, dummycode){
+  datacopy <- data
+
+	if(!is.na(likert[[1]]))
+		warning("ignoring likert flag for logical vector")
+
+	if(dummycode)
+		warning("ignoring dummycode flag for logical vector")
+
+	datacopy[[1]] <- as.numeric(datacopy[[1]])
+	datacopy
 }

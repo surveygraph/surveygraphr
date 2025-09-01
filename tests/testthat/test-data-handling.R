@@ -156,13 +156,11 @@ test_that("as above, but with multiple columns", {
 test_that("numeric with dummycode", {
 	expect_equal(
 	  data_handling(data.frame(a = c(1, 2, 3, 1)), dummycode = c(1)),
-	  data.frame(a1 = c(1, 0, 0, 1), a2 = c(0, 1, 0, 0), a3 = c(0, 0, 1, 0))
+	  data.frame(a_1 = c(1, 0, 0, 1), a_2 = c(0, 1, 0, 0), a_3 = c(0, 0, 1, 0))
 	)
 })
 
 
-# NOTE https://stat.ethz.ch/pipermail/r-help/2013-January/345928.html
-# hypen in column names replaced by periods, eg if dummycoding negative integers
 test_that("numeric with likert and dummycode", {
 	expect_equal(
 	  data_handling(
@@ -170,14 +168,62 @@ test_that("numeric with likert and dummycode", {
 			likert = data.frame(c(1, 3)), 
 			dummycode = c(1)
 		),
-	  data.frame(a = c(1, 2, 3, NA), a.99 = c(0, 0, 0, 1))
+	  data.frame(a = c(1, 2, 3, NA), a_.99 = c(0, 0, 0, 1))
 	)
 })
 
 
-# test characters
-# test factors
-# test logicals
-# test dates
-# test verbose
-# UCD nostalgic
+test_that("ignore likert scaling for character vectors", {
+	expect_warning(
+		data_handling(data.frame(a = c("a")), likert = data.frame(c(1, 3))),
+		regexp = "ignoring likert flag for character vector"
+	)
+})
+
+
+test_that("character vector without dummycoding flag coerced to NA", {
+	expect_warning(
+		expect_equal(
+			data_handling(data.frame(a = c("a"))),
+			data.frame(data.frame(a = as.numeric(c(NA))))
+		)
+	)
+})
+
+
+test_that("character vector without dummycoding flag coerced to numeric", {
+	expect_warning(
+		expect_equal(
+			data_handling(data.frame(a = c("1"))),
+			data.frame(data.frame(a = c(1)))
+		)
+	)
+})
+
+
+test_that("character vector without dummycoding flag coerced to numeric", {
+	expect_equal(
+		data_handling(data.frame(a = c("m", "f", "m", "f", "f")), dummycode = c(T)),
+		data.frame(data.frame(a_m = c(1, 0, 1, 0, 0), a_f = c(0, 1, 0, 1, 1)))
+	)
+})
+
+
+test_that("ignore likert flag for logical vectors", {
+	expect_warning(
+		data_handling(data.frame(a = c(T)), likert = data.frame(c(1, 3))),
+		regexp = "ignoring likert flag for logical vector"
+	)
+})
+
+
+test_that("ignore dummycode flag for logical vectors", {
+	expect_warning(
+		data_handling(data.frame(a = c(T)), dummycode = c(T)),
+		regexp = "ignoring dummycode flag for logical vector"
+	)
+})
+
+
+
+# test factors, dates, any other dataframe column type you can think of verbose flag
