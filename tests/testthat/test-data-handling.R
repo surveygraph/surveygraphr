@@ -155,8 +155,16 @@ test_that("as above, but with multiple columns", {
 
 test_that("numeric with dummycode", {
 	expect_equal(
-	  data_handling(data.frame(a = c(1, 2, 3, 1)), dummycode = c(1)),
-	  data.frame(a_1 = c(1, 0, 0, 1), a_2 = c(0, 1, 0, 0), a_3 = c(0, 0, 1, 0))
+	  data_handling(data.frame(a = c(1, NA, 2, 3, 1)), dummycode = c(1)),
+	  data.frame(a_1 = c(1, 0, 0, 0, 1), a_2 = c(0, 0, 1, 0, 0), a_3 = c(0, 0, 0, 1, 0))
+	)
+})
+
+
+test_that("numeric with dummycode and non-integers", {
+	expect_warning(
+	  data_handling(data.frame(a = c(1.1)), dummycode = c(1)),
+		regexp = "dummycoding a numeric column that contains non-integer values"
 	)
 })
 
@@ -203,8 +211,8 @@ test_that("character vector without dummycoding flag coerced to numeric", {
 
 test_that("character vector without dummycoding flag coerced to numeric", {
 	expect_equal(
-		data_handling(data.frame(a = c("m", "f", "m", "f", "f")), dummycode = c(T)),
-		data.frame(data.frame(a_m = c(1, 0, 1, 0, 0), a_f = c(0, 1, 0, 1, 1)))
+		data_handling(data.frame(a = c("m", NA, "f", "m", "f", "f")), dummycode = c(T)),
+		data.frame(data.frame(a_m = c(1, 0, 0, 1, 0, 0), a_f = c(0, 0, 1, 0, 1, 1)))
 	)
 })
 
@@ -225,5 +233,13 @@ test_that("ignore dummycode flag for logical vectors", {
 })
 
 
+test_that("coerce logical vector to numeric", {
+	expect_equal(
+		data_handling(data.frame(a = c(T, F, NA))),
+		data.frame(a = c(1, 0, NA))
+	)
+})
 
-# test factors, dates, any other dataframe column type you can think of verbose flag
+
+# test factors, dates, any other dataframe column type
+# test verbose flag

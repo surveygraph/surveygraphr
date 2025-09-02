@@ -12,8 +12,8 @@
 #' contains three columns named 
 #' 
 #' @param data A data frame corresponding to a survey
-#' @param dummycode flag that indicates whether we dummycode data.
 #' @param likert Specifies the range of the Likert scale contained in `data`.  
+#' @param dummycode flag that indicates whether we dummycode data.
 #' @param verbose This is a debugging flag that prints out survey data after a
 #' pre-processing step, but before being supplied to the C++ routines that compute
 #' the network representation.
@@ -165,6 +165,8 @@ data_handling <- function(
 				character_handling(data[i], likert[[i]], dummycode[[i]])
 			}else if(is.logical(data[[i]])){
 				logical_handling(data[i], likert[[i]], dummycode[[i]])
+			}else{
+				other_handling(data[i], likert[[i]], dummycode[[i]])
 			}
 		})
 	)
@@ -172,42 +174,47 @@ data_handling <- function(
 }
 
 
+dummycoding <- function(c, vals){
+	uniquevals <- unique(vals)
+	dcode <- as.data.frame(matrix(nrow = length(vals), ncol = 0))
+	dcodenames <- character(0)
+	for(i in uniquevals){
+		if(!is.na(i)){
+			m <- match(vals, i)
+			m[is.na(m)] <- 0
+
+			dcode <- data.frame(dcode, m)
+			dcodenames <- c(dcodenames, paste(paste(c, "_", sep = ""), i, sep = ""))
+		}
+	}
+	colnames(dcode) <- dcodenames
+	dcode
+}
+
+
 numeric_handling <- function(data, likert, dummycode){
   datacopy <- data
-  dummyvals <- character(0)
+  dummyvals <- character(nrow(data))
+	dummyvals[] <- NA
+
+	if(dummycode)
+		if(any(data[[1]] != floor(data[[1]]), na.rm = TRUE))
+			warning("dummycoding a numeric column that contains non-integer values")
+
   for(i in seq_along(data[[1]])){
     if(!is.na(data[[1]][[i]])){
       if(!is.na(likert[[1]])){
         if(data[[1]][[i]] < likert[[1]] || data[[1]][[i]] > likert[[2]]){
           datacopy[[1]][[i]] <- NA
-          if(dummycode)
-            dummyvals <- c(dummyvals, as.character(data[[1]][[i]]))
-        }else{
-          if(dummycode)
-            dummyvals <- c(dummyvals, as.character("tmp"))
-				}
+          if(dummycode) dummyvals[i] <- as.character(data[[1]][[i]])
+        }
       }else{
-        if(dummycode)
-          dummyvals <- c(dummyvals, as.character(data[[1]][[i]]))
+        if(dummycode) dummyvals[i] <- as.character(data[[1]][[i]])
       }
     }
   }
 
-  # NOTE need to warn about decimal points if there are any
-	udummyvals <- unique(dummyvals)
-	dcode <- as.data.frame(matrix(nrow = nrow(data), ncol = 0))
-	dcodenames <- character(0)
-	for(i in udummyvals){
-		if(i != "tmp"){
-			m <- match(dummyvals, i)
-			m[is.na(m)] <- 0
-
-			dcode <- data.frame(dcode, m)
-			#dcodenames <- c(dcodenames, paste(colnames(data[1]), i, sep = ""))
-			dcodenames <- c(dcodenames, paste(paste(colnames(data[1]), "_", sep = ""), i, sep = ""))
-		}
-	}
-	colnames(dcode) <- dcodenames
+	dcode <- dummycoding(colnames(data[1]), dummyvals)
 
 	datareturn <- as.data.frame(matrix(nrow = nrow(data), ncol = 0))
 	if(is.na(likert[[1]]) && dummycode)
@@ -221,7 +228,8 @@ numeric_handling <- function(data, likert, dummycode){
 
 character_handling <- function(data, likert, dummycode){
   datacopy <- data
-  dummyvals <- character(0)
+  dummyvals <- character(nrow(data))
+	dummyvals[] <- NA
 
 	if(!is.na(likert[[1]]))
 		warning("ignoring likert flag for character vector")
@@ -233,24 +241,11 @@ character_handling <- function(data, likert, dummycode){
 	}else{
 		for(i in seq_along(data[[1]])){
 			if(!is.na(data[[1]][[i]]))
-				dummyvals <- c(dummyvals, as.character(data[[1]][[i]]))
+				dummyvals[i] <- as.character(data[[1]][[i]])
 		}
 	}
 
-	# dummycoding
-	uniquedummyvals <- unique(dummyvals)
-	dcode <- as.data.frame(matrix(nrow = nrow(data), ncol = 0))
-	dcodenames <- character(0)
-	for(i in uniquedummyvals){
-		if(i != "tmp"){
-			m <- match(dummyvals, i)
-			m[is.na(m)] <- 0
-
-			dcode <- data.frame(dcode, m)
-			dcodenames <- c(dcodenames, paste(paste(colnames(data[1]), "_", sep = ""), i, sep = ""))
-		}
-	}
-	colnames(dcode) <- dcodenames
+	dcode <- dummycoding(colnames(data[1]), dummyvals)
 
 	datareturn <- as.data.frame(matrix(nrow = nrow(data), ncol = 0))
 	if(dummycode){
@@ -271,6 +266,16 @@ logical_handling <- function(data, likert, dummycode){
 
 	if(dummycode)
 		warning("ignoring dummycode flag for logical vector")
+
+	datacopy[[1]] <- as.numeric(datacopy[[1]])
+	datacopy
+}
+
+
+other_handling <- function(data, likert, dummycode){
+  datacopy <- data
+
+	warning("package doesn't specifically handly this type, simply coercing to numeric")
 
 	datacopy[[1]] <- as.numeric(datacopy[[1]])
 	datacopy
