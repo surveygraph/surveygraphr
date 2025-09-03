@@ -22,8 +22,8 @@ class surveygraph
       const int &rlayer,
       const int &rmethod,
       const double &rmethodval,
-      const int &rdummycode,
-      const std::vector<std::vector<double>> &rlikert,
+      //const int &rdummycode,
+      //const std::vector<std::vector<double>> &rlikert,
       const int &rmincomps,
       const int &rsimilarity
     ){
@@ -31,8 +31,8 @@ class surveygraph
       layer = rlayer;
       method = rmethod;
       methodval = rmethodval;
-      likert = rlikert;
-      dummycode = rdummycode;
+      //likert = rlikert;
+      //dummycode = rdummycode;
       mincomps = rmincomps;
       similarity = rsimilarity;
         
@@ -82,13 +82,15 @@ class surveygraph
     }
 
     double target_lcc, target_ad, raw_similarity;
-    int layer, method, mincomps, dummycode, similarity, metric;
+    int layer, method, mincomps, similarity, metric;
+    //int dummycode;
     double methodval;
 
     int nrow, ncol;  // number of agent, symbolic
 
     // survey, small sample of survey
-    std::vector<std::vector<double>> survey, surveysample, likert;
+    std::vector<std::vector<double>> survey, surveysample;
+    //std::vector<std::vector<double>> likert;
 
     graph g_agent, g_symbolic, g_dummy;
 

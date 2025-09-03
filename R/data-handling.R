@@ -5,7 +5,7 @@
 #' @description
 #' **Note that a major update to the surveygraph package, as well as documentation on this page, is planned for July 2025.**
 #'
-#' `data_handling()` outputs the survey formatted as required.
+#' `data_preprocess()` outputs the survey formatted as required.
 #' 
 #' @return
 #' A data frame corresponding to the edge list of the specified network. It
@@ -14,18 +14,14 @@
 #' @param data A data frame corresponding to a survey
 #' @param likert Specifies the range of the Likert scale contained in `data`.  
 #' @param dummycode flag that indicates whether we dummycode data.
-#' @param verbose This is a debugging flag that prints out survey data after a
-#' pre-processing step, but before being supplied to the C++ routines that compute
-#' the network representation.
 #' 
 #' @export
 #' @examples
 #' S <- make_synthetic_data(20, 5)
-data_handling <- function(
+data_preprocess <- function(
   data, 
   likert = NULL,
-  dummycode = NULL,
-  verbose = NULL
+  dummycode = NULL
 ){
 
   # Output error if data not a dataframe, important because we assume uniform
