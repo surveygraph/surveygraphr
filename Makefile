@@ -22,7 +22,8 @@ doc:
 
 test:
 	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-projection.R')"
-	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-data-handling.R')"
+	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-projection-deprecated.R')"
+	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-data-preprocessing.R')"
 
 knit:
 	@Rscript -e "rmarkdown::render('vignettes/datacleaning.Rmd', params=list(args = myarg))"

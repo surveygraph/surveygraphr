@@ -90,41 +90,28 @@ make_projection <- function(
   ...
 ){
 
-#make_projection <- function(
-#  data, 
-#  layer = NULL,
-#  threshold_method = NULL, 
-#  method_value = NULL, 
-#  centre = NULL, 
-#  likert = NULL,
-#  dummycode = NULL,
-#  mincompare = NULL,
-#  similarity_metric = NULL,
-#  verbose = NULL
-#){
-
   dots <- list(...)
 
   if(!is.null(dots$threshold_method)){
-    warning("Argument `threshold_method` is deprecated, using `method` instead.", call. = F)
+    warning("Argument `threshold_method` is deprecated and will be removed in future versions; use `method` instead.", call. = F)
     method <- dots$threshold_method
     dots$threshold_method <- NULL
   }
 
   if(!is.null(dots$method_value)){
-    warning("Argument `method_value` is deprecated, using `methodval` instead.", call. = F)
+    warning("Argument `method_value` is deprecated and will be removed future versions; use `methodval` instead.", call. = F)
     methodval <- dots$method_value
     dots$method_value <- NULL
   }
 
   if(!is.null(dots$similarity_metric)){
-    warning("Argument `similarity_metric` is deprecated, using `metric` instead.", call. = F)
+    warning("Argument `similarity_metric` is deprecated and will be removed in future versions; use `methodval` instead.", call. = F)
     metric <- dots$similarity_metric
     dots$similarity_metric <- NULL
   }
 
   if(!is.null(dots$centre)){
-    warning("Argument `centre` is deprecated, defaulting to positive edge weights.", call. = F)
+    warning("Argument `centre` is deprecated; outputting edge weights in range 0 to 1.", call. = F)
     dots$centre <- NULL
   }
 
@@ -146,15 +133,15 @@ make_projection <- function(
   }else if(layer == "symbolic"){
     layer <- as.integer(1)
   }else{
-    warning("Value of `layer`, ", layer, ", unrecognised. Defaulting to \"agent\".")
+    warning("`layer` option \"", layer, "\" unrecognised; defaulting to \"agent\".")
     layer <- as.integer(0)
   }
 
 
-  # Check that method is either lcc, avgdegree or rawsimilarity, mapping to
+  # Check that method is either lcc, avgdegree or similarity, mapping to
   # 0 for lcc
   # 1 for avgdegree
-  # 2 for rawsimilarity
+  # 2 for similarity
   if(is.null(method)){
     method <- as.integer(0)
   }else if(method %in% c("lcc", "target_lcc")){
@@ -164,7 +151,7 @@ make_projection <- function(
   }else if(method %in% c("similarity", "rawsimilarity", "raw_similarity")){
     method <- as.integer(2)
   }else{
-    warning("Value of `method`, ", method, ", unrecognised. Defaulting to \"lcc\".")
+    warning("`method` option \"", method, "\" unrecognised; defaulting to \"lcc\".")
     method <- as.integer(0)
   }
 
@@ -183,25 +170,22 @@ make_projection <- function(
       methodval <- as.numeric(0.99)
     }
   }else{
-    if(method == 0){
-      if(methodval < 0 || methodval > 1){
-        warning("`methodval` must be between 0 and 1 for the lcc method. Defaulting to 1.", call. = F)
-      }
-    }else if(method == 1){
-      if(layer == 0){
-        if(methodval < 0 || methodval > nrow(data) - 1){
-          warning("`methodval` must be between 0 and nrow(data) - 1 for the avgdegree method. Defaulting to 1.", call. = F)
-        }
-      }else{
-        if(methodval < 0 || methodval > ncol(data) - 1){
-          warning("`methodval` must be between 0 and ncol(data) - 1 for the avgdegree method. Defaulting to 1.", call. = F)
-        }
-      }
-    }else if(method == 2){
-      if(methodval < 0 || methodval > 1){
-        warning("`methodval` must be between 0 and 1 for the rawsimilarity method. Defaulting to 1.", call. = F)
-      }
-    }
+    if(methodval < 0 || methodval > 1)
+      warning("`methodval` must be between 0 and 1 for all methods; defaulting to 1.", call. = F)
+
+    #if(method == 0){
+    #  if(methodval < 0 || methodval > 1){
+    #    warning("`methodval` must be between 0 and 1 for the lcc method; defaulting to 1.", call. = F)
+    #  }
+    #}else if(method == 1){
+    #  if(methodval < 0 || methodval > 1){
+    #    warning("`methodval` must be between 0 and 1 for the avgdegree method; defaulting to 1.", call. = F)
+    #  }
+    #}else if(method == 2){
+    #  if(methodval < 0 || methodval > 1){
+    #    warning("`methodval` must be between 0 and 1 for the similarity method; defaulting to 1.", call. = F)
+    #  }
+    #}
   }
 
 
@@ -232,20 +216,9 @@ make_projection <- function(
   }else if(metric %in% c("euclidean", "Euclidean")){
     metric <- as.integer(0)
   }else{
-    warning("Value of `metric`, ", metric, ", unrecognised. Defaulting to \"Manhattan\".")
+    warning("`metric` option ", metric, " unrecognised; defaulting to \"Manhattan\".")
     metric <- as.integer(0)
   }
-
-  #e <- .Call(
-  #  "rmake_projection", 
-  #  data, 
-  #  layer,
-  #  threshold_method,
-  #  method_value, 
-  #  mincompare,
-  #  similarity_metric,
-  #  centre
-  #)
 
   e <- .Call(
     "rmake_projection", 

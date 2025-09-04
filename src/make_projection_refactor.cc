@@ -133,11 +133,10 @@ static void rlist_to_cppvector(const SEXP &rlist, std::vector<std::vector<double
 /*
 
 This function cleans the contents of `data`. It checks that
-
-* at least one row and column
-* all double precision
-* all columns have the same dimension
-* either a finite value or NaN
+- at least one row and column
+- all double precision
+- all columns have the same dimension
+- either a finite value or NaN
 
 */
 static void clean_data(std::vector<std::vector<double>> &data){
@@ -148,12 +147,10 @@ static void clean_data(std::vector<std::vector<double>> &data){
   //}
   //Rprintf("\n");
 
-  // Step 2: prepare a temporary container for cleaned data
+  // Prepare a temporary container for cleaned data.
   std::vector<std::vector<double>> cleandata;
 
-  //if(std::isnan(likert[j][0])){
-
-  // normalise entries each column to the range 0 to 1
+  // Normalise entries each column to the range 0 to 1
   for(int j = 0; j < data[0].size(); ++j){
     // Find bounds on entries in column j. TODO what if dhi and or dlo are nan?
     double dhi = data[0][j];
@@ -178,16 +175,8 @@ static void clean_data(std::vector<std::vector<double>> &data){
     cleandata.push_back(normalised_column);
   }
 
-  //Rprintf("cleandata :\n");
-  //for(int i = 0; i < cleandata.size(); ++i){
-  //  for(int j = 0; j < cleandata[i].size(); ++j) Rprintf("%9f ", cleandata[i][j]);
-  //  Rprintf("\n");
-  //}
-  //Rprintf("\n");
-
-  // Step 4: replace original data with the cleaned version
-  // take the transpose of cleandata, ncol and nrow are the column and row count
-  // of the transpose of cleandata
+  // Replace original data with the cleaned version. Take the transpose of
+  // cleandata, ncol and nrow are the resulting column and row count.
   unsigned int ncol = cleandata.size();
   unsigned int nrow = cleandata[0].size();
 
@@ -197,14 +186,6 @@ static void clean_data(std::vector<std::vector<double>> &data){
       data[j][i] = cleandata[i][j];
     }
   }
-
-  //Rprintf("===============\n");
-  //Rprintf("data after :\n");
-  //for(int i = 0; i < data.size(); ++i){
-  //  for(int j = 0; j < data[i].size(); ++j) Rprintf("%10f ", data[i][j]);
-  //  Rprintf("\n");
-  //}
-  //Rprintf("===============\n");
 }
 
 static void cppedgelist_to_rdf(const graph &g, SEXP &df)
