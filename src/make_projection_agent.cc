@@ -19,7 +19,7 @@ void surveygraph::make_proj_agent_ad()
 void surveygraph::make_proj_agent_similar()
 {
   double threshold = raw_similarity;
-  g_agent = graph(0, threshold, survey); 
+  g_agent = graph(0, threshold, mincomps, survey); 
 }
 
 // find the largest threshold for which the observed lcc is as close 
@@ -39,7 +39,7 @@ void surveygraph::search_threshold_agent_lcc()
   while(!tfound && i < 15){
     double threshold = (tlower + tupper) / 2.0;
 
-    g_agent = graph(0, threshold, survey);
+    g_agent = graph(0, threshold, mincomps, survey);
 
     if(g_agent.lcc > target){
       tlower = threshold;
@@ -79,7 +79,7 @@ void surveygraph::max_threshold_agent(double t, int l)
   while(i < 15){
     threshold = (tlower + tupper) / 2.0;
 
-    g_agent = graph(0, threshold, survey);
+    g_agent = graph(0, threshold, mincomps, survey);
 
     if(g_agent.lcc != l){
       tupper = threshold;
@@ -90,7 +90,7 @@ void surveygraph::max_threshold_agent(double t, int l)
   }
   threshold = tlower;
 
-  g_agent = graph(0, threshold, survey);
+  g_agent = graph(0, threshold, mincomps, survey);
 
   //if(l != g_agent.lcc){
   //  error("an internal test has failed, please report to package creators\n");
@@ -106,7 +106,7 @@ void surveygraph::search_threshold_agent_ad()
   int i = 0;
   while(!tfound && i < 20){  // bisection method
     double threshold = (tlower + tupper) / 2.0;
-    g_agent = graph(0, threshold, survey);
+    g_agent = graph(0, threshold, mincomps, survey);
 
     double addummy = g_agent.avg_degree / double(g_agent.network.size());
 

@@ -26,7 +26,7 @@ class graph
     graph(){}
 
     // provide flag for projection type, threshold, and survey data
-    graph(const int &a, const double &b, const surveydef &S){
+    graph(const int &a, const double &b, const int &c, const surveydef &S){
       switch(a){
         case 0:
           f = 0;
@@ -47,6 +47,7 @@ class graph
           m = int(S[0].size());
       }
       threshold = b;
+      mincomps = c;
 
       build_graph(S);
       build_partition();
@@ -57,6 +58,7 @@ class graph
     int n;  // number of graph nodes (nrow if agent, ncol if symbolic)
     int e;  // number of graph edges
     int m;  // complements n (ncol if agent, nrow if symbolic)
+    int mincomps;  // minimum number of valid comparisons for an edge to be counted
     double avg_degree;
     double threshold;
 

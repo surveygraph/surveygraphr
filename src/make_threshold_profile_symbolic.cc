@@ -22,7 +22,7 @@ void surveygraph::make_threshold_profile_symbolic()
   for(int i = 0; i < count; ++i){
     double threshold = i * dt_symbolic;
 
-    g_symbolic = graph(1, threshold, survey);
+    g_symbolic = graph(1, threshold, mincomps, survey);
 
     std::vector<double> dummy;
     dummy.push_back(threshold);

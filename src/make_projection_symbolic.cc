@@ -19,7 +19,7 @@ void surveygraph::make_proj_symbolic_ad()
 void surveygraph::make_proj_symbolic_similar()
 {
   double threshold = raw_similarity;
-  g_symbolic = graph(1, threshold, survey);
+  g_symbolic = graph(1, threshold, mincomps, survey);
 }
 
 void surveygraph::search_threshold_symbolic_lcc()
@@ -32,7 +32,7 @@ void surveygraph::search_threshold_symbolic_lcc()
   int i = 0;
   while(!tfound && i < 20){  // bisection method
     threshold = (tlower + tupper) / 2.0;
-    g_symbolic = graph(1, threshold, survey);
+    g_symbolic = graph(1, threshold, mincomps, survey);
 
     double lccdummy = g_symbolic.lcc / double(g_symbolic.network.size());
 
@@ -58,7 +58,7 @@ void surveygraph::search_threshold_symbolic_ad()
   int i = 0;
   while(!tfound && i < 20){  // bisection method
     threshold = (tlower + tupper) / 2.0;
-    g_symbolic = graph(1, threshold, survey);
+    g_symbolic = graph(1, threshold, mincomps, survey);
 
     double addummy = g_symbolic.avg_degree / double(g_symbolic.network.size());
 

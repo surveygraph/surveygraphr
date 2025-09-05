@@ -21,7 +21,7 @@ void surveygraph::make_threshold_profile_agent()
   for(int i = 0; i < count; ++i){
     double threshold = i * dt_agent;
 
-    g_agent = graph(0, threshold, survey);
+    g_agent = graph(0, threshold, mincomps, survey);
 
     std::vector<double> dummy;
     dummy.push_back(threshold);

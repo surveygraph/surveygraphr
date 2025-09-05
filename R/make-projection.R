@@ -128,7 +128,10 @@ make_projection <- function(
   # 1 for symbolic
   if(is.null(layer)){
     layer <- as.integer(0)
-  }else if(layer == "agent"){
+  }else if(!is.character(layer)){
+    warning("`layer` must be a character string; defaulting to \"agent\".")
+		layer <- as.integer(0)
+	}else if(layer == "agent"){
     layer <- as.integer(0)
   }else if(layer == "symbolic"){
     layer <- as.integer(1)
@@ -142,7 +145,11 @@ make_projection <- function(
   # 0 for lcc
   # 1 for avgdegree
   # 2 for similarity
+  # TODO check that it's a character string!!!!!!!
   if(is.null(method)){
+    method <- as.integer(0)
+	}else if (!is.character(method)){
+    warning("`method` must be a character string; defaulting to \"lcc\".")
     method <- as.integer(0)
   }else if(method %in% c("lcc", "target_lcc")){
     method <- as.integer(0)
@@ -157,53 +164,52 @@ make_projection <- function(
 
 
   # Check methodval, a utility parameter whose interpretation depends on the
-  # value of method. If method is
-  # 0, methodval is a number between 0 to 1
-  # 1, methodval is a number between 0 and nrow(data) - 1 or ncol(data) - 1
-  # 2, methodval is the threshold for pairwise similarity, between 0 and 1
-  if(is.null(methodval)){
-    if(method == 0){
-      methodval <- as.numeric(1)
-    }else if(method == 1){
-      methodval <- as.numeric(1)
-    }else if(method == 2){
-      methodval <- as.numeric(0.99)
-    }
-  }else{
-    if(methodval < 0 || methodval > 1)
-      warning("`methodval` must be between 0 and 1 for all methods; defaulting to 1.", call. = F)
+  # value of method. For all sparsification methods, methodval must be between
+  # 0 and 1.
 
-    #if(method == 0){
-    #  if(methodval < 0 || methodval > 1){
-    #    warning("`methodval` must be between 0 and 1 for the lcc method; defaulting to 1.", call. = F)
-    #  }
-    #}else if(method == 1){
-    #  if(methodval < 0 || methodval > 1){
-    #    warning("`methodval` must be between 0 and 1 for the avgdegree method; defaulting to 1.", call. = F)
-    #  }
-    #}else if(method == 2){
-    #  if(methodval < 0 || methodval > 1){
-    #    warning("`methodval` must be between 0 and 1 for the similarity method; defaulting to 1.", call. = F)
-    #  }
-    #}
-  }
+  # default values for methods 0, 1 and 2	
+	defaults <- c(1, 0, 1)
+	if(is.null(methodval)){
+		methodval <- defaults[method + 1]
+	}else if(!is.numeric(methodval)){
+		warning("`methodval` must be a numerical value between 0 and 1, inclusive.", call. = F)
+		methodval <- defaults[method + 1]
+	}else if(methodval < 0 || methodval > 1){
+		warningtext <- c(
+			"`methodval` must be between 0 and 1; defaulting to 1 for lcc method.",
+			"`methodval` must be between 0 and 1; defaulting to 0 for avgdegree method.",
+			"`methodval` must be between 0 and 1; defaulting to 1 for similarity method."
+		)
+		warning(warningtext[method + 1], call. = F)
+		methodval <- defaults[method + 1]
+	}
 
 
   # Check mincompare, the minimum number of numerical pairwise comparisons for
   # computing similarity.
+	defaults <- c(ceiling(ncol(data) / 2), ceiling(nrow(data) / 2))
+	defaults <- as.integer(defaults)
+	bounds <- c(ncol(data), nrow(data))
+
   if(is.null(mincompare)){
-    mincompare = as.integer(ncol(data) / 2)
+		mincompare <- defaults[layer + 1]
+	}else if(!is.numeric(mincompare)){	
+		warningtext <- c(
+			"Expecting an integer for `mincompare`; defaulting to ceiling(ncol(data) / 2) for agent layer.",
+			"Expecting an integer for `mincompare`; defaulting to ceiling(nrow(data) / 2) for symbolic layer."
+		)
+		warning(warningtext[layer + 1], call. = F)
+		mincompare <- defaults[layer + 1]
+  }else if(mincompare < 1 || mincompare > bounds[layer + 1]){
+		warningtext <- c(
+			"Expecting `mincompare` between 1 and ncol(data) for agent layer; defaulting to ceiling(ncol(data) / 2).",
+			"Expecting `mincompare` between 1 and nrow(data) for symbolic layer; defaulting to ceiling(nrow(data) / 2)."
+		)
+		warning(warningtext[layer + 1], call. = F)
+		mincompare <- defaults[layer + 1]
   }else{
-    if(layer == 0){
-      if(mincompare < 1 || mincompare > ncol(data)){
-        warning("`mincompare` must be between 1 and ncol(data), defaulting to ncol(data) / 2", call. = F)
-      }
-    }else if(layer == 1){
-      if(mincompare < 1 || mincompare > nrow(data)){
-        warning("`mincompare` must be between 1 and nrow(data), defaulting to nrow(data) / 2", call. = F)
-      }
-    }
-  }
+		mincompare <- as.integer(mincompare)
+	}
 
 
   # Check the value of the similarity metric.
@@ -211,14 +217,20 @@ make_projection <- function(
   # 1 Euclidean distance
   if(is.null(metric)){
     metric <- as.integer(0)
+	}else if(!is.character(metric)){
+    warning("`metric` must be a character string; defaulting to \"Manhattan\".")
+    metric <- as.integer(0)
   }else if(metric %in% c("manhattan", "Manhattan")){
     metric <- as.integer(0)
   }else if(metric %in% c("euclidean", "Euclidean")){
     metric <- as.integer(0)
   }else{
-    warning("`metric` option ", metric, " unrecognised; defaulting to \"Manhattan\".")
+    warning("`metric` option \"", metric, "\" unrecognised; defaulting to \"Manhattan\".")
     metric <- as.integer(0)
   }
+
+	print("mincompare is : ")
+	print(mincompare)
 
   e <- .Call(
     "rmake_projection", 
