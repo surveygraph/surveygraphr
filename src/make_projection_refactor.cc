@@ -16,6 +16,8 @@ static void rdf_to_cppvector(const SEXP &rdata, std::vector<std::vector<double>>
   data = std::vector<std::vector<double>>{};
 
   SEXP check = PROTECT(Rf_allocVector(VECSXP, Rf_length(rdata)));
+
+  // iterate over columns of dataframe... index by j?
   for(int i = 0; i < Rf_length(rdata); ++i){
     check = VECTOR_ELT(rdata, i);
 
@@ -40,6 +42,7 @@ static void rdf_to_cppvector(const SEXP &rdata, std::vector<std::vector<double>>
           value = std::nan("");
         }
         coltmp.push_back(value);
+        //Rprintf("%d %d %f\n", i, j, value);
       }
       data.push_back(coltmp);
     }else if(TYPEOF(check) == INTSXP){   // convert INTSXP to double
@@ -152,7 +155,8 @@ static void clean_data(std::vector<std::vector<double>> &data){
 
   // Normalise entries each column to the range 0 to 1
   for(int j = 0; j < data[0].size(); ++j){
-    // Find bounds on entries in column j. TODO what if dhi and or dlo are nan?
+    // Find bounds on entries in column j. 
+    // TODO what if dhi and or dlo are nan? or the same number?
     double dhi = data[0][j];
     double dlo = data[0][j];
     for(int i = 1; i < data.size(); ++i){
@@ -164,6 +168,7 @@ static void clean_data(std::vector<std::vector<double>> &data){
     for(int i = 0; i < data.size(); ++i){
       if(dhi != dlo){
         if(!std::isnan(data[i][j])){
+          // TODO what if dhi and dlo are the same number?
           normalised_column[i] = (data[i][j] - dlo) / (dhi - dlo);
         }else{
           normalised_column[i] = std::nan("");
@@ -250,6 +255,7 @@ SEXP rmake_projection(
 
   clean_data(data);
 
+  // Everything is done inside the constructor, creating S.g_dummy
   surveygraph S{
     data, 
     layer, 

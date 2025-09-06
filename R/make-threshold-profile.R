@@ -28,6 +28,8 @@
 #'   - `"symbolic"` produces the network corresponding to the symbols, or items,
 #'   which we assume to be columns in `data`
 #' 
+#' @param mincompare An integer, minimum number of comparisons for valid distance.
+#' @param metric A string option describing similarity metric used.
 #' @details
 #' Note that this routine is expensive on large graphs. We study networks over the
 #' full range of similarity thresholds `[-1, 1]`, and as a result, produce
@@ -38,14 +40,29 @@
 #' @export
 #' @examples
 #' S <- make_synthetic_data(20, 5)
-make_threshold_profile <- function(data, layer){
+make_threshold_profile <- function(
+  data, 
+  layer = NULL,
+  mincompare = NULL,
+  metric = NULL
+){
   if(layer == "agent"){
-    tdata <- .Call("rmake_threshold_profile_agent", data)
-    return(tdata)
+    layer <- as.integer(0)
   }else if(layer == "symbolic"){
-    tdata <- .Call("rmake_threshold_profile_symbolic", data)
-    return(tdata)
+    layer <- as.integer(1)
   }else{
-    message("layer must be either agent or symbolic")
+    message("layer must be either agent or symbolic, defaulting to agent")
+    layer <- as.integer(0)
   }
+
+  mincompare <- as.integer(1)
+  metric <- as.integer(0)
+
+  profile <- .Call(
+    "rmake_threshold_profile",
+    data,
+    layer,
+    mincompare,
+    metric
+  )
 }

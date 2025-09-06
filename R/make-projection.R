@@ -131,9 +131,9 @@ make_projection <- function(
   }else if(!is.character(layer)){
     warning("`layer` must be a character string; defaulting to \"agent\".")
 		layer <- as.integer(0)
-	}else if(layer == "agent"){
+	}else if(layer %in% c("a", "agent")){
     layer <- as.integer(0)
-  }else if(layer == "symbolic"){
+  }else if(layer %in% c("s", "symbolic")){
     layer <- as.integer(1)
   }else{
     warning("`layer` option \"", layer, "\" unrecognised; defaulting to \"agent\".")
@@ -229,8 +229,6 @@ make_projection <- function(
     metric <- as.integer(0)
   }
 
-	print("mincompare is : ")
-	print(mincompare)
 
   e <- .Call(
     "rmake_projection", 

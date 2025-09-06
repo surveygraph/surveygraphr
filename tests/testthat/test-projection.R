@@ -84,7 +84,13 @@ test_that("`mincompare` not integer, symbolic layer", {
 
 test_that("`mincompare` out of range, agent layer", {
 	expect_warning(
-		make_projection(data.frame(1:2), layer = "agent", mincompare = -1),
+		make_projection(data.frame(1:2), mincompare = 0),
+		regexp = "Expecting `mincompare` between 1 and ncol(data) for agent layer; defaulting to ceiling(ncol(data) / 2).",
+		fixed = T
+	)	
+
+	expect_warning(
+		make_projection(data.frame(1:2), mincompare = 2),
 		regexp = "Expecting `mincompare` between 1 and ncol(data) for agent layer; defaulting to ceiling(ncol(data) / 2).",
 		fixed = T
 	)	
@@ -93,7 +99,13 @@ test_that("`mincompare` out of range, agent layer", {
 
 test_that("`mincompare` out of range, symbolic layer", {
 	expect_warning(
-		make_projection(data.frame(1:2), layer = "symbolic", mincompare = -1),
+		make_projection(data.frame(1:2), layer = "symbolic", mincompare = 0),
+		regexp = "Expecting `mincompare` between 1 and nrow(data) for symbolic layer; defaulting to ceiling(nrow(data) / 2).",
+		fixed = T
+	)	
+
+	expect_warning(
+		make_projection(data.frame(1:2), layer = "symbolic", mincompare = 3),
 		regexp = "Expecting `mincompare` between 1 and nrow(data) for symbolic layer; defaulting to ceiling(nrow(data) / 2).",
 		fixed = T
 	)	
@@ -117,25 +129,51 @@ test_that("`metric` argument not a character", {
 
 
 test_that("`mincompare` behaves as expected", {
-	
-	fn <- function(n){make_projection(data.frame(c(1, 2), c(3, 4), c(5, 6), c(NA, 7), c(8, NA), c(NA, NA)), mincompare = n)}
-
-	fn <- function(n){
+	fnagent <- function(n){
 		make_projection(
 			data.frame(
-				item1 = c(1, 2),
-				item2 = c(3, 4),
-				item3 = c(5, 6),
-				item4 = c(NA, 7),
-				item5 = c(8, NA),
-				item6 = c(NA, NA)
+				c(1,  2),
+				c(1,  2),
+				c(1,  2),
+				c(NA, 1),
+				c(1,  NA),
+				c(NA, NA)
 			),
+			layer = "agent",
 			mincompare = n
 		)
 	}
 
-	expect_equal(nrow(fn(3)), 1)
-	expect_equal(nrow(fn(4)), 0)
+	fnsymbolic <- function(n){make_projection(data.frame(c(1, 1, 1, NA,  1, NA), c(1, 1, 1,  1, NA, NA)), layer = "symbolic", mincompare = n)}
+
+	fnsymbolic <- function(n){
+		make_projection(
+			data.frame(
+				c(1, 1, 1, NA,  1, NA),
+				c(1, 1, 1,  1, NA, NA)
+			),
+			layer = "symbolic",
+			mincompare = n
+		)
+	}
+
+	expect_equal(nrow(fnagent(1)), 1)
+	expect_equal(nrow(fnagent(2)), 1)
+	expect_equal(nrow(fnagent(3)), 1)
+	expect_equal(nrow(fnagent(4)), 0)
+	expect_equal(nrow(fnagent(5)), 0)
+	expect_equal(nrow(fnagent(6)), 0)
+
+	expect_equal(nrow(fnsymbolic(1)), 1)
+	#expect_equal(nrow(fnsymbolic(2)), 1)
+	#expect_equal(nrow(fnsymbolic(3)), 1)
+	#expect_equal(nrow(fnsymbolic(4)), 0)
+	#expect_equal(nrow(fnsymbolic(5)), 0)
+	#expect_equal(nrow(fnsymbolic(6)), 0)
+
+	# these work because it defaults to mincompare = 3
+	expect_warning(expect_equal(nrow(fnagent(7)), 1))  
+	#expect_warning(expect_equal(nrow(fnsymbolic(7)), 1))
 })
 
 
