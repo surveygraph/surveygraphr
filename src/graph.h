@@ -7,8 +7,8 @@
 
 using namespace std;
 
-typedef std::vector<std::vector<double>> surveydef;
-enum class Layer{agent, symbolic};
+typedef std::vector<std::vector<double>> survey;
+//enum class Layer{agent, symbolic};
 
 struct neighbour
 {
@@ -25,53 +25,76 @@ class graph
   public :
     graph(){}
 
-    // provide flag for projection type, threshold, and survey data
-    graph(const int &a, const double &b, const int &c, const surveydef &S){
-      switch(a){
-        case 0:
-          f = 0;
-          layer = Layer::agent;
-          n = int(S.size());          
-          m = int(S[0].size());          
-          break;
-        case 1:
-          f = 1;
-          layer = Layer::symbolic;
-          m = int(S.size());
-          n = int(S[0].size());
-          break;
-        default:
-          f = 0;
-          layer = Layer::agent;
-          n = int(S.size());
-          m = int(S[0].size());
-      }
-      threshold = b;
-      mincomps = c;
+    // Arguments are everything you might need to produce an edge from a
+    // comparison of two rows from survey.
+    graph(
+      const int &a,       // threshold
+      const int &b,       // mincomps
+      const int &c,       // metric
+      const survey &S     // survey data
+    ){
+      threshold = a;
+      mincomps = b;
+      metric = c;
 
       build_graph(S);
-      build_partition();
+      build_partition(); 
     }
 
-    Layer layer;
-    int f;  // 0 for agent, 1 for symbolic, projection flag
-    int n;  // number of graph nodes (nrow if agent, ncol if symbolic)
+    // provide flag for projection type, threshold, and survey data
+    //graph(const int &a, const double &b, const int &c, const survey &S){
+    //  switch(a){
+    //    case 0:
+    //      f = 0;
+    //      layer = Layer::agent;
+    //      n = int(S.size());          
+    //      m = int(S[0].size());          
+    //      break;
+    //    case 1:
+    //      f = 1;
+    //      layer = Layer::symbolic;
+    //      m = int(S.size());
+    //      n = int(S[0].size());
+    //      break;
+    //    default:
+    //      f = 0;
+    //      layer = Layer::agent;
+    //      n = int(S.size());
+    //      m = int(S[0].size());
+    //  }
+    //  threshold = b;
+    //  mincomps = c;
+
+    //  build_graph(S);
+    //  build_partition();
+    //}
+
+    double threshold;  // keep an edge if its similarity is above this threshold
+    int mincomps;      // minimum number of valid comparisons for an edge to be counted
+    int metric;        // flag describing metric used to compute distance (Manhattan Euclidean, ...)
+
+    //int n;  // number of graph nodes (nrow if agent, ncol if symbolic)
     int e;  // number of graph edges
-    int m;  // complements n (ncol if agent, nrow if symbolic)
-    int mincomps;  // minimum number of valid comparisons for an edge to be counted
-    double avg_degree;
-    double threshold;
+    //Layer layer;
+    //int m;  // complements n (ncol if agent, nrow if symbolic)
+    //int f;  // 0 for agent, 1 for symbolic, projection flag
 
     std::map<int, std::set<neighbour>> network;  // neighbour list
 
-    int lcc, isols, comps;
-    std::set<std::vector<int>> partition;
+    // topological properties of the resultant network
+    int lcc;                               // size of largest connected component
+    int isols;                             // number of isolated nodes
+    int comps;                             // number of components
+    double avg_degree;                     // average degree
+    std::set<std::vector<int>> partition;  // partition of nodes according to components
 
-    void build_graph(const surveydef&);
-    void build_partition();  // computes distribution of component sizes
-    void bfs(const int&, std::vector<int>&);   // breadth-first search
+    void build_graph(const survey&);       // constructs graphs by comparing all survey row pairs
+    void build_partition();                   // computes distribution of component sizes
+    void bfs(const int&, std::vector<int>&);  // breadth-first search
 
-    void man_distance(const surveydef&, const int&, const int&, double&);
-    void euclid_distance(const surveydef&, const int&, const int&, double&);
+    void dist_manhattan(const survey&, const int&, const int&, double&);
+    void dist_euclidean(const survey&, const int&, const int&, double&);
+    //void man_distance(const survey&, const int&, const int&, double&);
+    //void euclid_distance(const survey&, const int&, const int&, double&);
 };
 #endif

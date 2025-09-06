@@ -11,13 +11,14 @@
 
 // We can assume that rdata is an R data frame, having verified using is.data.frame 
 // from the calling function in R/make-projection.R.
-static void rdf_to_cppvector(const SEXP &rdata, std::vector<std::vector<double>> &data)
+static void rdf_to_cppvector(const SEXP &rdata, const int &layer, std::vector<std::vector<double>> &data)
 {
   data = std::vector<std::vector<double>>{};
 
   SEXP check = PROTECT(Rf_allocVector(VECSXP, Rf_length(rdata)));
 
-  // iterate over columns of dataframe... index by j?
+  // Iterate over columns of dataframe, `rdata`, so i indexes the row of
+  // `data`, so that `data` is the transpose of `rdata`.
   for(int i = 0; i < Rf_length(rdata); ++i){
     check = VECTOR_ELT(rdata, i);
 
@@ -42,7 +43,6 @@ static void rdf_to_cppvector(const SEXP &rdata, std::vector<std::vector<double>>
           value = std::nan("");
         }
         coltmp.push_back(value);
-        //Rprintf("%d %d %f\n", i, j, value);
       }
       data.push_back(coltmp);
     }else if(TYPEOF(check) == INTSXP){   // convert INTSXP to double
@@ -75,12 +75,16 @@ static void rdf_to_cppvector(const SEXP &rdata, std::vector<std::vector<double>>
   unsigned int ncol = data.size();     // this is m
   unsigned int nrow = data[0].size();  // this is n
 
-  // take the transpose, as each row is currently an item, not a respondent
-  std::vector<std::vector<double>> dummy = data;
-  data = std::vector<std::vector<double>>(nrow, std::vector<double>(ncol));
-  for(unsigned int i = 0; i < ncol; ++i)
-    for(unsigned int j = 0; j < nrow; ++j)
-      data[j][i] = dummy[i][j];
+  // If we're computing row similarities, producing the so-called agent layer,
+  // we need to take the transpose of data. If we're computing column
+  // similarities, producing the so-called symbolic layer, we leave as is.
+  if(layer == 0){
+    std::vector<std::vector<double>> dummy = data;
+    data = std::vector<std::vector<double>>(nrow, std::vector<double>(ncol));
+    for(unsigned int i = 0; i < ncol; ++i)
+      for(unsigned int j = 0; j < nrow; ++j)
+        data[j][i] = dummy[i][j];
+  }
 
   UNPROTECT(1);
 }
@@ -241,9 +245,6 @@ SEXP rmake_projection(
   SEXP rmetric       // similarity metric
 ){
 
-  std::vector<std::vector<double>> data;
-  rdf_to_cppvector(rdata, data);
-
   int layer, method, dummycode, mincompare, metric;
   rint_to_cppint(rlayer, layer);
   rint_to_cppint(rmethod, method);
@@ -253,12 +254,15 @@ SEXP rmake_projection(
   double methodval;
   rdouble_to_cppdouble(rmethodval, methodval);
 
+  std::vector<std::vector<double>> data;
+  rdf_to_cppvector(rdata, layer, data);
+
   clean_data(data);
 
   // Everything is done inside the constructor, creating S.g_dummy
   surveygraph S{
     data, 
-    layer, 
+    //layer, 
     method, 
     methodval, 
     mincompare, 

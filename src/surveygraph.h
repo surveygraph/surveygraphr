@@ -19,14 +19,14 @@ class surveygraph
   public :
     surveygraph(
       const std::vector<std::vector<double>> &rdata,
-      const int &rlayer,
+      //const int &rlayer,
       const int &rmethod,
       const double &rmethodval,
       const int &rmincomps,
       const int &rsimilarity
     ){
       survey = rdata;
-      layer = rlayer;
+      //layer = rlayer;
       method = rmethod;
       methodval = rmethodval;
       mincomps = rmincomps;
@@ -83,7 +83,8 @@ class surveygraph
     }
 
     double target_lcc, target_ad, raw_similarity;
-    int layer, method, mincomps, similarity, metric;
+    int method, mincomps, similarity, metric;
+    //int layer;
     double methodval;
 
     int nrow, ncol;  // number of agent, symbolic

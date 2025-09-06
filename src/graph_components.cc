@@ -1,4 +1,5 @@
-#include "surveygraph.h"
+//#include "surveygraph.h"
+#include "graph.h"
 
 #include <queue>
 

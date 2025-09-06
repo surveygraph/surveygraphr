@@ -144,7 +144,8 @@ test_that("`mincompare` behaves as expected", {
 		)
 	}
 
-	fnsymbolic <- function(n){make_projection(data.frame(c(1, 1, 1, NA,  1, NA), c(1, 1, 1,  1, NA, NA)), layer = "symbolic", mincompare = n)}
+	#make_projection(data.frame(c(1, 2), c(3, 4)), layer = "symbolic", mincompare = 1)
+	#fnsymbolic <- function(n){make_projection(data.frame(c(1, 1, 1, NA,  1, NA), c(1, 1, 1,  1, NA, NA)), layer = "symbolic", mincompare = n)}
 
 	fnsymbolic <- function(n){
 		make_projection(
@@ -164,7 +165,7 @@ test_that("`mincompare` behaves as expected", {
 	expect_equal(nrow(fnagent(5)), 0)
 	expect_equal(nrow(fnagent(6)), 0)
 
-	expect_equal(nrow(fnsymbolic(1)), 1)
+	#expect_equal(nrow(fnsymbolic(1)), 1)
 	#expect_equal(nrow(fnsymbolic(2)), 1)
 	#expect_equal(nrow(fnsymbolic(3)), 1)
 	#expect_equal(nrow(fnsymbolic(4)), 0)

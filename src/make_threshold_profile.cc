@@ -1,8 +1,8 @@
 #include "surveygraph.h"
 
-#define R_NO_REMAP
-#include "R.h"
-#include "Rdefines.h"
+//#define R_NO_REMAP
+//#include "R.h"
+//#include "Rdefines.h"
 
 using namespace std;
 
@@ -25,8 +25,8 @@ void surveygraph::make_threshold_profile()
 
     std::vector<double> dummy;
     dummy.push_back(threshold);
-    dummy.push_back(g.avg_degree / double(g.n));
-    dummy.push_back(g.lcc / double(g.n));
+    dummy.push_back(g.avg_degree / double(g.network.size()));
+    dummy.push_back(g.lcc / double(g.network.size()));
     dummy.push_back(double(g.isols));
     dummy.push_back(double(g.comps));
 
