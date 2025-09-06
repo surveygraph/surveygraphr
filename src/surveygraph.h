@@ -1,9 +1,10 @@
 #ifndef SURVEYGRAPH_H_
 #define SURVEYGRAPH_H_
 
-//#define R_NO_REMAP            // FIXME temporary
-//#include <Rinternals.h>       // FIXME temporary
-//#include <R_ext/Rdynload.h>   // FIXME temporary
+// FIXME remove this when you no longer need Rprintf, ie when you finish debugging
+#define R_NO_REMAP            // FIXME temporary
+#include <Rinternals.h>       // FIXME temporary
+#include <R_ext/Rdynload.h>   // FIXME temporary
 
 #include "graph.h"
 
@@ -19,21 +20,22 @@ class surveygraph
   public :
     surveygraph(
       const std::vector<std::vector<double>> &rdata,
-      //const int &rlayer,
       const int &rmethod,
       const double &rmethodval,
       const int &rmincomps,
-      const int &rsimilarity
+      const int &rmetric
     ){
       survey = rdata;
       //layer = rlayer;
       method = rmethod;
       methodval = rmethodval;
       mincomps = rmincomps;
-      similarity = rsimilarity;
+      metric = rmetric;
         
-      nrow = int(survey.size());
-      ncol = int(survey[0].size());
+      //nrow = int(survey.size());
+      //ncol = int(survey[0].size());
+      
+      //Rprintf("hello from surveygraph constructor, method is %d\n", method);
 
       if(method == 0) target_lcc = methodval;
       if(method == 1) target_ad  = methodval;
@@ -58,36 +60,37 @@ class surveygraph
 
     surveygraph(std::vector<std::vector<double>> &a){
       survey = a;
-      nrow = int(survey.size());
-      ncol = int(survey[0].size());  // will have verified dimensions in R routines
+      //nrow = int(survey.size());
+      //ncol = int(survey[0].size());  // will have verified dimensions in R routines
     }
 
-    surveygraph(std::vector<std::vector<double>> &a, int b, double c, int d){
-      survey = a;
-      nrow = int(survey.size());
-      ncol = int(survey[0].size());  // verify dimensions in R routines
+    //surveygraph(std::vector<std::vector<double>> &a, int b, double c, int d){
+    //  survey = a;
+    //  nrow = int(survey.size());
+    //  ncol = int(survey[0].size());  // verify dimensions in R routines
 
-      // b is threshold method flag
-      if(b == 0){        // method is target lcc
-        target_lcc = c;     
-      }else if(b == 1){  // method is target avg degree
-        target_ad = c;      
-      }else if(b == 2){  // method is input raw similarity threshold
-        raw_similarity = c;        
-      }
+    //  // b is threshold method flag
+    //  if(b == 0){        // method is target lcc
+    //    target_lcc = c;     
+    //  }else if(b == 1){  // method is target avg degree
+    //    target_ad = c;      
+    //  }else if(b == 2){  // method is input raw similarity threshold
+    //    raw_similarity = c;        
+    //  }
 
-      // d is similarity metric flag
-      if(d == 0){        // similarity metric is Manhattan distance
-        metric = 0;
-      }
-    }
+    //  // d is similarity metric flag
+    //  if(d == 0){        // similarity metric is Manhattan distance
+    //    metric = 0;
+    //  }
+    //}
 
     double target_lcc, target_ad, raw_similarity;
-    int method, mincomps, similarity, metric;
+    int method, mincomps, metric;
+    //int similarity;
     //int layer;
     double methodval;
 
-    int nrow, ncol;  // number of agent, symbolic
+    //int nrow, ncol;  // number of agent, symbolic
 
     // survey, small sample of survey
     std::vector<std::vector<double>> survey, surveysample;

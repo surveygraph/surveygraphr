@@ -21,7 +21,7 @@ void surveygraph::make_threshold_profile()
   for(int i = 0; i < count; ++i){
     double threshold = i * dt;
 
-    g = graph(0, threshold, mincomps, survey);
+    g = graph(threshold, mincomps, metric, survey);
 
     std::vector<double> dummy;
     dummy.push_back(threshold);

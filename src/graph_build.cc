@@ -4,9 +4,10 @@
 #include <cmath>
 
 // FIXME we can delete this now, right? this is standalone cpp
-//#define R_NO_REMAP
-//#include "R.h"
-//#include "Rdefines.h"
+// TODO delete this when you no longer need Rprintf
+#define R_NO_REMAP
+#include "R.h"
+#include "Rdefines.h"
 
 using namespace std;
 
@@ -27,7 +28,9 @@ void graph::build_graph(const survey &S)
       else if(metric == 1)
         dist_euclidean(S, int(i), int(j), w);
 
+      //Rprintf("including edge %d %d? weight is %f, threshold is %f, metric is %d\n", i, j, w, threshold, metric);
       if(w > threshold){
+        //Rprintf("yes! including edge : %d %d %f\n", i, j, w);
         network[i].insert(neighbour{int(j), w});
         network[j].insert(neighbour{int(i), w});
         avg_degree += 2;

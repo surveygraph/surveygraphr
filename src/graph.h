@@ -5,6 +5,10 @@
 #include <map>
 #include <set>
 
+//#define R_NO_REMAP            // FIXME temporary
+//#include <Rinternals.h>       // FIXME temporary
+//#include <R_ext/Rdynload.h>   // FIXME temporary
+
 using namespace std;
 
 typedef std::vector<std::vector<double>> survey;
@@ -28,7 +32,7 @@ class graph
     // Arguments are everything you might need to produce an edge from a
     // comparison of two rows from survey.
     graph(
-      const int &a,       // threshold
+      const double &a,    // threshold
       const int &b,       // mincomps
       const int &c,       // metric
       const survey &S     // survey data

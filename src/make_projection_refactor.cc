@@ -86,6 +86,13 @@ static void rdf_to_cppvector(const SEXP &rdata, const int &layer, std::vector<st
         data[j][i] = dummy[i][j];
   }
 
+  //Rprintf("reading in dataframe :\n");
+  //for(int i = 0; i < data.size(); ++i){
+  //  for(int j = 0; j < data[i].size(); ++j) Rprintf("%10f ", data[i][j]);
+  //  Rprintf("\n");
+  //}
+  //Rprintf("\n");
+
   UNPROTECT(1);
 }
 
@@ -262,7 +269,6 @@ SEXP rmake_projection(
   // Everything is done inside the constructor, creating S.g_dummy
   surveygraph S{
     data, 
-    //layer, 
     method, 
     methodval, 
     mincompare, 

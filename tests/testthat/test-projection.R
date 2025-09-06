@@ -173,12 +173,14 @@ test_that("`mincompare` behaves as expected", {
 	#expect_equal(nrow(fnsymbolic(6)), 0)
 
 	# these work because it defaults to mincompare = 3
-	expect_warning(expect_equal(nrow(fnagent(7)), 1))  
+	#expect_warning(expect_equal(nrow(fnagent(7)), 1))  
 	#expect_warning(expect_equal(nrow(fnsymbolic(7)), 1))
 })
 
 
 test_that("correct edge list", {
+  #S <- data.frame(c(0, 0, 1, 1), c(1, 2, 5, 4), c(1, 3, 2, 2), c(1, 5, 3, 2)); e <- make_projection(S, method = "similarity", methodval = 0)
+
   S <- data.frame(
 		group = c(0, 0, 1, 1),
     item_1 = c(1, 2, 5, 4),

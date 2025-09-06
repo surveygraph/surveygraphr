@@ -19,7 +19,7 @@ void surveygraph::make_proj_ad()
 void surveygraph::make_proj_similar()
 {
   double threshold = raw_similarity;
-  g = graph(0, threshold, mincomps, survey); 
+  g = graph(threshold, mincomps, metric, survey); 
 }
 
 // find the largest threshold for which the observed lcc is as close 
@@ -28,18 +28,20 @@ void surveygraph::search_threshold_lcc()
 {
   double tlower = -1;
   double tupper = 1;
-  int lcclower = nrow;
+  //int lcclower = nrow;
+  int lcclower = survey.size();
   int lccupper = 1;
 
   // important to round here, rather than take floor or ceiling
-  int target = int(round(target_lcc * double(nrow))); 
+  //int target = int(round(target_lcc * double(nrow))); 
+  int target = int(round(target_lcc * double(survey.size()))); 
 
   bool tfound = false;
   int i = 0;
   while(!tfound && i < 15){
     double threshold = (tlower + tupper) / 2.0;
 
-    g = graph(0, threshold, mincomps, survey);
+    g = graph(threshold, mincomps, metric, survey); 
 
     if(g.lcc > target){
       tlower = threshold;
@@ -79,7 +81,7 @@ void surveygraph::max_threshold(double t, int l)
   while(i < 15){
     threshold = (tlower + tupper) / 2.0;
 
-    g = graph(0, threshold, mincomps, survey);
+    g = graph(threshold, mincomps, metric, survey);
 
     if(g.lcc != l){
       tupper = threshold;
@@ -90,8 +92,7 @@ void surveygraph::max_threshold(double t, int l)
   }
   threshold = tlower;
 
-  g = graph(0, threshold, mincomps, survey);
-
+  g = graph(threshold, mincomps, metric, survey);
   //if(l != g.lcc){
   //  error("an internal test has failed, please report to package creators\n");
   //}
@@ -106,7 +107,7 @@ void surveygraph::search_threshold_ad()
   int i = 0;
   while(!tfound && i < 20){  // bisection method
     double threshold = (tlower + tupper) / 2.0;
-    g = graph(0, threshold, mincomps, survey);
+    g = graph(threshold, mincomps, metric, survey);
 
     double addummy = g.avg_degree / double(g.network.size());
 
