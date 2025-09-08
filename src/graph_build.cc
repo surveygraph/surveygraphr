@@ -29,6 +29,7 @@ void graph::build_graph(const survey &S)
         dist_euclidean(S, int(i), int(j), w);
 
       if(w >= threshold){
+        //Rprintf("weight of %d %d is %f\n", i, j, w);
         network[i].insert(neighbour{int(j), w});
         network[j].insert(neighbour{int(i), w});
         avg_degree += 2;
@@ -51,7 +52,6 @@ void graph::dist_manhattan(const survey &S, const int &u, const int &v, double &
     //Rprintf("%d %f %f %d %d\n", j, S[u][j], S[v][j], !isnan(S[u][j]), !isnan(S[v][j]));
     if(!isnan(S[u][j]) && !isnan(S[v][j])){
       w += abs(S[u][j] - S[v][j]);
-      Rprintf("weight differential %d %f\n", j, abs(S[u][j] - S[v][j]));
       ++count;
     }
   }

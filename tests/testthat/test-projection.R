@@ -1,5 +1,9 @@
 # Tests for make_projection(). Note that arguments likert and dummycode are
 # tested in test-data-preprocessing.R.
+
+# epsilon
+eps = 0.001
+
 test_that("unused arguments", {
 	expect_warning(
 		make_projection(data.frame(1), argname1 = 1, argname2 = 1),
@@ -305,13 +309,44 @@ test_that("same as `lcc` tests on 4-cliques but for symbolic layer", {
 # ======================================================================
 test_that("`avgdegree` method on a 4-clique.", {
 	expect_equal(
-		make_projection(data.frame(a = c(0, 0.6, 0.9, 1)), method = "a", methodval = 0),
-		data.frame(u = numeric(0), v = numeric(0), weight = numeric(0))
+		make_projection(data.frame(a = c(0, 0.6, 0.9, 1)), method = "a", methodval = 1),
+		data.frame(u = c(1, 1, 1, 2, 2, 3), v = c(2, 3, 4, 3, 4, 4), weight = c(0.4, 0.1, 0, 0.7, 0.6, 0.9))
+	)
+
+
+	expect_equal(
+		make_projection(data.frame(a = c(0, 0.6, 0.9, 1)), method = "a", methodval = 1 - 1/6 + eps),
+		data.frame(u = c(1, 1, 1, 2, 2, 3), v = c(2, 3, 4, 3, 4, 4), weight = c(0.4, 0.1, 0, 0.7, 0.6, 0.9))
 	)
 
 	expect_equal(
-		make_projection(data.frame(a = c(0, 0.6, 0.9, 1)), method = "a", methodval = 1),
-		data.frame(u = c(1, 1, 1, 2, 2, 3), v = c(2, 3, 4, 3, 4, 4), weight = c(0.4, 0.1, 0, 0.7, 0.6, 0.9))
+		make_projection(data.frame(a = c(0, 0.6, 0.9, 1)), method = "a", methodval = 1 - 2/6 + eps),
+		data.frame(u = c(1, 1, 2, 2, 3), v = c(2, 3, 3, 4, 4), weight = c(0.4, 0.1, 0.7, 0.6, 0.9))
+	)
+
+	expect_equal(
+		make_projection(data.frame(a = c(0, 0.6, 0.9, 1)), method = "a", methodval = 1 - 3/6 + eps),
+		data.frame(u = c(1, 2, 2, 3), v = c(2, 3, 4, 4), weight = c(0.4, 0.7, 0.6, 0.9))
+	)
+
+	expect_equal(
+		make_projection(data.frame(a = c(0, 0.6, 0.9, 1)), method = "a", methodval = 1 - 4/6 + eps),
+		data.frame(u = c(2, 2, 3), v = c(3, 4, 4), weight = c(0.7, 0.6, 0.9))
+	)
+
+	expect_equal(
+		make_projection(data.frame(a = c(0, 0.6, 0.9, 1)), method = "a", methodval = 1 - 5/6 + eps),
+		data.frame(u = c(2, 3), v = c(3, 4), weight = c(0.7, 0.9))
+	)
+
+	expect_equal(
+		make_projection(data.frame(a = c(0, 0.6, 0.9, 1)), method = "a", methodval = eps),
+		data.frame(u = c(3), v = c(4), weight = c(0.9))
+	)
+
+	expect_equal(
+		make_projection(data.frame(a = c(0, 0.6, 0.9, 1)), method = "a", methodval = 0),
+		data.frame(u = numeric(0), v = numeric(0), weight = numeric(0))
 	)
 })
 

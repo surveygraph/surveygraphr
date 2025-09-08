@@ -199,7 +199,9 @@ static void cppedgelist_to_rdf(const graph &g, SEXP &df)
       if(it.first < jt.u){
         INTEGER(u_vector)[i] = it.first + 1;
         INTEGER(v_vector)[i] = jt.u + 1;
-        REAL(w_vector)[i] = int(10000.0 * jt.w) / 10000.0;
+        //REAL(w_vector)[i] = int(10000.0 * jt.w) / 10000.0; // this was causing errors in testthat due to tolerance
+        REAL(w_vector)[i] = jt.w;
+        //Rprintf("%d %d %.9f %.9f\n", it.first + 1, jt.u + 1, jt.w, int(10000.0 * jt.w) / 10000.0);
         i += 1;
       }
     }  
@@ -252,6 +254,7 @@ SEXP rmake_projection(
   // Everything is done inside the constructor, creating S.g_dummy
   // TODO what does surveygraph assume in terms of normalisation? that it's already done???
   // TODO what is scale_columns() supposed to be doing then?
+  // when does likert scale come into play for scaling?
   surveygraph S{
     data, 
     method, 
