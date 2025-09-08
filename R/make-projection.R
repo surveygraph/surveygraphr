@@ -129,14 +129,14 @@ make_projection <- function(
   if(is.null(layer)){
     layer <- as.integer(0)
   }else if(!is.character(layer)){
-    warning("`layer` must be a character string; defaulting to \"agent\".")
+    warning("`layer` must be a character string; defaulting to \"agent\".", call. = F)
 		layer <- as.integer(0)
 	}else if(layer %in% c("a", "agent")){
     layer <- as.integer(0)
   }else if(layer %in% c("s", "symbolic")){
     layer <- as.integer(1)
   }else{
-    warning("`layer` option \"", layer, "\" unrecognised; defaulting to \"agent\".")
+    warning("`layer` option \"", layer, "\" unrecognised; defaulting to \"agent\".", call. = F)
     layer <- as.integer(0)
   }
 
@@ -149,16 +149,16 @@ make_projection <- function(
   if(is.null(method)){
     method <- as.integer(0)
 	}else if (!is.character(method)){
-    warning("`method` must be a character string; defaulting to \"lcc\".")
+    warning("`method` must be a character string; defaulting to \"lcc\".", call. = F)
     method <- as.integer(0)
-  }else if(method %in% c("lcc", "target_lcc")){
+  }else if(method %in% c("lcc", "target_lcc", "l")){
     method <- as.integer(0)
-  }else if(method %in% c("avgdegree", "target_avgdegree", "target_ad")){
+  }else if(method %in% c("avgdegree", "target_avgdegree", "target_ad", "a")){
     method <- as.integer(1)
-  }else if(method %in% c("similarity", "rawsimilarity", "raw_similarity")){
+  }else if(method %in% c("similarity", "rawsimilarity", "raw_similarity", "s")){
     method <- as.integer(2)
   }else{
-    warning("`method` option \"", method, "\" unrecognised; defaulting to \"lcc\".")
+    warning("`method` option \"", method, "\" unrecognised; defaulting to \"lcc\".", call. = F)
     method <- as.integer(0)
   }
 
@@ -166,23 +166,57 @@ make_projection <- function(
   # Check methodval, a utility parameter whose interpretation depends on the
   # value of method. For all sparsification methods, methodval must be between
   # 0 and 1.
-
-  # default values for methods 0, 1 and 2	
 	defaults <- c(1, 0, 1)
 	if(is.null(methodval)){
 		methodval <- defaults[method + 1]
 	}else if(!is.numeric(methodval)){
-		warning("`methodval` must be a numerical value between 0 and 1, inclusive.", call. = F)
-		methodval <- defaults[method + 1]
-	}else if(methodval < 0 || methodval > 1){
-		warningtext <- c(
-			"`methodval` must be between 0 and 1; defaulting to 1 for lcc method.",
-			"`methodval` must be between 0 and 1; defaulting to 0 for avgdegree method.",
-			"`methodval` must be between 0 and 1; defaulting to 1 for similarity method."
-		)
-		warning(warningtext[method + 1], call. = F)
-		methodval <- defaults[method + 1]
+		stop("`methodval` must be a numerical value.", call. = F)
+	}else{ 
+		if(method == 0){
+			if(methodval > 1){
+				warning("`methodval` must be between 0 and 1 inclusive for `lcc` method, setting to 1.", call. = F);
+				methodval <- 1
+			}else if(methodval < 0){
+				warning("`methodval` must be between 0 and 1 inclusive for `lcc` method, setting to 0.", call. = F);
+				methodval <- 0
+			}
+		}else if(method == 1){
+			if(methodval > 1){
+				warning("`methodval` must be between 0 and 1 inclusive for `avgdegree` method, setting to 1.", call. = F);
+				methodval <- 1
+			}else if(methodval < 0){
+				warning("`methodval` must be between 0 and 1 inclusive for `avgdegree` method, setting to 0.", call. = F);
+				methodval <- 0
+			}
+		}else if(method == 2){
+			if(methodval > 1){
+				warning("Note that for `similarity` method, all values of `methodval` greater than 1 are equivalent.", call. = F);
+			}else if(methodval < 0){
+				warning("Note that for `similarity` method all values of `methodval` less than 0 are equivalent.", call. = F);
+			}
+		}
 	}
+
+
+  # Check methodval, a utility parameter whose interpretation depends on the
+  # value of method. For all sparsification methods, methodval must be between
+  # 0 and 1.
+  ## default values for methods 0, 1 and 2	
+	#defaults <- c(1, 0, 1)
+	#if(is.null(methodval)){
+	#	methodval <- defaults[method + 1]
+	#}else if(!is.numeric(methodval)){
+	#	warning("`methodval` must be a numerical value between 0 and 1, inclusive.", call. = F)
+	#	methodval <- defaults[method + 1]
+	#}else if(methodval < 0 || methodval > 1){
+	#	warningtext <- c(
+	#		"`methodval` must be between 0 and 1 inclusive; defaulting to 1 for `lcc` method.",
+	#		"`methodval` must be between 0 and 1 inclusive; defaulting to 0 for `avgdegree` method.",
+	#		"`methodval` must be between 0 and 1; defaulting to 1 for `similarity` method."
+	#	)
+	#	warning(warningtext[method + 1], call. = F)
+	#	methodval <- defaults[method + 1]
+	#}
 
 
   # Check mincompare, the minimum number of numerical pairwise comparisons for

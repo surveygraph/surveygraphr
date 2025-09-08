@@ -2,6 +2,7 @@
 
 #include <cctype>
 #include <algorithm>
+#include <cmath>
 
 #include <iostream> // TODO temporary
 
@@ -144,64 +145,46 @@ static void rlist_to_cppvector(const SEXP &rlist, std::vector<std::vector<double
   }
 }
 
-/*
 
-This function cleans the contents of `data`. It checks that
-- at least one row and column
-- all double precision
-- all columns have the same dimension
-- either a finite value or NaN
+static void scale_columns(std::vector<std::vector<double>> &data){
+  // For each column j of data...
+  for(int j = 0; j < data[0].size(); ++j){
+    // find bounds on entries in column j, if there are entries that aren't NaNs...
+    double dhi = NAN;
+    double dlo = NAN;
+    for(int i = 0; i < data.size(); ++i){
+      if(!isnan(data[i][j])){
+        if(!isnan(dhi)){
+          if(data[i][j] > dhi) dhi = data[i][j];
+        }else{
+          dhi = data[i][j];
+        }
 
-*/
-static void clean_data(std::vector<std::vector<double>> &data){
-  //Rprintf("data before :\n");
+        if(!isnan(dlo)){
+          if(data[i][j] < dlo) dlo = data[i][j];
+        }else{
+          dlo = data[i][j];
+        }
+      }
+    }
+    
+    // and scale non-NaN entries to the range 0 to 1
+    for(int i = 0; i < data.size(); ++i){
+      if(!std::isnan(data[i][j])){
+        if(dhi > dlo)
+          data[i][j] = (data[i][j] - dlo) / (dhi - dlo);
+        else
+          data[i][j] = 0.5;
+      }
+    }
+  }
+
+  //Rprintf("data after :\n");
   //for(int i = 0; i < data.size(); ++i){
   //  for(int j = 0; j < data[i].size(); ++j) Rprintf("%10f ", data[i][j]);
   //  Rprintf("\n");
   //}
   //Rprintf("\n");
-
-  // Prepare a temporary container for cleaned data.
-  std::vector<std::vector<double>> cleandata;
-
-  // Normalise entries each column to the range 0 to 1
-  for(int j = 0; j < data[0].size(); ++j){
-    // Find bounds on entries in column j. 
-    // TODO what if dhi and or dlo are nan? or the same number?
-    double dhi = data[0][j];
-    double dlo = data[0][j];
-    for(int i = 1; i < data.size(); ++i){
-      if(data[i][j] > dhi) dhi = data[i][j];
-      if(data[i][j] < dlo) dlo = data[i][j];
-    }
-    
-    std::vector<double> normalised_column(data.size());
-    for(int i = 0; i < data.size(); ++i){
-      if(dhi != dlo){
-        if(!std::isnan(data[i][j])){
-          // TODO what if dhi and dlo are the same number?
-          normalised_column[i] = (data[i][j] - dlo) / (dhi - dlo);
-        }else{
-          normalised_column[i] = std::nan("");
-        }
-      }else{
-        normalised_column[i] = std::nan("");
-      }
-    }
-    cleandata.push_back(normalised_column);
-  }
-
-  // Replace original data with the cleaned version. Take the transpose of
-  // cleandata, ncol and nrow are the resulting column and row count.
-  unsigned int ncol = cleandata.size();
-  unsigned int nrow = cleandata[0].size();
-
-  data = std::vector<std::vector<double>>(nrow, std::vector<double>(ncol));
-  for(unsigned int i = 0; i < cleandata.size(); ++i){
-    for(unsigned int j = 0; j < cleandata[i].size(); ++j){
-      data[j][i] = cleandata[i][j];
-    }
-  }
 }
 
 static void cppedgelist_to_rdf(const graph &g, SEXP &df)
@@ -264,9 +247,11 @@ SEXP rmake_projection(
   std::vector<std::vector<double>> data;
   rdf_to_cppvector(rdata, layer, data);
 
-  clean_data(data);
+  scale_columns(data);
 
   // Everything is done inside the constructor, creating S.g_dummy
+  // TODO what does surveygraph assume in terms of normalisation? that it's already done???
+  // TODO what is scale_columns() supposed to be doing then?
   surveygraph S{
     data, 
     method, 
