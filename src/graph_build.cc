@@ -18,16 +18,6 @@ void graph::build_graph(const survey &S)
   network = std::map<int, std::set<neighbour>>{};
   for(int i = 0; i < S.size(); ++i) network[i] = std::set<neighbour>{};
 
-  //Rprintf("building graph for threshold %f\n", threshold);
-
-  //for(int i = 0; i < S.size(); ++i){
-  //  for(int j = 0; j < S[i].size(); ++j){
-  //     Rprintf("%f ", S[i][j]);
-  //  }
-  //  Rprintf("\n");
-  //}
-
-  // TODO FIXME NB XXX 
   e = 0;
   avg_degree = 0;
   for(int i = 0; i < S.size(); ++i){
@@ -38,15 +28,11 @@ void graph::build_graph(const survey &S)
       else if(metric == 1)
         dist_euclidean(S, int(i), int(j), w);
 
-      //Rprintf("    including edge %d %d? weight is %f, threshold is %f, metric is %d\n", i, j, w, threshold, metric);
       if(w >= threshold){
-        //Rprintf("        YES\n");
         network[i].insert(neighbour{int(j), w});
         network[j].insert(neighbour{int(i), w});
         avg_degree += 2;
         e += 1;
-      }else{
-        //Rprintf("        NO\n");
       }
     }
   }
@@ -62,10 +48,10 @@ void graph::dist_manhattan(const survey &S, const int &u, const int &v, double &
   w = 0;
   for(int j = 0; j < S[0].size(); ++j){
     //Rprintf("%d %d %f %f is comparison\n", u, v, S[u][i], S[v][i]);
-    //Rprintf("Doireann is sexy %d %f %f %d %d\n", j, S[u][j], S[v][j], !isnan(S[u][j]), !isnan(S[v][j]));
+    //Rprintf("%d %f %f %d %d\n", j, S[u][j], S[v][j], !isnan(S[u][j]), !isnan(S[v][j]));
     if(!isnan(S[u][j]) && !isnan(S[v][j])){
       w += abs(S[u][j] - S[v][j]);
-      //Rprintf("weight differential %d %f\n", j, abs(S[u][j] - S[v][j]));
+      Rprintf("weight differential %d %f\n", j, abs(S[u][j] - S[v][j]));
       ++count;
     }
   }

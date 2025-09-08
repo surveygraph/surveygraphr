@@ -303,6 +303,23 @@ test_that("same as `lcc` tests on 4-cliques but for symbolic layer", {
 # ======================================================================
 # Checking behaviour of avgdegree method on 2-, 3- and 4-cliques
 # ======================================================================
+test_that("`avgdegree` method on a 4-clique.", {
+	expect_equal(
+		make_projection(data.frame(a = c(0, 0.6, 0.9, 1)), method = "a", methodval = 0),
+		data.frame(u = numeric(0), v = numeric(0), weight = numeric(0))
+	)
+
+	expect_equal(
+		make_projection(data.frame(a = c(0, 0.6, 0.9, 1)), method = "a", methodval = 1),
+		data.frame(u = c(1, 1, 1, 2, 2, 3), v = c(2, 3, 4, 3, 4, 4), weight = c(0.4, 0.1, 0, 0.7, 0.6, 0.9))
+	)
+})
+
+
+
+# ======================================================================
+# Checking behaviour of similarity method on 2-, 3- and 4-cliques
+# ======================================================================
 test_that("`similarity` method works as expected when threshold out of bounds", {
 	expect_warning(
 		expect_equal(

@@ -6,12 +6,14 @@
 
 using namespace std;
 
+// FIXME this is temporary, and wildly inefficient for LCC computation
 void surveygraph::make_threshold_profile()
 {
   profile = std::vector<std::vector<double>>{};
 
   target_lcc = 1.00;
-  search_threshold_lcc();    // finds optimal threshold
+  //search_threshold_lcc();    // finds optimal threshold
+  make_proj_lcc();    // finds optimal threshold
 
   //double optimal_threshold = g.threshold;
 
