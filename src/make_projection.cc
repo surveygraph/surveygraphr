@@ -6,16 +6,6 @@
 
 using namespace std;
 
-//void surveygraph::make_proj_lcc()
-//{
-//  search_threshold_lcc();  // finds threshold with desired LCC
-//}
-
-//void surveygraph::make_proj_ad()
-//{
-//  search_threshold_ad();  // finds threshold with desired avg degree
-//}
-
 // Find the largest threshold for which the resulting LCC is greater than or
 // equal to the target LCC. Of course, the set of LCCs is degenerate; there can be
 // many thresholds that produce identical graphs with LCCs of the same size. We
@@ -35,7 +25,8 @@ void surveygraph::make_proj_lcc()
   int lcclower = survey.size();    // we ensure lcclower >= target LCC    
   int lccupper = 1;                // we ensure lccupper < target LCC
 
-  int target = int(ceil(target_lcc * double(survey.size()))); 
+  // ensures target is in range [1, N], while methodval is in range [0, 1]
+  int target = int(ceil(target_lcc * (survey.size() - 1))) + 1; 
 
   if(target == 0 || target == 1 || survey.size() == 1){
     g = graph(1.0001, mincomps, metric, survey); 
@@ -59,14 +50,13 @@ void surveygraph::make_proj_lcc()
 }
 
 
-//void surveygraph::search_threshold_ad()
 void surveygraph::make_proj_ad()
 {
+  int emax = survey.size() * (survey.size() - 1) / 2;
+
   // Recall that average degree is non-increasing with the similarity threshold.
   double thresholdlower = -0.001;  // LCC guaranteed to be survey.size()
   double thresholdupper =  1.001;  // LCC guaranteed to be 1
-
-  int emax = survey.size() * (survey.size() - 1) / 2;
   int zlower = emax;               // we ensure elower >= target edge count
   int zupper = 0;                  // we ensure eupper < target edge count
 
@@ -92,28 +82,6 @@ void surveygraph::make_proj_ad()
   }
   g = graph(thresholdlower, mincomps, metric, survey); 
 }
-
-//void surveygraph::search_threshold_ad()
-//{
-//  double tlower = -1;
-//  double tupper = 1;
-//
-//  bool tfound = false;
-//  int i = 0;
-//  while(!tfound && i < 20){  // bisection method
-//    double threshold = (tlower + tupper) / 2.0;
-//    g = graph(threshold, mincomps, metric, survey);
-//
-//    double addummy = g.avg_degree / double(g.network.size());
-//
-//    if(addummy > target_ad){
-//      tlower = threshold;
-//    }else if(addummy < target_ad){
-//      tupper = threshold;
-//    }
-//    i += 1;
-//  }
-//}
 
 void surveygraph::make_proj_similar()
 {
