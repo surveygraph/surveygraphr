@@ -189,11 +189,11 @@ make_projection <- function(
 				methodval <- 0
 			}
 		}else if(method == 2){
-			if(methodval > 1){
-				warning("Note that for `similarity` method, all values of `methodval` greater than 1 are equivalent.", call. = F);
-			}else if(methodval < 0){
-				warning("Note that for `similarity` method all values of `methodval` less than 0 are equivalent.", call. = F);
-			}
+			#if(methodval > 1){
+			#	warning("Note that for `similarity` method, all values of `methodval` greater than 1 are equivalent.", call. = F);
+			#}else if(methodval < 0){
+			#	warning("Note that for `similarity` method all values of `methodval` less than 0 are equivalent.", call. = F);
+			#}
 		}
 	}
 

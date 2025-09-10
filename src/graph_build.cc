@@ -28,7 +28,8 @@ void graph::build_graph(const survey &S)
       else if(metric == 1)
         dist_euclidean(S, int(i), int(j), w);
 
-      if(w >= threshold){
+      //if(w >= threshold){
+      if(w > threshold - 1e-9){
         //Rprintf("weight of %d %d is %f\n", i, j, w);
         network[i].insert(neighbour{int(j), w});
         network[j].insert(neighbour{int(i), w});
