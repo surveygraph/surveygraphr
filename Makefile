@@ -22,10 +22,10 @@ doc:
 
 test:
 	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-projection.R')"
-	@#Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-arguments.R')"
-	@#Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-projection-deprecated.R')"
-	@#Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-preprocessing.R')"
-	@#Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-synthetic.R')"
+	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-arguments.R')"
+	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-projection-deprecated.R')"
+	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-preprocessing.R')"
+	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test-synthetic.R')"
 
 knit:
 	@Rscript -e "rmarkdown::render('vignettes/datacleaning.Rmd', params=list(args = myarg))"
