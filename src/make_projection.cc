@@ -54,11 +54,13 @@ void surveygraph::make_proj_ad()
 {
   int emax = survey.size() * (survey.size() - 1) / 2;
 
+  double eps = 1e-3;
+
   // Recall that average degree is non-increasing with the similarity threshold.
-  double thresholdlower = -0.001;  // LCC guaranteed to be survey.size()
-  double thresholdupper =  1.001;  // LCC guaranteed to be 1
-  int zlower = emax;               // we ensure elower >= target edge count
-  int zupper = 0;                  // we ensure eupper < target edge count
+  double thresholdlower = -eps;     // LCC guaranteed to be survey.size()
+  double thresholdupper = 1 + eps;  // LCC guaranteed to be 1
+  int zlower = emax;                // we ensure elower >= target edge count
+  int zupper = 0;                   // we ensure eupper < target edge count
 
   int target = int(ceil(target_ad * emax)); 
 

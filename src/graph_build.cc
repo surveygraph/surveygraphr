@@ -84,8 +84,9 @@ void graph::dist_euclidean(const survey &S, const int &u, const int &v, double &
 
   // normalise by the number of valid comparisons
   if(count > 0)
-    w = 1.0 - w / double(count);
-  w = sqrt(w);
+    w = w / double(count);
+
+  w = 1 - sqrt(w);
 
   // If the number of valid comparisons is less than a specified threshold,
   // set to -1, and this edge will not be included in edge list.

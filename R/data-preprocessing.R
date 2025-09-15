@@ -29,13 +29,15 @@ data_preprocess <- function(
   if(!is.data.frame(data)){
     stop("Input data must be a dataframe.")
   }
+
   
   # Output warning if dataframe is empty, and proceed.
   if(ncol(data) == 0 || nrow(data) == 0){
     stop("Input dataframe cannot be empty.")
   }
 
-  # Set infinite value entries to NA.
+
+  # Set infinite value entries of numerical columns to NA.
   colsnumeric <- sapply(data, is.numeric)
   if(length(colsnumeric) > 0){
     data[colsnumeric] <- lapply(
@@ -47,7 +49,8 @@ data_preprocess <- function(
     )
   }
 
-  # Verify likert input.
+
+  # Verify `likert` argument.
   if(is.null(likert)){
 		likert <- as.data.frame(matrix(NA_real_, nrow = 2, ncol = ncol(data)))
 	}else{
@@ -127,24 +130,24 @@ data_preprocess <- function(
 	}else{
     # Verify that dummycode is a vector
     if(!is.atomic(dummycode))
-      stop("dummycode must be an atomic vector")
+      stop("`dummycode` must be an atomic vector")
 
     if(!(is.numeric(dummycode) || is.logical(dummycode)))
-      stop("dummycode must be numeric or logical")
+      stop("`dummycode` must be numeric or logical")
 
     # Verify that dimensions match survey
     if(length(dummycode) != ncol(data))
-      stop("dummycode length must equal number of columns in survey dataframe")
+      stop("`dummycode` length must equal number of columns in survey dataframe")
   
     # If dummycode is logical and NA entries present, set them to false
     if(is.logical(dummycode) && anyNA(dummycode)){
-      warning("setting NA entries of dummycode to FALSE")
+      warning("Setting NA entries of `dummycode` to FALSE")
       dummycode[is.na(dummycode)] <- FALSE
     }
 
     # If dummycode is numeric, set any entry that is not 1 to 0
     if(is.numeric(dummycode) && any(!(dummycode %in% c(0, 1)))){
-      warning("setting entries of dummycode that aren't 1 or 0 to 0")
+      warning("Setting entries of `dummycode` that aren't 1 or 0 to 0")
       dummycode[dummycode != 1] <- 0
 
       # Coerce to logical vector.
@@ -152,6 +155,9 @@ data_preprocess <- function(
     }
 	}
 
+
+  # Now we can process each column in `data` according to its type, and the
+  # `likert` and `dummycode` arguments provided.
 	datacopy <- do.call(
 		cbind,
 		lapply(seq_along(data), function(i){
@@ -170,6 +176,7 @@ data_preprocess <- function(
 }
 
 
+# Dummy-coding utility function, used in numeric_handling() and character_handling().
 dummycoding <- function(c, vals){
 	uniquevals <- unique(vals)
 	dcode <- as.data.frame(matrix(nrow = length(vals), ncol = 0))
@@ -188,14 +195,67 @@ dummycoding <- function(c, vals){
 }
 
 
+# Normalising utility function, used in numeric_handling(). Maps data to the
+# interval [0, 1], depending on whether a Likert range is supplied. If there's only 
+# a single finite value, set it to 0.5.
+#
+# Recall that either both values in a column of `likert` are finite, or neither
+# are.
+normalise <- function(data, likert){
+  dmin <- NA
+  dmax <- NA
+
+  # Get upper and lower bounds of column, depends on whether finite `likert`
+  # values are provided.
+  if(!is.na(likert[[1]])){
+    dmin <- likert[[1]]
+    dmax <- likert[[2]]
+  }else{
+    foundfinite <- FALSE
+    for(i in seq_along(data[[1]])){
+      if(!is.na(data[[1]][[i]])){
+        if(!foundfinite){
+          dmin <- data[[1]][[i]]
+          dmax <- data[[1]][[i]]
+          foundfinite <- TRUE
+        }else{
+          if(data[[1]][[i]] < dmin) dmin <- data[[1]][[i]]
+          if(data[[1]][[i]] > dmax) dmax <- data[[1]][[i]]
+        }
+      }
+    }
+  }
+
+  # Map the interval [dmin, dmax] to [0, 1].
+  if(!is.na(dmin)){
+    if(dmin < dmax){
+      for(i in seq_along(data[[1]])){
+        if(!is.na(data[[1]][[i]]))
+          data[[1]][[i]] <- (data[[1]][[i]] - dmin) / abs(dmax - dmin)
+      }
+    }else{
+      for(i in seq_along(data[[1]])){
+        if(!is.na(data[[1]][[i]]))
+          data[[1]][[i]] <- 0.5
+      }
+    }
+  }
+  data
+}
+
+
+# Pre-processing of numeric dataframe columns. data, likert and dummycode are
+# single-columns. Recall data is a dataframe, likert and dummycode are atomic
+# vectors.
 numeric_handling <- function(data, likert, dummycode){
   datacopy <- data
   dummyvals <- character(nrow(data))
 	dummyvals[] <- NA
 
-	if(dummycode)
+	if(dummycode){
 		if(any(data[[1]] != floor(data[[1]]), na.rm = TRUE))
 			warning("dummycoding a numeric column that contains non-integer values")
+  }
 
   for(i in seq_along(data[[1]])){
     if(!is.na(data[[1]][[i]])){
@@ -210,6 +270,7 @@ numeric_handling <- function(data, likert, dummycode){
     }
   }
 
+  datacopy <- normalise(datacopy, likert)
 	dcode <- dummycoding(colnames(data[1]), dummyvals)
 
 	datareturn <- as.data.frame(matrix(nrow = nrow(data), ncol = 0))
@@ -222,6 +283,8 @@ numeric_handling <- function(data, likert, dummycode){
 }
 
 
+# Pre-processing of character dataframe columns. data, likert and dummycode are
+# single-columns.
 character_handling <- function(data, likert, dummycode){
   datacopy <- data
   dummyvals <- character(nrow(data))
@@ -253,6 +316,7 @@ character_handling <- function(data, likert, dummycode){
 }
 
 
+# Pre-processing of logical dataframe columns.
 logical_handling <- function(data, likert, dummycode){
   datacopy <- data
 
@@ -267,6 +331,7 @@ logical_handling <- function(data, likert, dummycode){
 }
 
 
+# Pre-processing of dataframe columns of miscellaneous types.
 other_handling <- function(data, likert, dummycode){
   datacopy <- data
 

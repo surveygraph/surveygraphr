@@ -166,81 +166,49 @@ make_projection <- function(
   # Check methodval, a utility parameter whose interpretation depends on the
   # value of method. For all sparsification methods, methodval must be between
   # 0 and 1.
-	defaults <- c(1, 0, 1)
+
+	# TODO: explain default values in documentation. choices are conservative
 	if(is.null(methodval)){
+		defaults <- c(1, 0, 1)
 		methodval <- defaults[method + 1]
 	}else if(!is.numeric(methodval)){
 		stop("`methodval` must be a numerical value.", call. = F)
 	}else{ 
 		if(method == 0){
 			if(methodval > 1){
-				warning("`methodval` must be between 0 and 1 inclusive for `lcc` method, setting to 1.", call. = F);
-				methodval <- 1
+				stop("Expecting `methodval` between 0 and 1 inclusive for `lcc` method.", call. = F);
 			}else if(methodval < 0){
-				warning("`methodval` must be between 0 and 1 inclusive for `lcc` method, setting to 0.", call. = F);
-				methodval <- 0
+				stop("Expecting `methodval` between 0 and 1 inclusive for `lcc` method.", call. = F);
 			}
 		}else if(method == 1){
 			if(methodval > 1){
-				warning("`methodval` must be between 0 and 1 inclusive for `avgdegree` method, setting to 1.", call. = F);
-				methodval <- 1
+				stop("Expecting `methodval` between 0 and 1 inclusive for `avgdegree` method.", call. = F);
 			}else if(methodval < 0){
-				warning("`methodval` must be between 0 and 1 inclusive for `avgdegree` method, setting to 0.", call. = F);
-				methodval <- 0
+				stop("Expecting `methodval` between 0 and 1 inclusive for `avgdegree` method.", call. = F);
 			}
-		}else if(method == 2){
-			#if(methodval > 1){
-			#	warning("Note that for `similarity` method, all values of `methodval` greater than 1 are equivalent.", call. = F);
-			#}else if(methodval < 0){
-			#	warning("Note that for `similarity` method all values of `methodval` less than 0 are equivalent.", call. = F);
-			#}
 		}
 	}
 
 
-  # Check methodval, a utility parameter whose interpretation depends on the
-  # value of method. For all sparsification methods, methodval must be between
-  # 0 and 1.
-  ## default values for methods 0, 1 and 2	
-	#defaults <- c(1, 0, 1)
-	#if(is.null(methodval)){
-	#	methodval <- defaults[method + 1]
-	#}else if(!is.numeric(methodval)){
-	#	warning("`methodval` must be a numerical value between 0 and 1, inclusive.", call. = F)
-	#	methodval <- defaults[method + 1]
-	#}else if(methodval < 0 || methodval > 1){
-	#	warningtext <- c(
-	#		"`methodval` must be between 0 and 1 inclusive; defaulting to 1 for `lcc` method.",
-	#		"`methodval` must be between 0 and 1 inclusive; defaulting to 0 for `avgdegree` method.",
-	#		"`methodval` must be between 0 and 1; defaulting to 1 for `similarity` method."
-	#	)
-	#	warning(warningtext[method + 1], call. = F)
-	#	methodval <- defaults[method + 1]
-	#}
-
-
   # Check mincompare, the minimum number of numerical pairwise comparisons for
   # computing similarity.
-	defaults <- c(ceiling(ncol(data) / 2), ceiling(nrow(data) / 2))
-	defaults <- as.integer(defaults)
 	bounds <- c(ncol(data), nrow(data))
 
+	# TODO: explain default values in documentation. choices are conservative
   if(is.null(mincompare)){
+		defaults <- c(ceiling(ncol(data) / 2), ceiling(nrow(data) / 2))
+		defaults <- as.integer(defaults)
 		mincompare <- defaults[layer + 1]
 	}else if(!is.numeric(mincompare)){	
-		warningtext <- c(
-			"Expecting an integer for `mincompare`; defaulting to ceiling(ncol(data) / 2) for agent layer.",
-			"Expecting an integer for `mincompare`; defaulting to ceiling(nrow(data) / 2) for symbolic layer."
-		)
-		warning(warningtext[layer + 1], call. = F)
-		mincompare <- defaults[layer + 1]
+		stop("Expecting an integer for `mincompare`.", call. = F)
+	}else if(mincompare != as.integer(mincompare)){
+		stop("Expecting an integer for `mincompare`.", call. = F)
   }else if(mincompare < 1 || mincompare > bounds[layer + 1]){
 		warningtext <- c(
-			"Expecting `mincompare` between 1 and ncol(data) for agent layer; defaulting to ceiling(ncol(data) / 2).",
-			"Expecting `mincompare` between 1 and nrow(data) for symbolic layer; defaulting to ceiling(nrow(data) / 2)."
+			"Expecting `mincompare` between 1 and ncol(data) for agent layer.",
+			"Expecting `mincompare` between 1 and nrow(data) for symbolic layer."
 		)
-		warning(warningtext[layer + 1], call. = F)
-		mincompare <- defaults[layer + 1]
+		stop(warningtext[layer + 1], call. = F)
   }else{
 		mincompare <- as.integer(mincompare)
 	}
@@ -252,16 +220,17 @@ make_projection <- function(
   if(is.null(metric)){
     metric <- as.integer(0)
 	}else if(!is.character(metric)){
-    warning("`metric` must be a character string; defaulting to \"Manhattan\".")
-    metric <- as.integer(0)
+    stop("Expecting a character string for `metric`.", call. = F)
   }else if(metric %in% c("manhattan", "Manhattan")){
     metric <- as.integer(0)
   }else if(metric %in% c("euclidean", "Euclidean")){
-    metric <- as.integer(0)
+    metric <- as.integer(1)
   }else{
-    warning("`metric` option \"", metric, "\" unrecognised; defaulting to \"Manhattan\".")
-    metric <- as.integer(0)
+    stop("`metric` option \"", metric, "\" unrecognised; expecting \"Manhattan\" or \"Euclidean\".", call. = F)
   }
+
+
+	# Check bootstrapping arguments.
 
 
   e <- .Call(
