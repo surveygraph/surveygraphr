@@ -1,6 +1,9 @@
 #include "surveygraph.h"
 
 #include <cctype>
+#include <map>
+#include <set>
+#include <random>
 #include <algorithm>
 #include <cmath>
 
@@ -210,9 +213,9 @@ static void cppedgelist_to_rdf(const graph &g, SEXP &df)
   SET_VECTOR_ELT(df, 2, w_vector);
 
   SEXP names = PROTECT(Rf_allocVector(STRSXP, 3));
-  SET_STRING_ELT(names, 0, Rf_mkChar("u"));            // name first column u
-  SET_STRING_ELT(names, 1, Rf_mkChar("v"));            // name second column v
-  SET_STRING_ELT(names, 2, Rf_mkChar("weight"));       // name third column weight, required by igraph
+  SET_STRING_ELT(names, 0, Rf_mkChar("u"));            // name of first column
+  SET_STRING_ELT(names, 1, Rf_mkChar("v"));            // name of second column
+  SET_STRING_ELT(names, 2, Rf_mkChar("weight"));       // name of third column (required by igraph)
 
   SEXP rownames = PROTECT(Rf_allocVector(INTSXP, 2));
   INTEGER(rownames)[0] = NA_INTEGER;                   // default entry if size below too small
@@ -225,6 +228,66 @@ static void cppedgelist_to_rdf(const graph &g, SEXP &df)
   UNPROTECT(5);
 }
 
+static void cppmap_to_rdf(std::map<std::set<int>, double> &e, SEXP &df)
+{
+  unsigned int len = 0;
+  if(e.size() > 0) len = e.size();
+  SEXP u_vector = PROTECT(Rf_allocVector(INTSXP, len));  // u column
+  SEXP v_vector = PROTECT(Rf_allocVector(INTSXP, len));  // v column
+  SEXP w_vector = PROTECT(Rf_allocVector(REALSXP, len)); // weight column
+
+  int i = 0;
+  for(auto &it : e){
+    INTEGER(u_vector)[i] = *it.first.begin() + 1;
+    INTEGER(v_vector)[i] = *it.first.rbegin() + 1;
+    REAL(w_vector)[i] = it.second;
+    i += 1;
+  }
+
+  SET_VECTOR_ELT(df, 0, u_vector);
+  SET_VECTOR_ELT(df, 1, v_vector);
+  SET_VECTOR_ELT(df, 2, w_vector);
+
+  SEXP names = PROTECT(Rf_allocVector(STRSXP, 3));
+  SET_STRING_ELT(names, 0, Rf_mkChar("u"));            // name of first column
+  SET_STRING_ELT(names, 1, Rf_mkChar("v"));            // name of second column
+  SET_STRING_ELT(names, 2, Rf_mkChar("weight"));       // name of third column (required by igraph)
+
+  SEXP rownames = PROTECT(Rf_allocVector(INTSXP, 2));
+  INTEGER(rownames)[0] = NA_INTEGER;                   // default entry if size below too small
+  INTEGER(rownames)[1] = -Rf_length(u_vector);         // number of rows in agent edge list
+
+  Rf_setAttrib(df, R_ClassSymbol, Rf_ScalarString(Rf_mkChar("data.frame")));
+  Rf_setAttrib(df, R_RowNamesSymbol, rownames);
+  Rf_setAttrib(df, R_NamesSymbol, names);
+
+  UNPROTECT(5);
+}
+
+
+static void sample(std::vector<vector<double>> &d, const double &p, const int &seed, const int &seedval)
+{
+  std::mt19937 gen(std::random_device{}());
+  if(seed){
+    gen = std::mt19937(seedval);
+  }
+
+  std::uniform_real_distribution<double> unif(0, 1);
+
+  for(int i = 0; i < d.size(); ++i){
+    for(int j = 0; j < d[i].size(); ++j){
+      if(unif(gen) > p) d[i][j] = NAN;
+
+      //Rprintf("%d %d %f \n", i, j, d[i][j]);
+
+      //if(unif(gen) < p)
+      //  Rprintf("%d %d %f \n", i, j, d[i][j]);
+      //else
+      //  Rprintf("%d %d %f \n", i, j, NAN);
+    }
+  }
+}
+
 // Basic checks have been carried out in the calling R file, R/make-projection.R.
 SEXP rmake_projection(
   SEXP rdata,        // dataframe containing survey
@@ -232,37 +295,49 @@ SEXP rmake_projection(
   SEXP rmethod,      // sparsification method, lcc, average_degree, raw_similarity
   SEXP rmethodval,   // method value, utility variable
   SEXP rmincompare,  // minimum comparisons
-  SEXP rmetric       // similarity metric
+  SEXP rmetric,      // similarity metric
+  SEXP rbootreps,    // number of bootstrap repetitions
+  SEXP rbootval,     // resampling probability for bootstrapping
+  SEXP rbootseed     // resampling seed, used when testing
 ){
 
-  int layer, method, dummycode, mincompare, metric;
+  int layer, method, dummycode, mincompare, metric, bootreps, bootseed;
   rint_to_cppint(rlayer, layer);
   rint_to_cppint(rmethod, method);
   rint_to_cppint(rmincompare, mincompare);
   rint_to_cppint(rmetric, metric);
+  rint_to_cppint(rbootreps, bootreps);
+  rint_to_cppint(rbootseed, bootseed);
 
-  double methodval;
+  double methodval, bootval;
   rdouble_to_cppdouble(rmethodval, methodval);
+  rdouble_to_cppdouble(rbootval, bootval);
 
   std::vector<std::vector<double>> data;
   rdf_to_cppvector(rdata, layer, data);
 
-  //scale_columns(data);
+  std::map<std::set<int>, int> ecounts;
+  std::map<std::set<int>, double> eweights;
 
-  // Everything is done inside the constructor, creating S.g_dummy
-  // TODO what does surveygraph assume in terms of normalisation? that it's already done???
-  // TODO what is scale_columns() supposed to be doing then?
-  // when does likert scale come into play for scaling?
-  surveygraph S{
-    data, 
-    method, 
-    methodval, 
-    mincompare, 
-    metric
-  };
+  for(int i = 0; i < bootreps; ++i){
+    std::vector<std::vector<double>> datasample = data;
+    sample(datasample, bootval, bootseed, i);
+
+    surveygraph S{data, method, methodval, mincompare, metric};
+
+    for(auto &it : S.g.network){
+      for(auto &jt : it.second){
+        if(it.first < jt.u){
+          eweights[std::set<int>{it.first, jt.u}] += jt.w;
+          ecount[std::set<int>{it.first, jt.u}] += 1;
+        }
+      }  
+    }
+  }
 
   SEXP redgelist = PROTECT(Rf_allocVector(VECSXP, 3));
-  cppedgelist_to_rdf(S.g_dummy, redgelist);
+  //cppedgelist_to_rdf(S.g, redgelist);
+  cppmap_to_rdf(eweights, redgelist);
   UNPROTECT(1);
 
   return redgelist;

@@ -25,19 +25,24 @@ strtodf <- function(s){
 }
 
 
-#data_preprocessing
+#files
+#======================================
+#data_preprocessing_args.R
+#data_preprocessing.R
 #
-#make_projection_arguments
-#make_projection_method_lcc
-#make_projection_method_avgdegree
-#make_projection_method_similarity
-#make_projection_mincompare
-#make_projection_metric
-#make_projection_bootstrap
+#make_projection_args.R
+#make_projection_method_lcc.R
+#make_projection_method_avgdegree.R
+#make_projection_method_similarity.R
+#make_projection_mincompare.R
+#make_projection_metric.R
+#make_projection_bootstrap.R
 #
-#make_synthetic
+#make_synthetic_args.R
+#make_synthetic.R
 #
-#make_threshold_profile
+#make_threshold_profile_args.R
+#make_threshold_profile.R
 
 
 test_that("`lcc` method on a 1-clique, agent layer", {
@@ -342,6 +347,7 @@ test_that("`similarity` method on a 4-clique, agent layer.", {
 test_that("`similarity` method on a 4-clique, symbolic layer.", {
   proj <- function(x) make_projection(data.frame(a = 0, b = 0.6, c = 0.9, d = 1), layer = "s", likert = l4, method = "s", methodval = x)
 
+  #,,,,,,,,,,,,,,, u = c(), v = c(), weight = c()
   expect_equal(proj(-eps), strtodf("1 1 1 2 2 3 2 3 4 3 4 4 0.4 0.1 0 0.7 0.6 0.9"))
   expect_equal(proj(0), strtodf("1 1 1 2 2 3 2 3 4 3 4 4 0.4 0.1 0 0.7 0.6 0.9"))
   expect_equal(proj(eps), strtodf("1 1 2 2 3 2 3 3 4 4 0.4 0.1 0.7 0.6 0.9"))

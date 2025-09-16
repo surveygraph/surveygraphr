@@ -10,7 +10,10 @@ extern SEXP rmake_projection(
   SEXP rmethod,      // sparsification method
   SEXP rmethodval,   // method value
   SEXP rmincompare,  // minimum comparisons
-  SEXP rmetric       // similarity metric
+  SEXP rmetric,      // similarity metric
+  SEXP rbootreps,    // number of bootstrap realisations
+  SEXP rbootval,     // utility variable for boostrapping
+  SEXP rbootseed     // boostrapping seed
 );
 
 extern SEXP rmake_threshold_profile(
@@ -44,7 +47,7 @@ extern SEXP rmake_threshold_profile(
 static const R_CallMethodDef R_CallDef[] = {
   // R package entry points
   //{"rmake_projection",             (DL_FUNC) &rmake_projection, 9},
-  {"rmake_projection",             (DL_FUNC) &rmake_projection, 6},
+  {"rmake_projection",             (DL_FUNC) &rmake_projection, 9},
   //{"rmake_proj_agent_lcc",         (DL_FUNC) &rmake_proj_agent_lcc, 4},
   //{"rmake_proj_agent_ad",          (DL_FUNC) &rmake_proj_agent_ad, 4},
   //{"rmake_proj_agent_similar",     (DL_FUNC) &rmake_proj_agent_similar, 4},

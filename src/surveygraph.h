@@ -30,8 +30,6 @@ class surveygraph
       methodval = rmethodval;
       mincomps = rmincomps;
       metric = rmetric;
-      
-      //Rprintf("hello from surveygraph constructor, method is %d\n", method);
 
       if(method == 0){
         target_lcc = methodval;
@@ -44,7 +42,7 @@ class surveygraph
         make_proj_similar();
       }
 
-      g_dummy = g;
+      //g_dummy = g;
     }
 
     surveygraph(std::vector<std::vector<double>> &a){
@@ -54,26 +52,28 @@ class surveygraph
     int method, mincomps, metric;
     double methodval;
 
+    // TODO can get rid of these, just use methodval throughout
     double target_lcc, target_ad, raw_similarity;
 
     // survey, small sample of survey
     std::vector<std::vector<double>> survey, surveysample;
 
-    graph g, g_dummy;
+    graph g;
+    //graph g_dummy;
 
     std::vector<std::vector<double>> profile;     // agent threshold data
-    
-    //void search_threshold_lcc();
-    //void search_threshold_ad();
 
     void make_proj_lcc();      // builds agent projection graph with target largest component size
     void make_proj_ad();       // builds agent projection graph with target average degree
     void make_proj_similar();  // builds agent projection graph with desired threshold
 
+    void make_threshold_profile();     // sweeps through a range of radii and studies 
+    
+    //void search_threshold_lcc();
+    //void search_threshold_ad();
+
     //void max_threshold(double, int);
     //void max_threshold_agent(double, int);
-
-    void make_threshold_profile();     // sweeps through a range of radii and studies 
 
     //void make_threshold_profile_agent();     // sweeps through a range of radii and studies 
     //void make_threshold_profile_symbolic();  // sweeps through a range of radii and studies 
