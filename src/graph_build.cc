@@ -29,7 +29,7 @@ void graph::build_graph(const survey &S)
         dist_euclidean(S, int(i), int(j), w);
 
       //if(w >= threshold){
-      if(w > threshold - 1e-9){
+      if(w > threshold - 1e-9 && w != -1){
         //Rprintf("weight of %d %d is %f\n", i, j, w);
         network[i].insert(neighbour{int(j), w});
         network[j].insert(neighbour{int(i), w});
@@ -60,8 +60,6 @@ void graph::dist_manhattan(const survey &S, const int &u, const int &v, double &
   // normalise by the number of valid comparisons
   if(count > 0)
     w = 1.0 - w / double(count);
-
-  //Rprintf("%d %f %d count weight mincomps\n", count, w, mincomps);
 
   // If the number of valid comparisons is less than a specified threshold,
   // set to -1, and this edge will not be included in edge list.

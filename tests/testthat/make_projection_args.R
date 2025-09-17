@@ -168,6 +168,11 @@ test_that("`bootreps` and `bootval` arguments set together", {
 		make_projection(data.frame(1), bootval = 0),
 		regexp = "`bootreps` argument must be set if `bootval` is set."
 	)
+
+	expect_error(
+		make_projection(data.frame(1), bootseed = 1),
+		regexp = "`bootrep` and `bootval` arguments must be set if `bootseed` is set."
+	)
 })
 
 
@@ -198,6 +203,7 @@ test_that("`bootreps` argument", {
 	)
 })
 
+
 test_that("`bootval` argument", {
 	expect_error(
 		make_projection(data.frame(1), bootreps = 1, bootval = TRUE),
@@ -217,5 +223,23 @@ test_that("`bootval` argument", {
 	expect_error(
 		make_projection(data.frame(1), bootreps = 1, bootval = 1 + eps),
 		regexp = "`bootval` argument must be between 0 and 1, inclusive."
+	)
+})
+
+
+test_that("`bootseed` argument", {
+	expect_error(
+		make_projection(data.frame(1), bootreps = 1, bootval = 0.5, bootseed = TRUE),
+		regexp = "`bootseed` argument must be 0 or 1."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), bootreps = 1, bootval = 0.5, bootseed = as.integer(NA)),
+		regexp = "`bootseed` argument cannot be NA."
+	)
+  
+	expect_error(
+		make_projection(data.frame(1), bootreps = 1, bootval = 0.5, bootseed = 2),
+		regexp = "`bootseed` argument must be 0 or 1."
 	)
 })

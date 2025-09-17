@@ -5,64 +5,64 @@
 #'
 #' `make_projection()` outputs the agent or symbolic network corresponding
 #' to a survey, i.e. the row or column projection.
-#' 
+#'
 #' @return
 #' A data frame corresponding to the edge list of the specified network. It
-#' contains three columns named 
-#' 
+#' contains three columns named
+#'
 #'   - `u`, the first node adjacent to the edge
-#' 
-#'   - `v`, the second node adjacent to the edge, and 
-#' 
+#'
+#'   - `v`, the second node adjacent to the edge, and
+#'
 #'   - `weight`, the similarity between nodes `u` and `v`
-#' 
+#'
 #' @param data A data frame corresponding to a survey
 #' @param layer A string flag specifying which layer to project
-#'   
+#'
 #'   - `"agent"` produces the network corresponding to the agents, which we assume
 #'   to be rows in `data`
-#' 
+#'
 #'   - `"symbolic"` produces the network corresponding to the symbols, or items,
 #'   which we assume to be columns in `data`
-#' 
+#'
 #' @param method A string flag specifying how edges are thresholded in
 #' the network representation.
-#' 
+#'
 #'   - `"similarity"` means we remove all edges whose weight, meaning node
 #'   similarity, is below a threshold specified by `methodval`.
-#' 
+#'
 #'   - `"lcc"` finds the value of the threshold that results in the network
 #'   whose largest connected component is as close as possible to a specified
 #'   value. In general a range of thresholds will satisfy this condition, and we
 #'   choose the upper limit of this range. As such, `"lcc"` provided is a target.
-#' 
+#'
 #'   - `"avgdegree"` finds the value of the threshold that results in the network
-#'   whose average degree is as close as possible to a specified value. Like 
+#'   whose average degree is as close as possible to a specified value. Like
 #'   `"lcc"`, this is a target.
-#' 
+#'
 #' @param methodval A utility variable that we interpret according to the
 #'   `method` chosen.
-#' 
+#'
 #'   - If `method = "similarity"`, then `methodval` is
 #'   interpreted as the similarity threshold, and thus is in the range `[0, 1]`.
 #'   A value of 0 means no edges are removed, and a value of 1 means all edges
 #'   are removed.
-#' 
+#'
 #'   - If `method = "lcc"`, then `methodval` is interpreted as
 #'   the desired fractional size of the largest connected component, in the range
 #'   `[0, 1]`. E.g., when set to 0, no nodes are connected, and if set to 1, the
 #'   network is as sparse as possible while remaining fully connected.
-#' 
+#'
 #'   - If `method = "avgdegree"`, then `methodval` is interpreted as
 #'   the desired average degree. We assume that `methodval` is normalised to
 #'   the range `[0, 1]` When `method_value = 0`, then no nodes are connected, and
 #'   if `method_value = 1`, the network is complete, meaning it contains every
 #'   possible edge.
-#' @param centre If `TRUE`, we shift edge weights from `[0, 1]` to `[-1, 1]`. 
+#' @param centre If `TRUE`, we shift edge weights from `[0, 1]` to `[-1, 1]`.
 #'   Defaults to FALSE, as most network analysis applications require positive
 #'   edge weights.
 #' @param dummycode flag that indicates whether we dummycode data.
-#' @param likert Specifies the range of the Likert scale contained in `data`.  
+#' @param likert Specifies the range of the Likert scale contained in `data`.
 #' @param mincompare The minimum number of valid comparisons that must be
 #' made when computing the similarity between rows or columns in the `data`. If at
 #' least one of the entries in the fields being compared is NA, then the
@@ -72,22 +72,22 @@
 #' @param verbose This is a debugging flag that prints out survey data after a
 #' pre-processing step, but before being supplied to the C++ routines that compute
 #' the network representation.
-#' 
+#'
 #' @export
 #' @examples
 #' S <- make_synthetic_data(20, 5)
 make_projection <- function(
-  data, 
+  data,
   layer = NULL,
-  method = NULL, 
-  methodval = NULL, 
+  method = NULL,
+  methodval = NULL,
   mincompare = NULL,
   metric = NULL,
   likert = NULL,
   dummycode = NULL,
   bootreps = NULL,
   bootval = NULL,
-  bootseed = NULL,
+  bootseed = NULL, # could make this a set of seeds? ie allow it to have any length, plus usual tests of integers etc
   ...
 ){
 
@@ -121,8 +121,7 @@ make_projection <- function(
   }
 
 
-	# TODO: throughout, need error if length(argument) != 1, ie currently not
-	# checking for vectors being passed.
+	# TODO: need errors throughout if length(argument) != 1, shouldn't accept vector args
 	# TODO: need to check Inf values for doubel arguments. use is.finite()
 	# TODO: explain default values in documentation. choices are conservative
 
@@ -153,7 +152,6 @@ make_projection <- function(
   # 0 for lcc
   # 1 for avgdegree
   # 2 for similarity
-  # TODO check that it's a character string!!!!!!!
   if(is.null(method)){
     method <- as.integer(0)
 	}else if (!is.character(method)){
@@ -182,7 +180,7 @@ make_projection <- function(
 		stop("`methodval` argument must be a numerical value.", call. = F)
   }else if(is.na(methodval)){
     stop("`methodval` argument cannot be NA.", call. = F)
-	}else{ 
+	}else{
 		if(method == 0){
 			if(methodval < 0 || methodval > 1){
 				stop("Expecting `methodval` between 0 and 1 inclusive for `lcc` method.", call. = F);
@@ -247,6 +245,10 @@ make_projection <- function(
 		stop("`bootval` argument must be set if `bootreps` is set.")
 	}
 
+	if(!is.null(bootseed) && (is.null(bootreps) || is.null(bootval))){
+		stop("`bootrep` and `bootval` arguments must be set if `bootseed` is set.")
+	}
+
   if(is.null(bootreps)){
     bootreps <- as.integer(1)
 	}else if(!is.numeric(bootreps)){
@@ -281,7 +283,7 @@ make_projection <- function(
 		stop("`bootseed` argument must be 0 or 1.")
 	}else if(is.na(bootseed)){
 		stop("`bootseed` argument cannot be NA.")
-	}else if(bootseed != 0 || bootseed != 1){
+	}else if(bootseed != 0 && bootseed != 1){
 		stop("`bootseed` argument must be 0 or 1.")
 	}else{
 		bootseed <- as.integer(bootseed)
@@ -289,15 +291,18 @@ make_projection <- function(
 
 
   e <- .Call(
-    "rmake_projection", 
-    data, 
+    "rmake_projection",
+    data,
     layer,
     method,
-    methodval, 
+    methodval,
+    #methodvalue,
     mincompare,
+    #comparisons,
     metric,
 		bootreps,
+		#bootvalue,
 		bootval,
-		bootseed
+		bootseed 
   )
 }

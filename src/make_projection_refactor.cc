@@ -21,7 +21,7 @@ static void rdf_to_cppvector(const SEXP &rdata, const int &layer, std::vector<st
 
   SEXP check = PROTECT(Rf_allocVector(VECSXP, Rf_length(rdata)));
 
-  // Iterate over columns of dataframe, `rdata`, so i indexes the row of
+  // Iterate over columns of dataframe `rdata`, so i indexes the row of
   // `data`, so that `data` is the transpose of `rdata`.
   for(int i = 0; i < Rf_length(rdata); ++i){
     check = VECTOR_ELT(rdata, i);
@@ -89,13 +89,6 @@ static void rdf_to_cppvector(const SEXP &rdata, const int &layer, std::vector<st
       for(unsigned int j = 0; j < nrow; ++j)
         data[j][i] = dummy[i][j];
   }
-
-  //Rprintf("reading in dataframe :\n");
-  //for(int i = 0; i < data.size(); ++i){
-  //  for(int j = 0; j < data[i].size(); ++j) Rprintf("%10f ", data[i][j]);
-  //  Rprintf("\n");
-  //}
-  //Rprintf("\n");
 
   UNPROTECT(1);
 }
@@ -228,64 +221,88 @@ static void cppedgelist_to_rdf(const graph &g, SEXP &df)
   UNPROTECT(5);
 }
 
-static void cppmap_to_rdf(std::map<std::set<int>, double> &e, SEXP &df)
+static void cppmap_to_rdf(
+  std::map<std::set<int>, double> &e, 
+  std::map<std::set<int>, int> &c, 
+  const int &ctotal,
+  SEXP &df)
 {
-  unsigned int len = 0;
-  if(e.size() > 0) len = e.size();
+  unsigned int len = e.size();
   SEXP u_vector = PROTECT(Rf_allocVector(INTSXP, len));  // u column
   SEXP v_vector = PROTECT(Rf_allocVector(INTSXP, len));  // v column
   SEXP w_vector = PROTECT(Rf_allocVector(REALSXP, len)); // weight column
+  SEXP f_vector = PROTECT(Rf_allocVector(REALSXP, len)); // frequency column
 
   int i = 0;
   for(auto &it : e){
     INTEGER(u_vector)[i] = *it.first.begin() + 1;
     INTEGER(v_vector)[i] = *it.first.rbegin() + 1;
-    REAL(w_vector)[i] = it.second;
+    REAL(w_vector)[i] = it.second / double(c[it.first]);
+    REAL(f_vector)[i] = c[it.first] / double(ctotal);
     i += 1;
   }
 
   SET_VECTOR_ELT(df, 0, u_vector);
   SET_VECTOR_ELT(df, 1, v_vector);
   SET_VECTOR_ELT(df, 2, w_vector);
+  if(Rf_length(df) == 4) SET_VECTOR_ELT(df, 3, f_vector);
 
-  SEXP names = PROTECT(Rf_allocVector(STRSXP, 3));
-  SET_STRING_ELT(names, 0, Rf_mkChar("u"));            // name of first column
-  SET_STRING_ELT(names, 1, Rf_mkChar("v"));            // name of second column
-  SET_STRING_ELT(names, 2, Rf_mkChar("weight"));       // name of third column (required by igraph)
+  SEXP names = PROTECT(Rf_allocVector(STRSXP, Rf_length(df)));
+  SET_STRING_ELT(names, 0, Rf_mkChar("u"));
+  SET_STRING_ELT(names, 1, Rf_mkChar("v"));
+  SET_STRING_ELT(names, 2, Rf_mkChar("weight"));
+  if(Rf_length(names) == 4) SET_STRING_ELT(names, 3, Rf_mkChar("freq"));
 
   SEXP rownames = PROTECT(Rf_allocVector(INTSXP, 2));
   INTEGER(rownames)[0] = NA_INTEGER;                   // default entry if size below too small
-  INTEGER(rownames)[1] = -Rf_length(u_vector);         // number of rows in agent edge list
+  INTEGER(rownames)[1] = -Rf_length(u_vector);         // number of edges in edge list
 
   Rf_setAttrib(df, R_ClassSymbol, Rf_ScalarString(Rf_mkChar("data.frame")));
   Rf_setAttrib(df, R_RowNamesSymbol, rownames);
   Rf_setAttrib(df, R_NamesSymbol, names);
 
-  UNPROTECT(5);
+  UNPROTECT(6);
 }
 
 
-static void sample(std::vector<vector<double>> &d, const double &p, const int &seed, const int &seedval)
-{
+static void sample(
+  std::vector<vector<double>> &d, 
+  const double &p, 
+  const int &seed, 
+  const int &seedval
+){
+  // TODO shouldn't this be instantiated outside of sample()?
   std::mt19937 gen(std::random_device{}());
-  if(seed){
-    gen = std::mt19937(seedval);
-  }
+  if(seed) gen = std::mt19937(seedval);
+
+  //gen = std::mt19937(2);
+  std::vector<vector<double>> r = d;
 
   std::uniform_real_distribution<double> unif(0, 1);
 
   for(int i = 0; i < d.size(); ++i){
     for(int j = 0; j < d[i].size(); ++j){
-      if(unif(gen) > p) d[i][j] = NAN;
-
-      //Rprintf("%d %d %f \n", i, j, d[i][j]);
-
-      //if(unif(gen) < p)
-      //  Rprintf("%d %d %f \n", i, j, d[i][j]);
-      //else
-      //  Rprintf("%d %d %f \n", i, j, NAN);
+      double x = unif(gen);
+      r[i][j] = x;
+      if(x > p) d[i][j] = NAN;
     }
   }
+
+  //Rprintf("=============================================================\n");
+  //for(int i = 0; i < r.size(); ++i){
+  //  for(int j = 0; j < r[i].size(); ++j){
+  //    Rprintf("%8f ", r[i][j]);
+  //  }
+  //  Rprintf("\n");
+  //}
+  //Rprintf("\n");
+
+  //for(int i = 0; i < d.size(); ++i){
+  //  for(int j = 0; j < d[i].size(); ++j){
+  //    Rprintf("%-8f ", d[i][j]);
+  //  }
+  //  Rprintf("\n");
+  //}
 }
 
 // Basic checks have been carried out in the calling R file, R/make-projection.R.
@@ -321,23 +338,26 @@ SEXP rmake_projection(
 
   for(int i = 0; i < bootreps; ++i){
     std::vector<std::vector<double>> datasample = data;
-    sample(datasample, bootval, bootseed, i);
 
-    surveygraph S{data, method, methodval, mincompare, metric};
+    if(bootval < 1){
+      sample(datasample, bootval, bootseed, i);
+    }
+
+    surveygraph S{datasample, method, methodval, mincompare, metric};
 
     for(auto &it : S.g.network){
       for(auto &jt : it.second){
         if(it.first < jt.u){
           eweights[std::set<int>{it.first, jt.u}] += jt.w;
-          ecount[std::set<int>{it.first, jt.u}] += 1;
+          ecounts[std::set<int>{it.first, jt.u}] += 1;
         }
       }  
     }
   }
 
-  SEXP redgelist = PROTECT(Rf_allocVector(VECSXP, 3));
-  //cppedgelist_to_rdf(S.g, redgelist);
-  cppmap_to_rdf(eweights, redgelist);
+  int n = bootreps == 1 ? 3 : 4;
+  SEXP redgelist = PROTECT(Rf_allocVector(VECSXP, n));
+  cppmap_to_rdf(eweights, ecounts, bootreps, redgelist);
   UNPROTECT(1);
 
   return redgelist;
