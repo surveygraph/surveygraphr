@@ -1,6 +1,17 @@
-# Seeding the Mersenne twister mt19937 with 0, 1 and 2, and sampling from
-# uniform_real_distribution<double>(0, 1) 25 times each produces the following
-# arrays, respectively.
+# Consider the following array, representative of survey data,
+#
+# 1.000000 0.750000 0.000000 1.000000 0.500000
+# 0.000000 0.500000 0.750000 0.250000 0.000000
+# 0.500000 1.000000 1.000000 0.500000 1.000000
+# 0.250000 0.000000 0.250000 0.250000 1.000000
+# 0.750000 0.500000 0.500000 0.000000 0.750000
+#
+# With probability p = 0.6, we retain a given entry of the survey, and with 
+# probability 1 - p, we set it to NA. To do this, we generate pseudo-random
+# variables using the Mersenne twister mt19937, and sample from
+# uniform_real_distribution<double>(0, 1). In order to do so reproducibly, we
+# seed the generator with values 0, 1 and 2. This produces the following
+# sequences of 25 numbers, respectively.
 #
 # 0.592845 0.844266 0.857946 0.847252 0.623564
 # 0.384382 0.297535 0.056713 0.272656 0.477665
@@ -20,41 +31,30 @@
 # 0.258498 0.546207 0.407308 0.176985 0.969632
 # 0.297018 0.287869 0.116193 0.181727 0.494290
 #
-# We now consider the following array, representative of survey data,
-#
-# 1.000000 0.750000 0.000000 1.000000 0.500000
-# 0.000000 0.500000 0.750000 0.250000 0.000000
-# 0.500000 1.000000 1.000000 0.500000 1.000000
-
-# 0.250000 0.000000 0.250000 0.250000 1.000000
-# 0.750000 0.500000 0.500000 0.000000 0.750000
-#
-# With probability p = 0.6, we retain a given entry of the survey, and with 
-# probability 1 - p, we set it to nan. We use the random values above to do
-# this, for three independent resampling instances. This produces the 
+# Applying the threshold p = 0.6 to the original array, we produce the
 # following data.
 #
-# 1.000000 nan      nan      nan      nan
+# 1.000000 NA       NA       NA       NA 
 # 0.000000 0.500000 0.750000 0.250000 0.000000
-# nan      1.000000 1.000000 nan      1.000000
-# nan      0.000000 nan      0.250000 nan
-# 0.750000 nan      0.500000 nan      nan
+# NA       1.000000 1.000000 NA       1.000000
+# NA       0.000000 NA       0.250000 NA 
+# 0.750000 NA       0.500000 NA       NA 
 # 
-# nan      nan      0.000000 nan      0.500000
-# 0.000000 0.500000 nan      nan      nan
+# NA       NA       0.000000 NA       0.500000
+# 0.000000 0.500000 NA       NA       NA 
 # 0.500000 1.000000 1.000000 0.500000 1.000000
-# nan      0.000000 0.250000 nan      nan
-# nan      nan      0.500000 0.000000 nan
+# NA       0.000000 0.250000 NA       NA 
+# NA       NA       0.500000 0.000000 NA 
 # 
-# 1.000000 nan      nan      1.000000 0.500000
-# 0.000000 nan      0.750000 0.250000 nan
-# nan      nan      1.000000 0.500000 nan
-# 0.250000 0.000000 0.250000 0.250000 nan
+# 1.000000 NA       NA       1.000000 0.500000
+# 0.000000 NA       0.750000 0.250000 NA 
+# NA       NA       1.000000 0.500000 NA 
+# 0.250000 0.000000 0.250000 0.250000 NA 
 # 0.750000 0.500000 0.500000 0.000000 0.750000
 #
 # Computing similarity weights on these arrays, requiring at least one valid 
 # comparison yields the following weights, with the corresponding number of 
-# actual valid comparisons.
+# valid comparisons.
 #
 # u v w        w0       c0 w1       c1 w2       c2
 # 1 2 0.350000 0.000000 1  NaN      0  0.125000 2
@@ -73,7 +73,8 @@
 # it appeared with a finite value. We include an additional column with the
 # frequency with which the edge occured, as a fraction.
 
-df <- data.frame(
+
+survey <- data.frame(
   c(1.000000, 0.000000, 0.500000, 0.250000, 0.750000),
   c(0.750000, 0.500000, 1.000000, 0.000000, 0.500000),
   c(0.000000, 0.750000, 1.000000, 0.250000, 0.500000),
@@ -81,72 +82,178 @@ df <- data.frame(
   c(0.500000, 0.000000, 1.000000, 1.000000, 0.750000)
 )
 
-test_that("`bootreps` behave as expected", {
+eps <- 1e-5
 
-  proj <- function(a, b, c, d){
+datafn <- function(x){
+	df <- data.frame(
+		u = as.integer(c(1, 1, 1, 1, 2, 2, 2, 3, 3, 4)),
+		v = as.integer(c(2, 3, 4, 5, 3, 4, 5, 4, 5, 5)),
+		weight = as.numeric(x)
+	)
+	df <- df[!is.na(df$weight),]
+	if(nrow(df) > 0) rownames(df) <- 1:nrow(df)
+	df
+}
+
+datafreqfn <- function(x, y){
+	df <- data.frame(
+		u = as.integer(c(1, 1, 1, 1, 2, 2, 2, 3, 3, 4)),
+		v = as.integer(c(2, 3, 4, 5, 3, 4, 5, 4, 5, 5)),
+		weight = as.numeric(x),
+		freq = as.numeric(y)
+	)
+	df <- df[!is.na(df$weight),]
+	if(nrow(df) > 0) rownames(df) <- 1:nrow(df)
+	df
+}
+
+test_that("`bootseed` behaves as expected", {
+  proj <- function(x){
     make_projection(
-      df,
+      survey,
       method = "s",
       methodval = -1,
-      bootreps = a,
-      bootval = b,
-      bootseed = 1,
-      mincompare = 1
+      mincompare = 1,
+      bootval = 0.6,
+      bootseed = x
     ) 
   }
 
-  e1 <- data.frame(
-    u = c(1, 1, 1, 1, 2, 2, 2, 3, 3, 4),
-    v = c(2, 3, 4, 5, 3, 4, 5, 4, 5, 5),
-    weight = c(0.350000, 0.450000, 0.400000, 0.550000, 0.500000, 0.550000, 0.600000, 0.550000, 0.600000, 0.650000)
-  )
+	weights <- "
+  w0       w1       w2       w3       f3       w4       f4       w5       f5       w6       f6
+  0.000000 NA       0.125000 0.000000 0.500000 0.062500 1.000000 0.125000 0.500000 0.062500 0.666667
+  NA       0.250000 0.500000 0.250000 0.500000 0.500000 0.500000 0.375000 1.000000 0.375000 0.666667
+  NA       0.750000 0.250000 0.750000 0.500000 0.250000 0.500000 0.500000 1.000000 0.500000 0.666667
+  0.750000 0.500000 0.500000 0.625000 1.000000 0.625000 1.000000 0.500000 1.000000 0.583333 1.000000
+  0.416667 0.500000 0.750000 0.458333 1.000000 0.583333 1.000000 0.625000 1.000000 0.555556 1.000000
+  0.750000 0.500000 0.750000 0.625000 1.000000 0.750000 1.000000 0.625000 1.000000 0.666667 1.000000
+  0.500000 NA       0.583333 0.500000 0.500000 0.541667 1.000000 0.583333 0.500000 0.541667 0.666667
+  0.000000 0.125000 0.500000 0.062500 1.000000 0.250000 1.000000 0.312500 1.000000 0.208333 1.000000
+  0.500000 0.500000 0.500000 0.500000 1.000000 0.500000 1.000000 0.500000 1.000000 0.500000 1.000000
+  NA       0.750000 0.625000 0.750000 0.500000 0.625000 0.500000 0.687500 1.000000 0.687500 0.666667"
+	data <- read.table(text = weights, header = TRUE, na.strings = "NA")
 
-  e2 <- data.frame(
-    u = c(1, 1, 2, 2, 2, 3, 3),
-    v = c(2, 5, 3, 4, 5, 4, 5),
-    weight = c(0.000000, 0.750000, 0.416666, 0.750000, 0.500000, 0.000000, 0.50000)
-  )
-
-  e3 <- data.frame(
-    u = c(1, 1, 1, 1, 2, 2, 2, 3, 3, 4),
-    v = c(2, 3, 4, 5, 3, 4, 5, 4, 5, 5),
-    weight = c(0.0000000, 0.2500000, 0.7500000, 0.6250000, 0.4583333, 0.6250000, 0.5000000, 0.0625000, 0.5000000, 0.7500000),
-		freq = c(0.5, 0.5, 0.5, 1.0, 1.0, 1.0, 0.5, 1.0, 1.0, 0.5)
-  )
-
-
-  e4 <- data.frame(
-    u = c(1, 1, 1, 1, 2, 2, 2, 3, 3, 4),
-    v = c(2, 3, 4, 5, 3, 4, 5, 4, 5, 5),
-    weight = c(0.0625000, 0.3750000, 0.5000000, 0.5833333, 0.5555556, 0.6666667, 0.5416667, 0.2083333, 0.5000000, 0.6875000),
-    freq = c(0.6666667, 0.6666667, 0.6666667, 1.0000000, 1.0000000, 1.0000000, 0.6666667, 1.0000000, 1.0000000, 0.6666667)
-  )
-
-  expect_equal(
-    proj(1, 1),
-    e1,
-    tolerance = 1e-5
-  )
-
-  expect_equal(
-    proj(1, 0.6),
-    e2,
-    tolerance = 1e-5
-  )
-
-  expect_equal(
-    proj(2, 0.6),
-    e3,
-    tolerance = 1e-5
-  )
-
-  expect_equal(
-    proj(3, 0.6),
-    e4,
-    tolerance = 1e-5
-  )
+  expect_equal(proj(0), datafn(data$w0), tolerance = eps)
+  expect_equal(proj(1), datafn(data$w1), tolerance = eps)
+  expect_equal(proj(2), datafn(data$w2), tolerance = eps)
+  expect_equal(proj(c(0, 1)), datafreqfn(data$w3, data$f3), tolerance = eps)
+  expect_equal(proj(c(0, 2)), datafreqfn(data$w4, data$f4), tolerance = eps)
+  expect_equal(proj(c(1, 2)), datafreqfn(data$w5, data$f5), tolerance = eps)
+  expect_equal(proj(c(0, 1, 2)), datafreqfn(data$w6, data$f6), tolerance = eps)
 })
 
 
+test_that("`bootval` behaving as expected", {
+  proj <- function(x){
+    make_projection(
+      survey,
+      method = "s",
+      methodval = -1,
+      mincompare = 1,
+      bootval = x,
+      bootseed = 0
+    ) 
+  }
+
+	weights <- "
+	w0       w1       w2       w3       w4       w5       w6       w7       w8       w9       w10     
+	NA       NA       NA       NA       NA       NA       0.000000 0.250000 0.250000 0.350000 0.350000
+	NA       NA       NA       NA       NA       NA       NA       0.500000 0.500000 0.450000 0.450000
+	NA       NA       NA       NA       NA       NA       NA       0.250000 0.250000 0.312500 0.400000
+	NA       NA       NA       NA       NA       NA       0.750000 0.750000 0.750000 0.550000 0.550000
+	NA       NA       NA       NA       0.750000 0.416667 0.416667 0.416667 0.416667 0.500000 0.500000
+	NA       NA       NA       1.000000 0.750000 0.750000 0.750000 0.750000 0.750000 0.562500 0.550000
+	NA       NA       NA       NA       NA       0.250000 0.500000 0.583333 0.500000 0.600000 0.600000
+	NA       NA       NA       NA       NA       0.000000 0.000000 0.000000 0.000000 0.625000 0.550000
+	NA       NA       NA       NA       NA       NA       0.500000 0.500000 0.625000 0.600000 0.600000
+	NA       NA       NA       NA       NA       NA       NA       0.625000 0.625000 0.625000 0.650000"
+	data <- read.table(text = weights, header = TRUE, na.strings = "NA")
+
+	expect_equal(proj(0.0), datafn(data$w0), tolerance = eps)
+	expect_equal(proj(0.1), datafn(data$w1), tolerance = eps)
+	expect_equal(proj(0.2), datafn(data$w2), tolerance = eps)
+	expect_equal(proj(0.3), datafn(data$w3), tolerance = eps)
+	expect_equal(proj(0.4), datafn(data$w4), tolerance = eps)
+	expect_equal(proj(0.5), datafn(data$w5), tolerance = eps)
+	expect_equal(proj(0.6), datafn(data$w6), tolerance = eps)
+	expect_equal(proj(0.7), datafn(data$w7), tolerance = eps)
+	expect_equal(proj(0.8), datafn(data$w8), tolerance = eps)
+	expect_equal(proj(0.9), datafn(data$w9), tolerance = eps)
+	expect_equal(proj(1.0), datafn(data$w10), tolerance = eps)
+
+})
 
 
+test_that("`mincompare` working as expected when data is bootstrapped", {
+  proj <- function(x, y){
+    make_projection(
+      survey,
+      method = "s",
+      methodval = -1,
+      mincompare = y,
+      bootval = 0.75,
+      bootseed = x
+    ) 
+  }
+
+	weights <- "
+	w01      w02      w03      w04      w05      w11      w12      w13      w14      w15      w21      w22      w23      w24      w25
+	0.250000 0.250000 NA       NA       NA       0.250000 NA       NA       NA       NA       0.250000 0.250000 0.250000 NA       NA
+	0.500000 NA       NA       NA       NA       0.250000 0.250000 NA       NA       NA       0.500000 0.500000 NA       NA       NA
+	0.250000 NA       NA       NA       NA       0.750000 NA       NA       NA       NA       0.250000 0.250000 NA       NA       NA
+	0.750000 0.750000 NA       NA       NA       0.500000 NA       NA       NA       NA       0.500000 0.500000 0.500000 NA       NA
+	0.416667 0.416667 0.416667 NA       NA       0.583333 0.583333 0.583333 NA       NA       0.500000 0.500000 0.500000 0.500000 NA
+	0.750000 0.750000 0.750000 NA       NA       0.500000 0.500000 NA       NA       NA       0.687500 0.687500 0.687500 0.687500 NA
+	0.500000 0.500000 0.500000 0.500000 NA       0.500000 0.500000 NA       NA       NA       0.600000 0.600000 0.600000 0.600000 0.600000
+	0.000000 NA       NA       NA       NA       0.125000 0.125000 NA       NA       NA       0.333333 0.333333 0.333333 NA       NA
+	0.625000 0.625000 NA       NA       NA       0.583333 0.583333 0.583333 NA       NA       0.562500 0.562500 0.562500 0.562500 NA
+	0.625000 0.625000 NA       NA       NA       0.750000 NA       NA       NA       NA       0.625000 0.625000 0.625000 0.625000 NA"
+	data <- read.table(text = weights, header = TRUE, na.strings = "NA")
+
+ 	expect_equal(proj(0, 1), datafn(data$w01), tolerance = eps)
+ 	expect_equal(proj(0, 2), datafn(data$w02), tolerance = eps)
+ 	expect_equal(proj(0, 3), datafn(data$w03), tolerance = eps)
+ 	expect_equal(proj(0, 4), datafn(data$w04), tolerance = eps)
+ 	expect_equal(proj(0, 5), datafn(data$w05), tolerance = eps)
+ 	expect_equal(proj(1, 1), datafn(data$w11), tolerance = eps)
+ 	expect_equal(proj(1, 2), datafn(data$w12), tolerance = eps)
+ 	expect_equal(proj(1, 3), datafn(data$w13), tolerance = eps)
+ 	expect_equal(proj(1, 4), datafn(data$w14), tolerance = eps)
+ 	expect_equal(proj(1, 5), datafn(data$w15), tolerance = eps)
+ 	expect_equal(proj(2, 1), datafn(data$w21), tolerance = eps)
+ 	expect_equal(proj(2, 2), datafn(data$w22), tolerance = eps)
+ 	expect_equal(proj(2, 3), datafn(data$w23), tolerance = eps)
+ 	expect_equal(proj(2, 4), datafn(data$w24), tolerance = eps)
+ 	expect_equal(proj(2, 5), datafn(data$w25), tolerance = eps)
+})
+
+
+test_that("A couple of bootstrapping sanity checks.", {
+  proj <- function(x){
+    make_projection(
+      survey,
+      method = "s",
+      methodval = -1,
+      mincompare = 1,
+			bootreps = 100,
+      bootval = x
+    ) 
+  }
+
+	weights <- "
+	w0       f0       w1       f1 
+	NA       NA       0.350000 1.000000
+	NA       NA       0.450000 1.000000
+	NA       NA       0.400000 1.000000
+	NA       NA       0.550000 1.000000
+	NA       NA       0.500000 1.000000
+	NA       NA       0.550000 1.000000
+	NA       NA       0.600000 1.000000
+	NA       NA       0.550000 1.000000
+	NA       NA       0.600000 1.000000
+	NA       NA       0.650000 1.000000"
+	data <- read.table(text = weights, header = TRUE, na.strings = "NA")
+
+	expect_equal(proj(0), datafreqfn(data$w0, data$f0), tolerance = eps)
+	expect_equal(proj(1), datafreqfn(data$w1, data$f1), tolerance = eps)
+})

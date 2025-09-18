@@ -22,11 +22,11 @@ doc:
 
 test:
 	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/make_projection_bootstrap.R')"
-	@#Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/make_projection_args.R')"
-	@#Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/make_projection.R')"
-	@#Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/make_projection_deprecated.R')"
-	@#Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/data_preprocessing.R')"
-	@#Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/make_synthetic.R')"
+	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/make_projection_args.R')"
+	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/make_projection.R')"
+	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/make_projection_deprecated.R')"
+	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/data_preprocessing.R')"
+	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/make_synthetic.R')"
 
 knit:
 	@Rscript -e "rmarkdown::render('vignettes/datacleaning.Rmd', params=list(args = myarg))"

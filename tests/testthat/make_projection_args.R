@@ -158,7 +158,7 @@ test_that("`metric` argument has unrecognised option", {
 })
 
 
-test_that("`bootreps` and `bootval` arguments set together", {
+test_that("Bootstrapping arguments are set together.", {
 	expect_error(
 		make_projection(data.frame(1), bootreps = 1),
 		regexp = "`bootval` argument must be set if `bootreps` is set."
@@ -171,7 +171,17 @@ test_that("`bootreps` and `bootval` arguments set together", {
 
 	expect_error(
 		make_projection(data.frame(1), bootseed = 1),
-		regexp = "`bootrep` and `bootval` arguments must be set if `bootseed` is set."
+		regexp = "`bootval` argument must be set if `bootseed` is set."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), bootseed = 1, bootreps = 3),
+		regexp = "`bootval` argument must be set if `bootseed` is set."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), bootseed = 1, bootval = 0, bootreps = 3),
+		regexp = "`bootreps` argument must be NULL if `bootseed` is set."
 	)
 })
 
@@ -229,17 +239,22 @@ test_that("`bootval` argument", {
 
 test_that("`bootseed` argument", {
 	expect_error(
-		make_projection(data.frame(1), bootreps = 1, bootval = 0.5, bootseed = TRUE),
-		regexp = "`bootseed` argument must be 0 or 1."
+		make_projection(data.frame(1), bootval = 0.5, bootseed = TRUE),
+		regexp = "`bootseed` argument must be an integer vector."
 	)
 
 	expect_error(
-		make_projection(data.frame(1), bootreps = 1, bootval = 0.5, bootseed = as.integer(NA)),
-		regexp = "`bootseed` argument cannot be NA."
+		make_projection(data.frame(1), bootval = 0.5, bootseed = c(0, 1, NA, 3)),
+		regexp = "`bootseed` argument must not contain NAs."
 	)
   
 	expect_error(
-		make_projection(data.frame(1), bootreps = 1, bootval = 0.5, bootseed = 2),
-		regexp = "`bootseed` argument must be 0 or 1."
+		make_projection(data.frame(1), bootval = 0.5, bootseed = integer()),
+		regexp = "`bootseed` argument, if provided, must contain at least one integer."
+	)
+  
+	expect_error(
+		make_projection(data.frame(1), bootval = 0.5, bootseed = c(0, 1, 2.1)),
+		regexp = "`bootseed` argument must only contain integers."
 	)
 })

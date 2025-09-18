@@ -7,82 +7,48 @@
 #include <algorithm>
 #include <cmath>
 
-#include <iostream> // TODO temporary
+#include <iostream> // TODO comment out for CRAN
 
 #define R_NO_REMAP
 #include <R.h>
 #include <Rdefines.h>
 
-// We can assume that rdata is an R data frame, having verified using is.data.frame 
-// from the calling function in R/make-projection.R.
-static void rdf_to_cppvector(const SEXP &rdata, const int &layer, std::vector<std::vector<double>> &data)
-{
+// We can assume that rdata is an R data frame, having verified using
+// is.data.frame from the calling function in R/make-projection.R.
+static void rdf_to_cppvector(
+  const SEXP &rdata, 
+  const int &layer, 
+  std::vector<std::vector<double>> &data
+){
   data = std::vector<std::vector<double>>{};
 
-  SEXP check = PROTECT(Rf_allocVector(VECSXP, Rf_length(rdata)));
+  SEXP dummy = PROTECT(Rf_allocVector(VECSXP, Rf_length(rdata)));
 
-  // Iterate over columns of dataframe `rdata`, so i indexes the row of
-  // `data`, so that `data` is the transpose of `rdata`.
+  // Columns i of the dataframe `rdata` become rows i of `data`.
   for(int i = 0; i < Rf_length(rdata); ++i){
-    check = VECTOR_ELT(rdata, i);
+    dummy = VECTOR_ELT(rdata, i);
 
-    // TODO simply verify that it's real, throw an error if it's anything else
-
-    if(TYPEOF(check) == STRSXP){         // convert STRSXP to double
+    if(TYPEOF(dummy) == REALSXP){
       std::vector<double> coltmp;
-      for(int j = 0; j < Rf_length(check); ++j){
-        const char* str_value = CHAR(STRING_ELT(check, j));
-        double numeric_value = std::nan("");
-        if(std::isdigit(str_value[0])){
-          numeric_value = atof(str_value);
-        }
-        coltmp.push_back(numeric_value);
-      }
-      data.push_back(coltmp);
-    }else if(TYPEOF(check) == REALSXP){  // convert REALSXP to double
-      std::vector<double> coltmp;
-      for(int j = 0; j < Rf_length(check); ++j){
-        double value = REAL(check)[j];
+      for(int j = 0; j < Rf_length(dummy); ++j){
+        double value = REAL(dummy)[j];
         if(ISNA(value)){
           value = std::nan("");
         }
         coltmp.push_back(value);
       }
       data.push_back(coltmp);
-    }else if(TYPEOF(check) == INTSXP){   // convert INTSXP to double
-      std::vector<double> coltmp;
-      for(int j = 0; j < Rf_length(check); ++j){
-        int value = INTEGER(check)[j];
-        if(value == NA_INTEGER){
-          coltmp.push_back(std::nan(""));
-        }else{
-          coltmp.push_back(static_cast<double>(value));
-        }
-      }
-      data.push_back(coltmp);
-    }else if(TYPEOF(check) == LGLSXP){   // convert LGLSXP to double
-      std::vector<double> coltmp;
-      for(int j = 0; j < Rf_length(check); ++j){
-        int value = LOGICAL(check)[j];
-        if(value == NA_LOGICAL){
-          coltmp.push_back(std::nan(""));
-        }else{
-          coltmp.push_back(static_cast<double>(value));
-        }
-      }
-      data.push_back(coltmp);
     }else{
-      Rprintf("Warning: unsupported type at column %d\n", i);
+      Rf_error("Non-double type at column %d of input dataframe.\n", i);
     }
   }
 
-  unsigned int ncol = data.size();     // this is m
-  unsigned int nrow = data[0].size();  // this is n
-
   // If we're computing row similarities, producing the so-called agent layer,
-  // we need to take the transpose of data. If we're computing column
-  // similarities, producing the so-called symbolic layer, we leave as is.
+  // we need to take the transpose of `data`. Otherwise, leave as is.
   if(layer == 0){
+    unsigned int ncol = data.size();
+    unsigned int nrow = data[0].size();
+
     std::vector<std::vector<double>> dummy = data;
     data = std::vector<std::vector<double>>(nrow, std::vector<double>(ncol));
     for(unsigned int i = 0; i < ncol; ++i)
@@ -94,7 +60,6 @@ static void rdf_to_cppvector(const SEXP &rdata, const int &layer, std::vector<st
 }
 
 // convert an R integer vector of length one to a C integer
-// TODO you haven't thought about NA entries
 static void rint_to_cppint(const SEXP &rval, int &cval)
 {
   if(TYPEOF(rval) != INTSXP || Rf_length(rval) != 1){
@@ -104,7 +69,6 @@ static void rint_to_cppint(const SEXP &rval, int &cval)
 }
 
 // convert R double vector of length one to a C double
-// TODO you haven't thought about NA entries
 static void rdouble_to_cppdouble(const SEXP &rval, double &cval)
 {
   if(TYPEOF(rval) != REALSXP || Rf_length(rval) != 1){
@@ -113,34 +77,20 @@ static void rdouble_to_cppdouble(const SEXP &rval, double &cval)
   cval = REAL(rval)[0];
 }
 
-// convert R list containing R double vectors, of length either 1 or 2, to a C++ vector
-// TODO you haven't thought about NA entries
-static void rlist_to_cppvector(const SEXP &rlist, std::vector<std::vector<double>> &cvec)
+
+static void rint_to_cppvector(const SEXP &rint, std::vector<int> &cvec)
 {
-  if(TYPEOF(rlist) != VECSXP){
-    Rf_error("Expected a list.");
+  if(TYPEOF(rint) != INTSXP){
+    Rf_error("Expected an R integer.");
   }
 
-  int n = Rf_length(rlist);
+  int n = Rf_length(rint);
   cvec.resize(n);
 
   for(int i = 0; i < n; ++i){
-    SEXP rvec = VECTOR_ELT(rlist, i);
-    if(TYPEOF(rvec) != REALSXP){
-      Rf_error("Expected a numeric vector inside the list.");
-    }
-
-    int len = Rf_length(rvec);
-    std::vector<double> temp(len);
-    
-    for(int j = 0; j < len; ++j){
-      temp[j] = REAL(rvec)[j];
-    }
-    
-    cvec[i] = temp;
+    cvec[i] = INTEGER(rint)[i];
   }
 }
-
 
 static void scale_columns(std::vector<std::vector<double>> &data){
   // For each column j of data...
@@ -174,13 +124,6 @@ static void scale_columns(std::vector<std::vector<double>> &data){
       }
     }
   }
-
-  //Rprintf("data after :\n");
-  //for(int i = 0; i < data.size(); ++i){
-  //  for(int j = 0; j < data[i].size(); ++j) Rprintf("%10f ", data[i][j]);
-  //  Rprintf("\n");
-  //}
-  //Rprintf("\n");
 }
 
 static void cppedgelist_to_rdf(const graph &g, SEXP &df)
@@ -254,8 +197,8 @@ static void cppmap_to_rdf(
   if(Rf_length(names) == 4) SET_STRING_ELT(names, 3, Rf_mkChar("freq"));
 
   SEXP rownames = PROTECT(Rf_allocVector(INTSXP, 2));
-  INTEGER(rownames)[0] = NA_INTEGER;                   // default entry if size below too small
-  INTEGER(rownames)[1] = -Rf_length(u_vector);         // number of edges in edge list
+  INTEGER(rownames)[0] = NA_INTEGER;
+  INTEGER(rownames)[1] = -Rf_length(u_vector);
 
   Rf_setAttrib(df, R_ClassSymbol, Rf_ScalarString(Rf_mkChar("data.frame")));
   Rf_setAttrib(df, R_RowNamesSymbol, rownames);
@@ -265,45 +208,29 @@ static void cppmap_to_rdf(
 }
 
 
-static void sample(
-  std::vector<vector<double>> &d, 
-  const double &p, 
-  const int &seed, 
-  const int &seedval
-){
+static void sample(std::vector<vector<double>> &d, const double &p, const int &seed)
+{
   // TODO shouldn't this be instantiated outside of sample()?
-  std::mt19937 gen(std::random_device{}());
-  if(seed) gen = std::mt19937(seedval);
-
-  //gen = std::mt19937(2);
-  std::vector<vector<double>> r = d;
-
+  std::mt19937 gen(seed);
   std::uniform_real_distribution<double> unif(0, 1);
 
-  for(int i = 0; i < d.size(); ++i){
-    for(int j = 0; j < d[i].size(); ++j){
-      double x = unif(gen);
-      r[i][j] = x;
-      if(x > p) d[i][j] = NAN;
-    }
-  }
-
-  //Rprintf("=============================================================\n");
-  //for(int i = 0; i < r.size(); ++i){
-  //  for(int j = 0; j < r[i].size(); ++j){
-  //    Rprintf("%8f ", r[i][j]);
-  //  }
-  //  Rprintf("\n");
-  //}
-  //Rprintf("\n");
-
-  //for(int i = 0; i < d.size(); ++i){
-  //  for(int j = 0; j < d[i].size(); ++j){
-  //    Rprintf("%-8f ", d[i][j]);
-  //  }
-  //  Rprintf("\n");
-  //}
+  for(int i = 0; i < d.size(); ++i)
+    for(int j = 0; j < d[i].size(); ++j)
+      if(unif(gen) > p) d[i][j] = NAN;
 }
+
+
+static void sample(std::vector<vector<double>> &d, const double &p)
+{
+  // TODO shouldn't this be instantiated outside of sample()?
+  std::mt19937 gen(std::random_device{}());
+  std::uniform_real_distribution<double> unif(0, 1);
+
+  for(int i = 0; i < d.size(); ++i)
+    for(int j = 0; j < d[i].size(); ++j)
+      if(unif(gen) > p) d[i][j] = NAN;
+}
+
 
 // Basic checks have been carried out in the calling R file, R/make-projection.R.
 SEXP rmake_projection(
@@ -318,17 +245,19 @@ SEXP rmake_projection(
   SEXP rbootseed     // resampling seed, used when testing
 ){
 
-  int layer, method, dummycode, mincompare, metric, bootreps, bootseed;
+  int layer, method, dummycode, mincompare, metric, bootreps;
   rint_to_cppint(rlayer, layer);
   rint_to_cppint(rmethod, method);
   rint_to_cppint(rmincompare, mincompare);
   rint_to_cppint(rmetric, metric);
   rint_to_cppint(rbootreps, bootreps);
-  rint_to_cppint(rbootseed, bootseed);
 
   double methodval, bootval;
   rdouble_to_cppdouble(rmethodval, methodval);
   rdouble_to_cppdouble(rbootval, bootval);
+
+  std::vector<int> bootseed;
+  rint_to_cppvector(rbootseed, bootseed);
 
   std::vector<std::vector<double>> data;
   rdf_to_cppvector(rdata, layer, data);
@@ -339,9 +268,10 @@ SEXP rmake_projection(
   for(int i = 0; i < bootreps; ++i){
     std::vector<std::vector<double>> datasample = data;
 
-    if(bootval < 1){
-      sample(datasample, bootval, bootseed, i);
-    }
+    if(bootseed.size() == 0)
+      sample(datasample, bootval);
+    else
+      sample(datasample, bootval, bootseed[i]);
 
     surveygraph S{datasample, method, methodval, mincompare, metric};
 
