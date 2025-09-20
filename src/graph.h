@@ -5,23 +5,37 @@
 #include <map>
 #include <set>
 
-//#define R_NO_REMAP            // FIXME temporary
-//#include <Rinternals.h>       // FIXME temporary
-//#include <R_ext/Rdynload.h>   // FIXME temporary
+#define R_NO_REMAP            // TODO comment out for CRAN, only used for debugging
+#include <Rinternals.h>       // with Rprint.
+#include <R_ext/Rdynload.h>   // 
 
 using namespace std;
 
 typedef std::vector<std::vector<double>> survey;
-//enum class Layer{agent, symbolic};
 
 struct neighbour
 {
-  neighbour(int a, double b) { u = a; w = b; }
+  neighbour(int index, double w) : u(index), weight(w) {}
 
-  int u;     // neighbour index
-  double w;  // edge weight, corresponding to agent or symbolic similarity
+  int u;
+  double weight;
 
-  bool operator<(const neighbour& rhs) const { return u < rhs.u; }
+  bool operator<(const neighbour& rhs)const{return u < rhs.u;}
+};
+
+struct edge
+{
+  edge(std::set<int> n, double w) : nodes(std::move(n)), weight(w) {}
+
+  std::set<int> nodes;
+  double weight;
+
+  bool operator<(const edge& rhs)const{
+    if(weight != rhs.weight)
+      return weight < rhs.weight;
+    else
+      return nodes < rhs.nodes;
+  }
 };
 
 class graph
@@ -29,8 +43,7 @@ class graph
   public :
     graph(){}
 
-    // Arguments are everything you might need to produce an edge from a
-    // comparison of two rows from survey.
+    // used mostly in make_projection()
     graph(
       const double &a,    // threshold
       const int &b,       // mincomps
@@ -45,60 +58,38 @@ class graph
       build_partition(); 
     }
 
-    // provide flag for projection type, threshold, and survey data
-    //graph(const int &a, const double &b, const int &c, const survey &S){
-    //  switch(a){
-    //    case 0:
-    //      f = 0;
-    //      layer = Layer::agent;
-    //      n = int(S.size());          
-    //      m = int(S[0].size());          
-    //      break;
-    //    case 1:
-    //      f = 1;
-    //      layer = Layer::symbolic;
-    //      m = int(S.size());
-    //      n = int(S[0].size());
-    //      break;
-    //    default:
-    //      f = 0;
-    //      layer = Layer::agent;
-    //      n = int(S.size());
-    //      m = int(S[0].size());
-    //  }
-    //  threshold = b;
-    //  mincomps = c;
+    graph(
+      const int &a,       // mincomps
+      const int &b,       // metric
+      const survey &S     // survey data
+    ){
+      mincomps = a;
+      metric = b;
 
-    //  build_graph(S);
-    //  build_partition();
-    //}
+      build_complete(S);
+    }
 
     double threshold;  // keep an edge if its similarity is above this threshold
     int mincomps;      // minimum number of valid comparisons for an edge to be counted
-    int metric;        // flag describing metric used to compute distance (Manhattan Euclidean, ...)
-
-    //int n;  // number of graph nodes (nrow if agent, ncol if symbolic)
-    int e;  // number of graph edges
-    //Layer layer;
-    //int m;  // complements n (ncol if agent, nrow if symbolic)
-    //int f;  // 0 for agent, 1 for symbolic, projection flag
+    int metric;        // flag describing metric used to compute distance
 
     std::map<int, std::set<neighbour>> network;  // neighbour list
+    std::set<edge> edgelist;                     // edge list sorted by weight
 
-    // topological properties of the resultant network
-    int lcc;                               // size of largest connected component
-    int isols;                             // number of isolated nodes
-    int comps;                             // number of components
-    double avg_degree;                     // average degree
-    std::set<std::vector<int>> partition;  // partition of nodes according to components
+    // topological properties of graph
+    int lcc;                                  // size of largest connected component
+    int isols;                                // number of isolated nodes
+    int comps;                                // number of components
+    int e;                                    // number of edges
+    double avg_degree;                        // average degree
+    std::set<std::vector<int>> partition;     // partition of nodes according to components
 
-    void build_graph(const survey&);       // constructs graphs by comparing all survey row pairs
+    void build_graph(const survey&);          // constructs graphs by comparing all survey row pairs
+    void build_complete(const survey&);       // constructs a complete edge list
     void build_partition();                   // computes distribution of component sizes
     void bfs(const int&, std::vector<int>&);  // breadth-first search
 
     void dist_manhattan(const survey&, const int&, const int&, double&);
     void dist_euclidean(const survey&, const int&, const int&, double&);
-    //void man_distance(const survey&, const int&, const int&, double&);
-    //void euclid_distance(const survey&, const int&, const int&, double&);
 };
 #endif

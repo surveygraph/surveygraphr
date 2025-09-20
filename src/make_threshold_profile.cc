@@ -1,41 +1,110 @@
 #include "surveygraph.h"
 
-//#define R_NO_REMAP
-//#include "R.h"
-//#include "Rdefines.h"
+#define R_NO_REMAP     // TODO comment out for CRAN, only used for debugging 
+#include <R.h>         // with Rprint.
+#include <Rdefines.h>  //
 
 using namespace std;
 
-// FIXME this is temporary, and wildly inefficient for LCC computation
+class UF 
+{
+  int *id, cnt, ecnt, isols, lcc, *sz;
+
+  public:
+		// Create an empty union find data structure with N isolated sets.
+		UF(int N){
+			cnt = N; 
+			lcc = 1;
+			ecnt = 0;
+			isols = N;
+			id = new int[N];
+			sz = new int[N];
+			for(int i = 0; i < N; i++){
+				id[i] = i;
+				sz[i] = 1; 
+			}
+		}
+
+		~UF(){ 
+			delete[] id; 
+			delete[] sz; 
+		}
+
+		// Return the id of component corresponding to object p.
+		int find(int p){
+			int root = p;
+			while(root != id[root]) root = id[root];
+			while(p != root){
+				int newp = id[p]; 
+				id[p] = root; 
+				p = newp;
+			}
+			return root;
+		}
+
+		// Replace sets containing x and y with their union.
+		void merge(int x, int y){
+			int i = find(x); 
+			int j = find(y); 
+			++ecnt;
+			if(i == j) return;
+
+			if(sz[i] == 1) isols--;
+			if(sz[j] == 1) isols--;
+
+			// make smaller root point to larger one
+			if(sz[i] < sz[j]){
+				id[i] = j;
+				sz[j] += sz[i]; 
+				if(sz[j] > lcc) lcc = sz[j];
+			}else{
+				id[j] = i;
+				sz[i] += sz[j];
+				if(sz[i] > lcc) lcc = sz[i];
+			}
+			cnt--;
+		}
+
+		// Are objects x and y in the same set?
+		bool connected(int x, int y){return find(x) == find(y);}
+
+		// Return the number of disjoint sets.
+		int count(){return cnt;}
+
+		// Return the number of edges.
+		int ecount(){return ecnt;}
+
+		// Return the number of singleton sets.
+		int isolscount(){return isols;}
+
+		// Return the size of the largest set.
+		int largest(){return lcc;}
+};
+
+// Implements union find algorithm, with slight adaptations.
 void surveygraph::make_threshold_profile()
 {
-  profile = std::vector<std::vector<double>>{};
+  profile = std::vector<std::vector<int>>{};
 
-  target_lcc = 1.00;
-  //search_threshold_lcc();    // finds optimal threshold
-  make_proj_lcc();    // finds optimal threshold
+  g = graph(mincomps, metric, survey); 
 
-  //double optimal_threshold = g.threshold;
+	UF uf(survey.size());  
 
-  int count = 200;
-
-  double dt = 1.0 / double(count);
+  auto it = g.edgelist.rbegin();
   for(int i = 0; i < count; ++i){
-    double threshold = i * dt;
+    double threshold = 1 - i / double(count - 1);
+    
+    // add edges to graph, merging components
+    while(it->weight >= threshold && it != g.edgelist.rend()){
+			uf.merge(*it->nodes.begin(), *it->nodes.rbegin());
+      ++it;
+    }
 
-    g = graph(threshold, mincomps, metric, survey);
-
-    std::vector<double> dummy;
-    dummy.push_back(threshold);
-    dummy.push_back(g.avg_degree / double(g.network.size()));
-    dummy.push_back(g.lcc / double(g.network.size()));
-    dummy.push_back(double(g.isols));
-    dummy.push_back(double(g.comps));
-
+    std::vector<int> dummy;
+    dummy.push_back(uf.largest());
+    dummy.push_back(uf.ecount());
+    dummy.push_back(uf.count());
+    dummy.push_back(uf.isolscount());
     profile.push_back(dummy);
-
-    //if(!(g.avg_degree / double(g.n) >= 0 && g.avg_degree / double(g.n) <= 1)){
-    //  error("an internal test has failed, please report to package creators\n");
-    //}
   }
 }

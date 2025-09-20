@@ -87,10 +87,9 @@ make_projection <- function(
   dummycode = NULL,
   bootreps = NULL,
   bootval = NULL,
-  bootseed = NULL, # could make this a set of seeds? ie allow it to have any length, plus usual tests of integers etc
+  bootseed = NULL,
   ...
 ){
-
   dots <- list(...)
 
   if(!is.null(dots$threshold_method)){
@@ -121,10 +120,11 @@ make_projection <- function(
   }
 
 
-  # TODO: need errors throughout if length(argument) != 1, shouldn't accept vector args
-  # TODO: need to check Inf values for doubel arguments. use is.finite()
+  # TODO: need to check Inf values for double arguments. use is.finite()
   # TODO: explain default values in documentation. choices are conservative
-  # TODO: could make use of is.atomic() right?
+  # TODO: rename mincompare to comparisons
+  # TODO: deprecate "target_lcc", "target_ad", "raw_similarity"?
+
 
   # Checking of data, likert and dummycode is done in data_preprocess()
   data <- data_preprocess(data, likert, dummycode)
@@ -137,6 +137,8 @@ make_projection <- function(
     layer <- as.integer(0)
   }else if(!is.character(layer)){
     stop("`layer` argument must be a character string.", call. = F)
+  }else if(length(layer) != 1){
+    stop("`layer` argument must be of length 1.", call. = F)
   }else if(is.na(layer)){
     stop("`layer` argument cannot be NA.", call. = F)
   }else if(layer %in% c("a", "Agent", "agent")){
@@ -156,6 +158,8 @@ make_projection <- function(
     method <- as.integer(0)
   }else if (!is.character(method)){
     stop("`method` argument must be a character string.", call. = F)
+  }else if(length(method) != 1){
+    stop("`method` argument must be of length 1.", call. = F)
   }else if(is.na(method)){
     stop("`method` argument cannot be NA.", call. = F)
   }else if(method %in% c("lcc", "target_lcc", "l")){
@@ -172,22 +176,23 @@ make_projection <- function(
   # Check methodval, a utility parameter whose interpretation depends on the
   # value of method. For all sparsification methods, methodval must be between
   # 0 and 1.
-
   if(is.null(methodval)){
     defaults <- c(1, 0, 1)
     methodval <- defaults[method + 1]
   }else if(!is.numeric(methodval)){
     stop("`methodval` argument must be a numerical value.", call. = F)
+  }else if(length(methodval) != 1){
+    stop("`methodval` argument must be of length 1.", call. = F)
   }else if(is.na(methodval)){
     stop("`methodval` argument cannot be NA.", call. = F)
   }else{
     if(method == 0){
       if(methodval < 0 || methodval > 1){
-        stop("Expecting `methodval` between 0 and 1 inclusive for `lcc` method.", call. = F);
+        stop("`methodval` must be between 0 and 1 inclusive for `lcc` method.", call. = F);
       }
     }else if(method == 1){
       if(methodval < 0 || methodval > 1){
-        stop("Expecting `methodval` between 0 and 1 inclusive for `avgdegree` method.", call. = F);
+        stop("`methodval` must be between 0 and 1 inclusive for `avgdegree` method.", call. = F);
       }
     }
   }
@@ -196,22 +201,22 @@ make_projection <- function(
   # Check mincompare, the minimum number of numerical pairwise comparisons for
   # computing similarity.
   bounds <- c(ncol(data), nrow(data))
-
   if(is.null(mincompare)){
-    defaults <- c(ceiling(ncol(data) / 2), ceiling(nrow(data) / 2))
-    defaults <- as.integer(defaults)
+    defaults <- as.integer(c(ceiling(ncol(data) / 2), ceiling(nrow(data) / 2)))
     mincompare <- defaults[layer + 1]
   }else if(!is.numeric(mincompare)){  
     stop("`mincompare` argument must be an integer.", call. = F)
+  }else if(length(mincompare) != 1){
+    stop("`mincompare` argument must be of length 1.", call. = F)
   }else if(is.na(mincompare)){  
     stop("`mincompare` argument cannot be NA.", call. = F)
   }else if(mincompare != as.integer(mincompare)){
     stop("`mincompare` argument must be an integer.", call. = F)
   }else if(mincompare < 1 || mincompare > bounds[layer + 1]){
     if(layer == 0)
-      stop("Expecting `mincompare` between 1 and ncol(data) for agent layer.", call. = F)
+      stop("`mincompare` must be between 1 and ncol(data) for agent layer.", call. = F)
     else if(layer == 1)
-      stop("Expecting `mincompare` between 1 and nrow(data) for symbolic layer.", call. = F)
+      stop("`mincompare` must be between 1 and nrow(data) for symbolic layer.", call. = F)
   }else{
     mincompare <- as.integer(mincompare)
   }
@@ -225,6 +230,8 @@ make_projection <- function(
     metric <- as.integer(0)
   }else if(!is.character(metric)){
     stop("`metric` argument must be a character string.", call. = F)
+  }else if(length(metric) != 1){
+    stop("`metric` argument must be of length 1.", call. = F)
   }else if(is.na(metric)){
     stop("`metric` argument cannot be NA.", call. = F)
   }else if(metric %in% c("manhattan", "Manhattan")){
@@ -239,19 +246,17 @@ make_projection <- function(
   # Check that correct combination of bootstrapping arguments are set.
   if(is.null(bootseed)){
     if(is.null(bootreps) && !is.null(bootval)){
-      stop("`bootreps` argument must be set if `bootval` is set.")
-    }
-
-    if(!is.null(bootreps) && is.null(bootval)){
-      stop("`bootval` argument must be set if `bootreps` is set.")
+      stop("`bootreps` argument must be set if `bootval` is set.", call. = F)
+    }else if(!is.null(bootreps) && is.null(bootval)){
+      stop("`bootval` argument must be set if `bootreps` is set.", call. = F)
     }
   }else{ 
     if(is.null(bootreps) && is.null(bootval)){
-      stop("`bootval` argument must be set if `bootseed` is set.")
+      stop("`bootval` argument must be set if `bootseed` is set.", call. = F)
     }else if(!is.null(bootreps) && is.null(bootval)){
-      stop("`bootval` argument must be set if `bootseed` is set.")
+      stop("`bootval` argument must be set if `bootseed` is set.", call. = F)
     }else if(!is.null(bootreps) && !is.null(bootval)){
-      stop("`bootreps` argument must be NULL if `bootseed` is set.")
+      stop("`bootreps` argument must be NULL if `bootseed` is set.", call. = F)
     }
   }
 
@@ -259,13 +264,15 @@ make_projection <- function(
   if(is.null(bootreps)){
     bootreps <- as.integer(1)
   }else if(!is.numeric(bootreps)){
-    stop("`bootreps` argument must be a positive integer.")
+    stop("`bootreps` argument must be a positive integer.", call. = F)
+  }else if(length(bootreps) != 1){
+    stop("`bootreps` argument must be of length 1.", call. = F)
   }else if(is.na(bootreps)){
-    stop("`bootreps` argument cannot be NA.")
+    stop("`bootreps` argument cannot be NA.", call. = F)
   }else if(bootreps < 1){
-    stop("`bootreps` argument must be a positive integer.")
+    stop("`bootreps` argument must be a positive integer.", call. = F)
   }else if(bootreps != as.integer(bootreps)){
-    stop("`bootreps` argument must be a positive integer.")
+    stop("`bootreps` argument must be a positive integer.", call. = F)
   }else{
     bootreps <- as.integer(bootreps)
   }
@@ -273,13 +280,15 @@ make_projection <- function(
   if(is.null(bootval)){
     bootval <- as.double(1)
   }else if(!is.numeric(bootval)){
-    stop("`bootval` argument must be between 0 and 1, inclusive.")
+    stop("`bootval` argument must be between 0 and 1, inclusive.", call. = F)
+  }else if(length(bootval) != 1){
+    stop("`bootval` argument must be of length 1.", call. = F)
   }else if(is.na(bootval)){
-    stop("`bootval` argument cannot be NA.")
+    stop("`bootval` argument cannot be NA.", call. = F)
   }else if(!is.finite(bootval)){
-    stop("`bootval` argument must be between 0 and 1, inclusive.")
+    stop("`bootval` argument must be between 0 and 1, inclusive.", call. = F)
   }else if(bootval < 0 || bootval > 1){
-    stop("`bootval` argument must be between 0 and 1, inclusive.")
+    stop("`bootval` argument must be between 0 and 1, inclusive.", call. = F)
   }else{
     bootval <- as.double(bootval)
   }
@@ -287,13 +296,13 @@ make_projection <- function(
   if(is.null(bootseed)){
     bootseed <- integer()
   }else if(!is.numeric(bootseed)){
-    stop("`bootseed` argument must be an integer vector.")
+    stop("`bootseed` argument must be an integer vector.", call. = F)
   }else if(any(is.na(bootseed))){
-    stop("`bootseed` argument must not contain NAs.")
+    stop("`bootseed` argument must not contain NAs.", call. = F)
   }else if(length(bootseed) == 0){
-    stop("`bootseed` argument, if provided, must contain at least one integer.")
+    stop("`bootseed` argument, if provided, must contain at least one integer.", call. = F)
   }else if(!all(bootseed == as.integer(bootseed))){
-    stop("`bootseed` argument must only contain integers.")
+    stop("`bootseed` argument must only contain integers.", call. = F)
   }else{
     bootseed <- as.integer(bootseed)
     bootreps <- length(bootseed)
@@ -306,12 +315,9 @@ make_projection <- function(
     layer,
     method,
     methodval,
-    #methodvalue,
     mincompare,
-    #comparisons,
     metric,
     bootreps,
-    #bootvalue,
     bootval,
     bootseed 
   )

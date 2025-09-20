@@ -21,8 +21,9 @@ doc:
 	Rscript -e "library('roxygen2'); roxygenise()"
 
 test:
-	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/make_projection_bootstrap.R')"
 	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/make_projection_args.R')"
+	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/make_threshold_profile_args.R')"
+	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/make_projection_bootstrap.R')"
 	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/make_projection.R')"
 	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/make_projection_deprecated.R')"
 	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/data_preprocessing.R')"

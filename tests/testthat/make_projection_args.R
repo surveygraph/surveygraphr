@@ -11,20 +11,27 @@ test_that("unused arguments", {
 })
 
 
-test_that("`layer` argument not a character, or is a character and NA", {
+test_that("`layer` argument is correctly supplied.", {
 	expect_error(
-		make_projection(data.frame(1), layer = 2),
+		make_projection(data.frame(1), layer = TRUE),
 		regexp = "`layer` argument must be a character string."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), layer = character()),
+		regexp = "`layer` argument must be of length 1."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), layer = c("agent", "symbolic")),
+		regexp = "`layer` argument must be of length 1."
 	)
 
 	expect_error(
 		make_projection(data.frame(1), layer = as.character(NA)),
 		regexp = "`layer` argument cannot be NA."
 	)
-})
 
-
-test_that("`layer` argument has unrecognised option", {
 	expect_error(
 		make_projection(data.frame(1), layer = "agnet"),
 		regexp = "`layer` option \"agnet\" unrecognised."
@@ -32,20 +39,27 @@ test_that("`layer` argument has unrecognised option", {
 })
 
 
-test_that("`method` argument not a character, or is a character and NA", {
+test_that("`method` argument is correctly supplied.", {
 	expect_error(
-		make_projection(data.frame(1), method = 0),
+		make_projection(data.frame(1), method = TRUE),
 		regexp = "`method` argument must be a character string."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), method = character()),
+		regexp = "`method` argument must be of length 1."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), method = c("lcc", "avgdegree", "similarity")),
+		regexp = "`method` argument must be of length 1."
 	)
 
 	expect_error(
 		make_projection(data.frame(1), method = as.character(NA)),
 		regexp = "`method` argument cannot be NA."
 	)
-})
 
-
-test_that("`method` argument has unrecognised option", {
 	expect_error(
 		make_projection(data.frame(1), method = "clc"),
 		regexp = "`method` option \"clc\" unrecognised."
@@ -53,49 +67,63 @@ test_that("`method` argument has unrecognised option", {
 })
 
 
-test_that("`methodval` argument not numeric, or is numeric and NA", {
+test_that("`methodval` argument is correctly supplied.", {
 	expect_error(
 		make_projection(data.frame(1), method = "lcc", methodval = TRUE),
 		regexp = "`methodval` argument must be a numerical value."
 	)
 
 	expect_error(
+		make_projection(data.frame(1), method = "lcc", methodval = numeric()),
+		regexp = "`methodval` argument must be of length 1."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), method = "lcc", methodval = c(0, 1)),
+		regexp = "`methodval` argument must be of length 1."
+	)
+
+	expect_error(
 		make_projection(data.frame(1), method = "lcc", methodval = as.numeric(NA)),
 		regexp = "`methodval` argument cannot be NA."
 	)
-})
 
-
-test_that("`methodval` not in range, lcc", {
 	expect_error(
 		make_projection(data.frame(1), method = "lcc", methodval = 1 + eps),
-		regexp = "Expecting `methodval` between 0 and 1 inclusive for `lcc` method."
+		regexp = "`methodval` must be between 0 and 1 inclusive for `lcc` method."
 	)
 
 	expect_error(
 		make_projection(data.frame(1), method = "lcc", methodval = -eps),
-		regexp = "Expecting `methodval` between 0 and 1 inclusive for `lcc` method."
+		regexp = "`methodval` must be between 0 and 1 inclusive for `lcc` method."
 	)
-})
 
-
-test_that("`methodval` not in range, avgdegree", {
 	expect_error(
 		make_projection(data.frame(1), method = "avgdegree", methodval = 1 + eps),
-		regexp = "Expecting `methodval` between 0 and 1 inclusive for `avgdegree` method."
+		regexp = "`methodval` must be between 0 and 1 inclusive for `avgdegree` method."
 	)
 
 	expect_error(
 		make_projection(data.frame(1), method = "avgdegree", methodval = -eps),
-		regexp = "Expecting `methodval` between 0 and 1 inclusive for `avgdegree` method."
+		regexp = "`methodval` must be between 0 and 1 inclusive for `avgdegree` method."
 	)
 })
 
 
-test_that("`mincompare` not integer, or integer and NA", {
+test_that("`mincompare` argument is correctly supplied.", {
 	expect_error(
-		make_projection(data.frame(1:2), mincompare = "hello"),
+		make_projection(data.frame(1:2), mincompare = TRUE),
 		regexp = "`mincompare` argument must be an integer."
+	)	
+
+	expect_error(
+		make_projection(data.frame(1:2), mincompare = integer()),
+		regexp = "`mincompare` argument must be of length 1."
+	)	
+
+	expect_error(
+		make_projection(data.frame(1:2), mincompare = c(1, 2)),
+		regexp = "`mincompare` argument must be of length 1."
 	)	
 
 	expect_error(
@@ -107,50 +135,54 @@ test_that("`mincompare` not integer, or integer and NA", {
 		make_projection(data.frame(1:2), mincompare = 1.2),
 		regexp = "`mincompare` argument must be an integer."
 	)	
-})
 
-
-test_that("`mincompare` out of range", {
 	expect_error(
 		make_projection(data.frame(1:2), mincompare = 0),
-		regexp = "Expecting `mincompare` between 1 and ncol(data) for agent layer.",
+		regexp = "`mincompare` must be between 1 and ncol(data) for agent layer.",
 		fixed = T
 	)	
 
 	expect_error(
 		make_projection(data.frame(1:2), mincompare = 2),
-		regexp = "Expecting `mincompare` between 1 and ncol(data) for agent layer.",
+		regexp = "`mincompare` must be between 1 and ncol(data) for agent layer.",
 		fixed = T
 	)	
 
 	expect_error(
 		make_projection(data.frame(1:2), layer = "symbolic", mincompare = 0),
-		regexp = "Expecting `mincompare` between 1 and nrow(data) for symbolic layer.",
+		regexp = "`mincompare` must be between 1 and nrow(data) for symbolic layer.",
 		fixed = T
 	)	
 
 	expect_error(
 		make_projection(data.frame(1:2), layer = "symbolic", mincompare = 3),
-		regexp = "Expecting `mincompare` between 1 and nrow(data) for symbolic layer.",
+		regexp = "`mincompare` must be between 1 and nrow(data) for symbolic layer.",
 		fixed = T
 	)	
 })
 
 
-test_that("`metric` argument not a character, or is a character but NA", {
+test_that("`metric` argument is correctly supplied.", {
 	expect_error(
-		make_projection(data.frame(1), metric = 0),
+		make_projection(data.frame(1), metric = TRUE),
 		regexp = "`metric` argument must be a character string."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), metric = character()),
+		regexp = "`metric` argument must be of length 1."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), metric = c("Manhattan", "Euclidean")),
+		regexp = "`metric` argument must be of length 1."
 	)
 
 	expect_error(
 		make_projection(data.frame(1), metric = as.character(NA)),
 		regexp = "`metric` argument cannot be NA."
 	)
-})
 
-
-test_that("`metric` argument has unrecognised option", {
 	expect_error(
 		make_projection(data.frame(1), metric = "Mnahattan"),
 		regexp = "`metric` option \"Mnahattan\" unrecognised; expecting \"Manhattan\" or \"Euclidean\"."
@@ -186,10 +218,20 @@ test_that("Bootstrapping arguments are set together.", {
 })
 
 
-test_that("`bootreps` argument", {
+test_that("`bootreps` argument is correctly supplied.", {
 	expect_error(
 		make_projection(data.frame(1), bootreps = TRUE, bootval = 0),
 		regexp = "`bootreps` argument must be a positive integer."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), bootreps = numeric(), bootval = 0),
+		regexp = "`bootreps` argument must be of length 1."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), bootreps = c(1, 2), bootval = 0),
+		regexp = "`bootreps` argument must be of length 1."
 	)
 
 	expect_error(
@@ -214,10 +256,20 @@ test_that("`bootreps` argument", {
 })
 
 
-test_that("`bootval` argument", {
+test_that("`bootval` argument is correctly supplied.", {
 	expect_error(
 		make_projection(data.frame(1), bootreps = 1, bootval = TRUE),
 		regexp = "`bootval` argument must be between 0 and 1, inclusive."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), bootreps = 1, bootval = numeric()),
+		regexp = "`bootval` argument must be of length 1."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), bootreps = 1, bootval = c(0, 1)),
+		regexp = "`bootval` argument must be of length 1."
 	)
 
 	expect_error(
@@ -237,7 +289,7 @@ test_that("`bootval` argument", {
 })
 
 
-test_that("`bootseed` argument", {
+test_that("`bootseed` argument is correctly supplied.", {
 	expect_error(
 		make_projection(data.frame(1), bootval = 0.5, bootseed = TRUE),
 		regexp = "`bootseed` argument must be an integer vector."

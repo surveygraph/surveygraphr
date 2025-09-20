@@ -44,6 +44,7 @@ strtodf <- function(s){
 #make_threshold_profile_args.R
 #make_threshold_profile.R
 
+# TODO: add more tests where the weight 1 appears?
 
 test_that("`lcc` method on a 1-clique, agent layer", {
   proj <- function(x) make_projection(data.frame(a = 1, b = 1, c = 1), method = "l", methodval = x)
@@ -174,6 +175,7 @@ test_that("`avgdegree` method on a 2-clique, symbolic layer", {
   expect_equal(proj(1), strtodf("1 2 0"))
 })
 
+# e <- make_projection(data.frame(a = c(0, 0.4, 1)), method = "a", methodval = 1e-6)
 
 test_that("`avgdegree` method on a 3-clique, agent layer.", {
   proj <- function(x) make_projection(data.frame(a = c(0, 0.4, 1)), method = "a", methodval = x)

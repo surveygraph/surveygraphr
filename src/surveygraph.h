@@ -1,10 +1,9 @@
 #ifndef SURVEYGRAPH_H_
 #define SURVEYGRAPH_H_
 
-// FIXME remove this when you no longer need Rprintf, ie when you finish debugging
-#define R_NO_REMAP            // FIXME temporary
-#include <Rinternals.h>       // FIXME temporary
-#include <R_ext/Rdynload.h>   // FIXME temporary
+#define R_NO_REMAP           // TODO comment out for CRAN, only used for debugging
+#include <Rinternals.h>      // with Rprint.
+#include <R_ext/Rdynload.h>  //
 
 #include "graph.h"
 
@@ -13,11 +12,10 @@
 #include <set>
 #include <cmath>
 
-#include <iostream> // FIXME temporary
-
 class surveygraph
 {
   public :
+    // Constructor for make_projection()
     surveygraph(
       const std::vector<std::vector<double>> &rdata,
       const int &rmethod,
@@ -32,50 +30,39 @@ class surveygraph
       metric = rmetric;
 
       if(method == 0){
-        target_lcc = methodval;
-        make_proj_lcc();
+        make_projection_lcc();
       }else if(method == 1){
-        target_ad  = methodval;
-        make_proj_ad();
+        make_projection_avgdegree();
       }else if(method == 2){
-        raw_similarity = methodval;
-        make_proj_similar();
+        make_projection_similarity();
       }
-
-      //g_dummy = g;
     }
 
-    surveygraph(std::vector<std::vector<double>> &a){
-      survey = a;
+    // Constructor for make_threshold_profile()
+    surveygraph(
+      const std::vector<std::vector<double>> &rdata,
+      const int &rmincomps,
+      const int &rmetric,
+      const int &rcount
+    ){
+      survey = rdata;
+      mincomps = rmincomps;
+      metric = rmetric;
+      count = rcount;
+
+      make_threshold_profile();
     }
 
-    int method, mincomps, metric;
+    int method, mincomps, metric, count;
     double methodval;
 
-    // TODO can get rid of these, just use methodval throughout
-    double target_lcc, target_ad, raw_similarity;
-
-    // survey, small sample of survey
-    std::vector<std::vector<double>> survey, surveysample;
-
     graph g;
-    //graph g_dummy;
+    std::vector<std::vector<double>> survey;
+    std::vector<std::vector<int>> profile;     // data from threshold profile
 
-    std::vector<std::vector<double>> profile;     // agent threshold data
-
-    void make_proj_lcc();      // builds agent projection graph with target largest component size
-    void make_proj_ad();       // builds agent projection graph with target average degree
-    void make_proj_similar();  // builds agent projection graph with desired threshold
-
-    void make_threshold_profile();     // sweeps through a range of radii and studies 
-    
-    //void search_threshold_lcc();
-    //void search_threshold_ad();
-
-    //void max_threshold(double, int);
-    //void max_threshold_agent(double, int);
-
-    //void make_threshold_profile_agent();     // sweeps through a range of radii and studies 
-    //void make_threshold_profile_symbolic();  // sweeps through a range of radii and studies 
+    void make_projection_lcc();                // builds graph with target largest component size
+    void make_projection_avgdegree();          // builds graph with target average degree
+    void make_projection_similarity();         // builds graph with desired threshold
+    void make_threshold_profile();             // sweeps through a range of radii and studies 
 };
 #endif

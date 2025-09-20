@@ -180,7 +180,6 @@ test_that("`bootval` behaving as expected", {
 	expect_equal(proj(0.8), datafn(data$w8), tolerance = eps)
 	expect_equal(proj(0.9), datafn(data$w9), tolerance = eps)
 	expect_equal(proj(1.0), datafn(data$w10), tolerance = eps)
-
 })
 
 
