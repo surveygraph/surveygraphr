@@ -133,13 +133,13 @@ make_threshold_profile <- function(
   # Check the value of the `count` argument, the number of similarity
   # thresholds over which we compute lcc and the average degree. `count` is
   # set to at least 3, such that when `count` is
-  # 3, we compute the profile over the values 0, 0.5 and 1
-  # 4, we compute the profile over the values 0, 0.3..., 0.6... and 1
-  # 5, we compute the profile over the values 0, 0.25, 0.5, 0.75 and 1
+  # 3, thresholds are 0, 0.5 and 1
+  # 4, thresholds are 0, 0.3..., 0.6... and 1
+  # 5, thresholds are 0, 0.25, 0.5, 0.75 and 1
   # and so on. If supplied 0, 1 or 2, warn that we compute the profile over at
   # least 3 values, and continue, setting count to 3.
   if(is.null(count)){
-    count <- as.integer(25)
+    count <- as.integer(21)
   }else if(!is.numeric(count)){  
     stop("`count` argument must be an integer.", call. = F)
   }else if(length(count) != 1){

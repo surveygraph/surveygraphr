@@ -92,43 +92,56 @@ static void rint_to_cppvector(const SEXP &rint, std::vector<int> &cvec)
   }
 }
 
-static void cppedgelist_to_rdf(const graph &g, SEXP &df)
-{
-  SEXP u_vector = PROTECT(Rf_allocVector(INTSXP, g.e));  // u column
-  SEXP v_vector = PROTECT(Rf_allocVector(INTSXP, g.e));  // v column
-  SEXP w_vector = PROTECT(Rf_allocVector(REALSXP, g.e)); // weight column
-
-  int i = 0;
-  for(auto &it : g.network){
-    for(auto &jt : it.second){
-      if(it.first < jt.u){
-        INTEGER(u_vector)[i] = it.first + 1;
-        INTEGER(v_vector)[i] = jt.u + 1;
-        REAL(w_vector)[i] = jt.weight;
-        i += 1;
-      }
-    }  
-  }
-
-  SET_VECTOR_ELT(df, 0, u_vector);
-  SET_VECTOR_ELT(df, 1, v_vector);
-  SET_VECTOR_ELT(df, 2, w_vector);
-
-  SEXP names = PROTECT(Rf_allocVector(STRSXP, 3));
-  SET_STRING_ELT(names, 0, Rf_mkChar("u"));            // name of first column
-  SET_STRING_ELT(names, 1, Rf_mkChar("v"));            // name of second column
-  SET_STRING_ELT(names, 2, Rf_mkChar("weight"));       // name of third column
-
-  SEXP rownames = PROTECT(Rf_allocVector(INTSXP, 2));
-  INTEGER(rownames)[0] = NA_INTEGER;                   // default entry if size below too small
-  INTEGER(rownames)[1] = -Rf_length(u_vector);         // number of rows in agent edge list
-
-  Rf_setAttrib(df, R_ClassSymbol, Rf_ScalarString(Rf_mkChar("data.frame")));
-  Rf_setAttrib(df, R_RowNamesSymbol, rownames);
-  Rf_setAttrib(df, R_NamesSymbol, names);
-
-  UNPROTECT(5);
-}
+////static void cppedgelist_to_rdf(const graph &g, SEXP &df)
+//static void cppedgelist_to_rdf(std::set<edge> &edgelist, SEXP &df)
+//{
+//  //SEXP u_vector = PROTECT(Rf_allocVector(INTSXP, g.e));  // u column
+//  //SEXP v_vector = PROTECT(Rf_allocVector(INTSXP, g.e));  // v column
+//  //SEXP w_vector = PROTECT(Rf_allocVector(REALSXP, g.e)); // weight column
+//
+//  SEXP u_vector = PROTECT(Rf_allocVector(INTSXP, edgelist.size()));  // u column
+//  SEXP v_vector = PROTECT(Rf_allocVector(INTSXP, edgelist.size()));  // v column
+//  SEXP w_vector = PROTECT(Rf_allocVector(REALSXP, edgelist.size())); // weight column
+//
+//  //int i = 0;
+//  //for(auto &it : g.network){
+//  //  for(auto &jt : it.second){
+//  //    if(it.first < jt.u){
+//  //      INTEGER(u_vector)[i] = it.first + 1;
+//  //      INTEGER(v_vector)[i] = jt.u + 1;
+//  //      REAL(w_vector)[i] = jt.weight;
+//  //      i += 1;
+//  //    }
+//  //  }  
+//  //}
+//
+//  int i = 0;
+//  for(auto &it : edgelist){
+//		INTEGER(u_vector)[i] = *it.nodes.begin() + 1;
+//		INTEGER(v_vector)[i] = *it.nodes.rbegin() + 1;
+//		REAL(w_vector)[i] = it.weight;
+//		i += 1;
+//  }
+//
+//  SET_VECTOR_ELT(df, 0, u_vector);
+//  SET_VECTOR_ELT(df, 1, v_vector);
+//  SET_VECTOR_ELT(df, 2, w_vector);
+//
+//  SEXP names = PROTECT(Rf_allocVector(STRSXP, 3));
+//  SET_STRING_ELT(names, 0, Rf_mkChar("u"));            // name of first column
+//  SET_STRING_ELT(names, 1, Rf_mkChar("v"));            // name of second column
+//  SET_STRING_ELT(names, 2, Rf_mkChar("weight"));       // name of third column
+//
+//  SEXP rownames = PROTECT(Rf_allocVector(INTSXP, 2));
+//  INTEGER(rownames)[0] = NA_INTEGER;                   // default entry if size below too small
+//  INTEGER(rownames)[1] = -Rf_length(u_vector);         // number of rows in agent edge list
+//
+//  Rf_setAttrib(df, R_ClassSymbol, Rf_ScalarString(Rf_mkChar("data.frame")));
+//  Rf_setAttrib(df, R_RowNamesSymbol, rownames);
+//  Rf_setAttrib(df, R_NamesSymbol, names);
+//
+//  UNPROTECT(5);
+//}
 
 static void cppmap_to_rdf(
   std::map<std::set<int>, double> &e, 
@@ -174,7 +187,7 @@ static void cppmap_to_rdf(
 }
 
 
-static void sample(std::vector<vector<double>> &d, const double &p, const int &seed)
+static void sample(std::vector<std::vector<double>> &d, const double &p, const int &seed)
 {
   // TODO shouldn't this be instantiated outside of sample()?
   std::mt19937 gen(seed);
@@ -186,7 +199,7 @@ static void sample(std::vector<vector<double>> &d, const double &p, const int &s
 }
 
 
-static void sample(std::vector<vector<double>> &d, const double &p)
+static void sample(std::vector<std::vector<double>> &d, const double &p)
 {
   // TODO shouldn't this be instantiated outside of sample()?
   std::mt19937 gen(std::random_device{}());
@@ -242,14 +255,20 @@ SEXP rmake_projection(
     surveygraph S{datasample, method, methodval, mincompare, metric};
 
     // Add edge list to histogram.
-    for(auto &it : S.g.network){
-      for(auto &jt : it.second){
-        if(it.first < jt.u){
-          eweights[std::set<int>{it.first, jt.u}] += jt.weight;
-          ecounts[std::set<int>{it.first, jt.u}] += 1;
-        }
-      }  
+    for(auto &it : S.edgelist){
+			eweights[it.nodes] += it.weight;
+			ecounts[it.nodes] += 1;
     }
+
+    //// Add edge list to histogram.
+    //for(auto &it : S.g.network){
+    //  for(auto &jt : it.second){
+    //    if(it.first < jt.u){
+    //      eweights[std::set<int>{it.first, jt.u}] += jt.weight;
+    //      ecounts[std::set<int>{it.first, jt.u}] += 1;
+    //    }
+    //  }  
+    //}
   }
 
   int n = bootreps == 1 ? 3 : 4;

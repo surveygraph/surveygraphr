@@ -61,7 +61,6 @@ test_that("`lcc` method on a 1-clique, symbolic layer", {
   expect_equal(proj(1), nulldf)
 })
 
-
 test_that("`lcc` method on a 2-clique, agent layer", {
   proj <- function(x) make_projection(data.frame(a = c(0, 1)), method = "l", methodval = x)
 

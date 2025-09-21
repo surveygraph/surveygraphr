@@ -5,7 +5,8 @@
 #include <Rinternals.h>      // with Rprint.
 #include <R_ext/Rdynload.h>  //
 
-#include "graph.h"
+//#include "graph.h"
+#include "edge.h"
 
 #include <vector>
 #include <map>
@@ -56,7 +57,16 @@ class surveygraph
     int method, mincomps, metric, count;
     double methodval;
 
-    graph g;
+    //int edgecount;
+    //double threshold;
+
+    std::set<edge> edgelist;                   // edge list sorted by weight
+    void edgelist_complete();                  // construct complete edgelist
+    void edgelist_thresholded(const double&);  // construct thresholded edgelist
+    void dist_manhattan(const int&, const int&, double&);
+    void dist_euclidean(const int&, const int&, double&);
+
+    //graph g;
     std::vector<std::vector<double>> survey;
     std::vector<std::vector<int>> profile;     // data from threshold profile
 

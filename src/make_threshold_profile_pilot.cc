@@ -147,6 +147,14 @@ SEXP rmake_threshold_profile(
   std::vector<std::vector<double>> data;
   rdf_to_cppvector(rdata, layer, data);
 
+  //for(int i = 0; i < data.size(); ++i){
+  //  for(int j = 0; j < data[i].size(); ++j){
+  //    Rprintf("%f ", data[i][j]);
+  //  }
+  //  Rprintf("\n");
+  //}
+  //Rprintf("\n");
+
   surveygraph S{data, mincompare, metric, count};
 
   SEXP rprofile = PROTECT(Rf_allocVector(VECSXP, 5));
