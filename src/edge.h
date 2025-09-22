@@ -7,6 +7,9 @@
 #include <Rinternals.h>       // with Rprint.
 #include <R_ext/Rdynload.h>   // 
 
+// TODO you could be using uint16_t, if survey.size() \leq 65535. should be a
+// template that assigns type at runtime.
+// TODO there's no way you need double precision for the weights, floats are fine
 struct edge
 {
   edge(std::set<int> n, double w) : nodes(std::move(n)), weight(w) {}

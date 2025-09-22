@@ -1,5 +1,5 @@
 #include "surveygraph.h"
-#include "uf.h"
+#include "unionfind.h"
 
 #define R_NO_REMAP     // TODO comment out for CRAN, only used for debugging
 #include <R.h>         // with Rprint.
@@ -42,7 +42,8 @@ void surveygraph::make_projection_lcc()
     }
 
     oldweight = weight;
-    if(it != edgelist.rend()) weight = it->weight;  // FIXME without the check, segfault if at rend()
+    // FIXME without this check, segfaul occurs if we reach rend()
+    if(it != edgelist.rend()) weight = it->weight;  
     lcc = uf.lcc;
   }
 

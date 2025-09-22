@@ -5,7 +5,6 @@
 #include <Rinternals.h>      // with Rprint.
 #include <R_ext/Rdynload.h>  //
 
-//#include "graph.h"
 #include "edge.h"
 
 #include <vector>
@@ -21,13 +20,13 @@ class surveygraph
       const std::vector<std::vector<double>> &rdata,
       const int &rmethod,
       const double &rmethodval,
-      const int &rmincomps,
+      const int &rcomparisons,
       const int &rmetric
     ){
       survey = rdata;
       method = rmethod;
       methodval = rmethodval;
-      mincomps = rmincomps;
+      comparisons = rcomparisons;
       metric = rmetric;
 
       if(method == 0){
@@ -42,23 +41,20 @@ class surveygraph
     // Constructor for make_threshold_profile()
     surveygraph(
       const std::vector<std::vector<double>> &rdata,
-      const int &rmincomps,
+      const int &rcomparisons,
       const int &rmetric,
       const int &rcount
     ){
       survey = rdata;
-      mincomps = rmincomps;
+      comparisons = rcomparisons;
       metric = rmetric;
       count = rcount;
 
       make_threshold_profile();
     }
 
-    int method, mincomps, metric, count;
+    int method, comparisons, metric, count;
     double methodval;
-
-    //int edgecount;
-    //double threshold;
 
     std::set<edge> edgelist;                   // edge list sorted by weight
     void edgelist_complete();                  // construct complete edgelist
@@ -66,7 +62,6 @@ class surveygraph
     void dist_manhattan(const int&, const int&, double&);
     void dist_euclidean(const int&, const int&, double&);
 
-    //graph g;
     std::vector<std::vector<double>> survey;
     std::vector<std::vector<int>> profile;     // data from threshold profile
 

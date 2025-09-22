@@ -6,8 +6,6 @@
 #include <R.h>         // with Rprint.
 #include <Rdefines.h>  //
 
-//using namespace std;
-
 
 // TODO simpler version of this, simply keep edges in `edgelist` with weights
 // greater than or equal to threshold.
@@ -70,7 +68,7 @@ void surveygraph::dist_manhattan(const int &u, const int &v, double &w)
 
   // If the number of valid comparisons is less than a specified threshold,
   // set to -1, and this edge will not be included in edge list.
-  if(count < mincomps)
+  if(count < comparisons)
     w = -1;
 }
 
@@ -92,6 +90,6 @@ void surveygraph::dist_euclidean(const int &u, const int &v, double &w)
 
   w = 1 - sqrt(w);
 
-  if(count < mincomps)
+  if(count < comparisons)
     w = -1;
 }

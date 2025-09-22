@@ -5,8 +5,8 @@
 #include <Rdefines.h>  //
 
 
-// We can assume that rdata is an R data frame, having verified using
-// is.data.frame from the calling function in R/make-projection.R.
+// Converts and R dataframe to a nested C++ vector. We verify that rdata is a
+// dataframe elsewhere.
 static void rdf_to_cppvector(
   const SEXP &rdata, 
   const int &layer, 
@@ -51,7 +51,7 @@ static void rdf_to_cppvector(
   UNPROTECT(1);
 }
 
-// convert an R integer vector of length one to a C integer
+// Converts an R integer vector of length one to a C++ integer.
 static void rint_to_cppint(const SEXP &rval, int &cval)
 {
   if(TYPEOF(rval) != INTSXP || Rf_length(rval) != 1){
@@ -60,7 +60,7 @@ static void rint_to_cppint(const SEXP &rval, int &cval)
   cval = INTEGER(rval)[0];
 }
 
-// convert R double vector of length one to a C double
+// Converts an R double vector of length one to a C++ double.
 static void rdouble_to_cppdouble(const SEXP &rval, double &cval)
 {
   if(TYPEOF(rval) != REALSXP || Rf_length(rval) != 1){
@@ -70,21 +70,7 @@ static void rdouble_to_cppdouble(const SEXP &rval, double &cval)
 }
 
 
-static void rint_to_cppvector(const SEXP &rint, std::vector<int> &cvec)
-{
-  if(TYPEOF(rint) != INTSXP){
-    Rf_error("Expected an R integer.");
-  }
-
-  int n = Rf_length(rint);
-  cvec.resize(n);
-
-  for(int i = 0; i < n; ++i){
-    cvec[i] = INTEGER(rint)[i];
-  }
-}
-
-
+// Converts a nested C++ vector to an R dataframe.
 static void cppvector_to_rdf(
   const std::vector<std::vector<int>> &profile,
   SEXP &df
@@ -129,8 +115,6 @@ static void cppvector_to_rdf(
 }
 
 
-// Returns the largest connected component and average degree profile of the
-// survey as a function of the similarity threshold.
 SEXP rmake_threshold_profile(
   SEXP rdata,        // dataframe containing survey
   SEXP rlayer,       // layer flag, agent or symbolic
@@ -146,14 +130,6 @@ SEXP rmake_threshold_profile(
 
   std::vector<std::vector<double>> data;
   rdf_to_cppvector(rdata, layer, data);
-
-  //for(int i = 0; i < data.size(); ++i){
-  //  for(int j = 0; j < data[i].size(); ++j){
-  //    Rprintf("%f ", data[i][j]);
-  //  }
-  //  Rprintf("\n");
-  //}
-  //Rprintf("\n");
 
   surveygraph S{data, mincompare, metric, count};
 

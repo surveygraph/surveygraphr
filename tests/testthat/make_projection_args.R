@@ -110,53 +110,53 @@ test_that("`methodval` argument is correctly supplied.", {
 })
 
 
-test_that("`mincompare` argument is correctly supplied.", {
+test_that("`comparisons` argument is correctly supplied.", {
 	expect_error(
-		make_projection(data.frame(1:2), mincompare = TRUE),
-		regexp = "`mincompare` argument must be an integer."
+		make_projection(data.frame(1:2), comparisons = TRUE),
+		regexp = "`comparisons` argument must be an integer."
 	)	
 
 	expect_error(
-		make_projection(data.frame(1:2), mincompare = integer()),
-		regexp = "`mincompare` argument must be of length 1."
+		make_projection(data.frame(1:2), comparisons = integer()),
+		regexp = "`comparisons` argument must be of length 1."
 	)	
 
 	expect_error(
-		make_projection(data.frame(1:2), mincompare = c(1, 2)),
-		regexp = "`mincompare` argument must be of length 1."
+		make_projection(data.frame(1:2), comparisons = c(1, 2)),
+		regexp = "`comparisons` argument must be of length 1."
 	)	
 
 	expect_error(
-		make_projection(data.frame(1:2), mincompare = as.integer(NA)),
-		regexp = "`mincompare` argument cannot be NA."
+		make_projection(data.frame(1:2), comparisons = as.integer(NA)),
+		regexp = "`comparisons` argument cannot be NA."
 	)	
 
 	expect_error(
-		make_projection(data.frame(1:2), mincompare = 1.2),
-		regexp = "`mincompare` argument must be an integer."
+		make_projection(data.frame(1:2), comparisons = 1.2),
+		regexp = "`comparisons` argument must be an integer."
 	)	
 
 	expect_error(
-		make_projection(data.frame(1:2), mincompare = 0),
-		regexp = "`mincompare` must be between 1 and ncol(data) for agent layer.",
+		make_projection(data.frame(1:2), comparisons = 0),
+		regexp = "`comparisons` must be between 1 and ncol(data) for agent layer.",
 		fixed = T
 	)	
 
 	expect_error(
-		make_projection(data.frame(1:2), mincompare = 2),
-		regexp = "`mincompare` must be between 1 and ncol(data) for agent layer.",
+		make_projection(data.frame(1:2), comparisons = 2),
+		regexp = "`comparisons` must be between 1 and ncol(data) for agent layer.",
 		fixed = T
 	)	
 
 	expect_error(
-		make_projection(data.frame(1:2), layer = "symbolic", mincompare = 0),
-		regexp = "`mincompare` must be between 1 and nrow(data) for symbolic layer.",
+		make_projection(data.frame(1:2), layer = "symbolic", comparisons = 0),
+		regexp = "`comparisons` must be between 1 and nrow(data) for symbolic layer.",
 		fixed = T
 	)	
 
 	expect_error(
-		make_projection(data.frame(1:2), layer = "symbolic", mincompare = 3),
-		regexp = "`mincompare` must be between 1 and nrow(data) for symbolic layer.",
+		make_projection(data.frame(1:2), layer = "symbolic", comparisons = 3),
+		regexp = "`comparisons` must be between 1 and nrow(data) for symbolic layer.",
 		fixed = T
 	)	
 })

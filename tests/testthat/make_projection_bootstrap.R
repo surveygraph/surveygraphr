@@ -113,7 +113,7 @@ test_that("`bootseed` behaves as expected", {
       survey,
       method = "s",
       methodval = -1,
-      mincompare = 1,
+      comparisons = 1,
       bootval = 0.6,
       bootseed = x
     ) 
@@ -149,7 +149,7 @@ test_that("`bootval` behaving as expected", {
       survey,
       method = "s",
       methodval = -1,
-      mincompare = 1,
+      comparisons = 1,
       bootval = x,
       bootseed = 0
     ) 
@@ -183,13 +183,13 @@ test_that("`bootval` behaving as expected", {
 })
 
 
-test_that("`mincompare` working as expected when data is bootstrapped", {
+test_that("`comparisons` working as expected when data is bootstrapped", {
   proj <- function(x, y){
     make_projection(
       survey,
       method = "s",
       methodval = -1,
-      mincompare = y,
+      comparisons = y,
       bootval = 0.75,
       bootseed = x
     ) 
@@ -233,7 +233,7 @@ test_that("A couple of bootstrapping sanity checks.", {
       survey,
       method = "s",
       methodval = -1,
-      mincompare = 1,
+      comparisons = 1,
 			bootreps = 100,
       bootval = x
     ) 

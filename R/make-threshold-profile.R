@@ -28,7 +28,7 @@
 #'   - `"symbolic"` produces the network corresponding to the symbols, or items,
 #'   which we assume to be columns in `data`
 #' 
-#' @param mincompare An integer, minimum number of comparisons for valid distance.
+#' @param comparisons An integer, minimum number of comparisons for valid distance.
 #' @param metric A string option describing similarity metric used.
 #' @details
 #' Note that this routine is expensive on large graphs. We study networks over the
@@ -43,7 +43,7 @@
 make_threshold_profile <- function(
   data,
   layer = NULL,
-  mincompare = NULL,
+  comparisons = NULL,
   metric = NULL,
   count = NULL,
   likert = NULL,
@@ -86,27 +86,27 @@ make_threshold_profile <- function(
   }
 
 
-  # Check mincompare, the minimum number of numerical pairwise comparisons for
+  # Check comparisons, the minimum number of numerical pairwise comparisons for
   # computing similarity.
   bounds <- c(ncol(data), nrow(data))
-  if(is.null(mincompare)){
+  if(is.null(comparisons)){
     defaults <- as.integer(c(ceiling(ncol(data) / 2), ceiling(nrow(data) / 2)))
-    mincompare <- defaults[layer + 1]
-  }else if(!is.numeric(mincompare)){  
-    stop("`mincompare` argument must be an integer.", call. = F)
-  }else if(length(mincompare) != 1){
-    stop("`mincompare` argument must be of length 1.", call. = F)
-  }else if(is.na(mincompare)){  
-    stop("`mincompare` argument cannot be NA.", call. = F)
-  }else if(mincompare != as.integer(mincompare)){
-    stop("`mincompare` argument must be an integer.", call. = F)
-  }else if(mincompare < 1 || mincompare > bounds[layer + 1]){
+    comparisons <- defaults[layer + 1]
+  }else if(!is.numeric(comparisons)){  
+    stop("`comparisons` argument must be an integer.", call. = F)
+  }else if(length(comparisons) != 1){
+    stop("`comparisons` argument must be of length 1.", call. = F)
+  }else if(is.na(comparisons)){  
+    stop("`comparisons` argument cannot be NA.", call. = F)
+  }else if(comparisons != as.integer(comparisons)){
+    stop("`comparisons` argument must be an integer.", call. = F)
+  }else if(comparisons < 1 || comparisons > bounds[layer + 1]){
     if(layer == 0)
-      stop("`mincompare` must be between 1 and ncol(data) for agent layer.", call. = F)
+      stop("`comparisons` must be between 1 and ncol(data) for agent layer.", call. = F)
     else if(layer == 1)
-      stop("`mincompare` must be between 1 and nrow(data) for symbolic layer.", call. = F)
+      stop("`comparisons` must be between 1 and nrow(data) for symbolic layer.", call. = F)
   }else{
-    mincompare <- as.integer(mincompare)
+    comparisons <- as.integer(comparisons)
   }
 
 
@@ -160,7 +160,7 @@ make_threshold_profile <- function(
     "rmake_threshold_profile",
     data,
     layer,
-    mincompare,
+    comparisons,
     metric,
     count
   )

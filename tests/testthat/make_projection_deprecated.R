@@ -20,3 +20,8 @@ test_that("Deprecated argument names for make_projection()", {
 		regexp = "Argument `centre` is deprecated; outputting edge weights in range 0 to 1."
 	)
 })
+
+# TODO: also need to output deprecation warnings for old option names
+# target_lcc
+# target_ad
+# raw_similarity

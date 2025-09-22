@@ -1,5 +1,5 @@
 #include "surveygraph.h"
-#include "uf.h"
+#include "unionfind.h"
 
 #define R_NO_REMAP     // TODO comment out for CRAN, only used for debugging 
 #include <R.h>         // with Rprint.
@@ -7,28 +7,21 @@
 
 using namespace std;
 
-// Implements union find algorithm, with slight adaptations.
+// Computes the largest connected component, average degree, number of
+// connected components, and isolated nodes as a function of the similarity
+// threshold. It stores these in the array `profile`.
 void surveygraph::make_threshold_profile()
 {
-	// TODO tests for surveys with a single entry.. how to treat profile?
-  //if(survey.size() == 1){
-  //  edgelist = std::set<edge>{};
-  //  return;
-  //}
-
   profile = std::vector<std::vector<int>>{};
 
-  //g = graph(mincomps, metric, survey); 
 	edgelist_complete();
 
 	UF uf(survey.size());  
 
-  //auto it = g.edgelist.rbegin();
   auto it = edgelist.rbegin();
   for(int i = 0; i < count; ++i){
     double threshold = 1 - i / double(count - 1);
     
-    //while(it->weight >= threshold && it != g.edgelist.rend()){
     while(it->weight >= threshold && it != edgelist.rend()){
 			uf.merge(*it->nodes.begin(), *it->nodes.rbegin());
       ++it;

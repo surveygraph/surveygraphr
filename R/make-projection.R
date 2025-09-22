@@ -63,7 +63,7 @@
 #'   edge weights.
 #' @param dummycode flag that indicates whether we dummycode data.
 #' @param likert Specifies the range of the Likert scale contained in `data`.
-#' @param mincompare The minimum number of valid comparisons that must be
+#' @param comparisons The minimum number of valid comparisons that must be
 #' made when computing the similarity between rows or columns in the `data`. If at
 #' least one of the entries in the fields being compared is NA, then the
 #' comparison is invalid.
@@ -81,7 +81,7 @@ make_projection <- function(
   layer = NULL,
   method = NULL,
   methodval = NULL,
-  mincompare = NULL,
+  comparisons = NULL,
   metric = NULL,
   likert = NULL,
   dummycode = NULL,
@@ -121,8 +121,8 @@ make_projection <- function(
 
 
   # TODO: need to check Inf values for double arguments. use is.finite()
+  # TODO: just use if loops, don't need ifelse
   # TODO: explain default values in documentation. choices are conservative
-  # TODO: rename mincompare to comparisons
   # TODO: deprecate "target_lcc", "target_ad", "raw_similarity"?
 
 
@@ -198,27 +198,27 @@ make_projection <- function(
   }
 
 
-  # Check mincompare, the minimum number of numerical pairwise comparisons for
+  # Check comparisons, the minimum number of numerical pairwise comparisons for
   # computing similarity.
   bounds <- c(ncol(data), nrow(data))
-  if(is.null(mincompare)){
+  if(is.null(comparisons)){
     defaults <- as.integer(c(ceiling(ncol(data) / 2), ceiling(nrow(data) / 2)))
-    mincompare <- defaults[layer + 1]
-  }else if(!is.numeric(mincompare)){  
-    stop("`mincompare` argument must be an integer.", call. = F)
-  }else if(length(mincompare) != 1){
-    stop("`mincompare` argument must be of length 1.", call. = F)
-  }else if(is.na(mincompare)){  
-    stop("`mincompare` argument cannot be NA.", call. = F)
-  }else if(mincompare != as.integer(mincompare)){
-    stop("`mincompare` argument must be an integer.", call. = F)
-  }else if(mincompare < 1 || mincompare > bounds[layer + 1]){
+    comparisons <- defaults[layer + 1]
+  }else if(!is.numeric(comparisons)){  
+    stop("`comparisons` argument must be an integer.", call. = F)
+  }else if(length(comparisons) != 1){
+    stop("`comparisons` argument must be of length 1.", call. = F)
+  }else if(is.na(comparisons)){  
+    stop("`comparisons` argument cannot be NA.", call. = F)
+  }else if(comparisons != as.integer(comparisons)){
+    stop("`comparisons` argument must be an integer.", call. = F)
+  }else if(comparisons < 1 || comparisons > bounds[layer + 1]){
     if(layer == 0)
-      stop("`mincompare` must be between 1 and ncol(data) for agent layer.", call. = F)
+      stop("`comparisons` must be between 1 and ncol(data) for agent layer.", call. = F)
     else if(layer == 1)
-      stop("`mincompare` must be between 1 and nrow(data) for symbolic layer.", call. = F)
+      stop("`comparisons` must be between 1 and nrow(data) for symbolic layer.", call. = F)
   }else{
-    mincompare <- as.integer(mincompare)
+    comparisons <- as.integer(comparisons)
   }
 
 
@@ -315,7 +315,7 @@ make_projection <- function(
     layer,
     method,
     methodval,
-    mincompare,
+    comparisons,
     metric,
     bootreps,
     bootval,
