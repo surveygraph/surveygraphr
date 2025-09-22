@@ -1,4 +1,4 @@
-# use a seed to actually test
+# TODO: introduce a seed to run tests
 
 test_that("correctly names columns", {
   S <- make_synthetic_data(1, 3)
