@@ -16,7 +16,7 @@ void surveygraph::make_threshold_profile()
 
 	edgelist_complete();
 
-	UF uf(survey.size());  
+	unionfind uf(survey.size());  
 
   auto it = edgelist.rbegin();
   for(int i = 0; i < count; ++i){

@@ -2,22 +2,22 @@
 test_that("Deprecated argument names for make_projection()", {
 	expect_warning(
     make_projection(data.frame(1), threshold_method = "raw_similarity"),
-		regexp = "Argument `threshold_method` is deprecated and will be removed in future versions; use `method` instead."
+		regexp = "`threshold_method` argument is deprecated and will be removed in future versions; use `method`."
 	)
 
 	expect_warning(
     make_projection(data.frame(1), method_value = 0.5),
-		regexp = "Argument `method_value` is deprecated and will be removed future versions; use `methodval` instead."
+		regexp = "`method_value` argument is deprecated and will be removed future versions; use `methodval`."
 	)
 
 	expect_warning(
     make_projection(data.frame(1), similarity_metric = "Manhattan"),
-		regexp = "Argument `similarity_metric` is deprecated and will be removed in future versions; use `methodval` instead."
+		regexp = "`similarity_metric` argument is deprecated and will be removed in future versions; use `methodval`."
 	)
 
 	expect_warning(
     make_projection(data.frame(1), centre = 1),
-		regexp = "Argument `centre` is deprecated; outputting edge weights in range 0 to 1."
+		regexp = "`centre` argument is deprecated; outputting edge weights in range 0 to 1."
 	)
 })
 

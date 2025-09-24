@@ -93,25 +93,25 @@ make_projection <- function(
   dots <- list(...)
 
   if(!is.null(dots$threshold_method)){
-    warning("Argument `threshold_method` is deprecated and will be removed in future versions; use `method` instead.", call. = F)
+    warning("`threshold_method` argument is deprecated and will be removed in future versions; use `method`.", call. = F)
     method <- dots$threshold_method
     dots$threshold_method <- NULL
   }
 
   if(!is.null(dots$method_value)){
-    warning("Argument `method_value` is deprecated and will be removed future versions; use `methodval` instead.", call. = F)
+    warning("`method_value` argument is deprecated and will be removed future versions; use `methodval`.", call. = F)
     methodval <- dots$method_value
     dots$method_value <- NULL
   }
 
   if(!is.null(dots$similarity_metric)){
-    warning("Argument `similarity_metric` is deprecated and will be removed in future versions; use `methodval` instead.", call. = F)
+    warning("`similarity_metric` argument is deprecated and will be removed in future versions; use `methodval`.", call. = F)
     metric <- dots$similarity_metric
     dots$similarity_metric <- NULL
   }
 
   if(!is.null(dots$centre)){
-    warning("Argument `centre` is deprecated; outputting edge weights in range 0 to 1.", call. = F)
+    warning("`centre` argument is deprecated; outputting edge weights in range 0 to 1.", call. = F)
     dots$centre <- NULL
   }
 

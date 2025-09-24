@@ -29,7 +29,7 @@ void surveygraph::make_projection_lcc()
 
   edgelist_complete();
 
-  UF uf(survey.size());
+  unionfind uf(survey.size());
 
   auto it = edgelist.rbegin();
   double weight = it->weight;  // value of the weight we're currently adding to list

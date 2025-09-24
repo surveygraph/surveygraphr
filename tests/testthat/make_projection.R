@@ -412,7 +412,3 @@ test_that("`metric` gives expected behaviour", {
   expect_equal(proj(0.75, 0.75, "Euclidean"), data.frame(u = 1, v = 2, weight = 0.2500000000), tolerance = 1e-6)
   expect_equal(proj(1,    1,    "Euclidean"), data.frame(u = 1, v = 2, weight = 0.0000000000), tolerance = 1e-6)
 })
-
-
-# TODO, test the following
-# bootstrapping

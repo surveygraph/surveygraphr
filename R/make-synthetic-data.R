@@ -12,9 +12,9 @@
 #' @param nrow The number of rows in the survey
 #' @param ncol The number of columns in the survey
 #' @param minority The fraction of nodes in the smaller of the two polarised groups
-#' @param polarisation The degree of polarisation among the system's agents
 #' @param correlation Probability that group item corresponds to polarisation
-#' @param scale Range of the Likert scale
+#' @param polarisation The degree of polarisation among the system's agents
+#' @param likert Range of the Likert scale
 #' @param seed Seed value for random number generation.
 #' 
 #' @export
@@ -25,15 +25,33 @@ make_synthetic_data <- function(
   nrow, 
   ncol,
   minority = NULL,
-  polarisation = NULL,
   correlation = NULL,
-  scale = NULL,
+  polarisation = NULL,
+  likert = NULL,
   seed = NULL,
   ...
 ){
   # TODO:
   # rename `scale` to `likert`, deprecation warning, use ... argument for this
   # accept both UK and US spelling, polarisation and polarization. use ... argument for this.
+  # your validations errors and warnings currently don't catch Infs... use
+  #     is.finite()? if Inf is passed, it's as a double, since integers can't be Inf
+  dots <- list(...)
+
+  if(!is.null(dots$scale)){
+    warning("`scale` argument is deprecated and will be removed in future versions; use `likert`.", call. = F)
+    likert <- dots$scale
+    dots$scale <- NULL
+  }
+
+  if(!is.null(dots$polarization)){
+    polarisation <- dots$polarization
+    dots$polarization <- NULL
+  }
+
+  if(length(dots) > 0)
+    warning("Unused arguments in ...: ", paste(names(dots), collapse = ", "), ".", call. = F)
+
 
   # Validate `nrow` argument.
   if(!is.numeric(nrow))
@@ -90,30 +108,11 @@ make_synthetic_data <- function(
     stop("`minority` argument must be between 0 and 0.5, inclusive.", call. = F)
 
   if(minority > 0.5){
-    warning("'minority' argument must be between 0 and 0.5 inclusive, taking 1 - minority.")
+    warning("`minority` argument must be between 0 and 0.5, inclusive; taking 1 - minority.")
     minority <- 1 - minority
   }
 
   minority <- as.numeric(minority)
-
-
-  # Validate `polarisation` argument.
-  if(is.null(polarisation))
-    polarisation <- 0
-
-  if(!is.numeric(polarisation))
-    stop("`polarisation` argument must be between 0 and 1, inclusive.", call. = F)
-
-  if(length(polarisation) != 1)
-    stop("`polarisation` argument must be of length 1.", call. = F)
-
-  if(is.na(polarisation))
-    stop("`polarisation` argument cannot be NA.", call. = F)
-
-  if(polarisation < 0 || polarisation > 1)
-    stop("`polarisation` argument must be between 0 and 1, inclusive.", call. = F)
-
-  polarisation <- as.numeric(polarisation)
 
 
   # Validate `correlation` argument.
@@ -135,67 +134,112 @@ make_synthetic_data <- function(
   correlation <- as.numeric(correlation)
 
 
-  # Validate `scale` argument.
-  if(is.null(scale))
-    scale <- 10
+  # Validate `polarisation` argument.
+  if(is.null(polarisation))
+    polarisation <- 0
 
-  if(!is.numeric(scale))
-    stop("`scale` argument must be a positive integer.", call. = F)
+  if(!is.numeric(polarisation))
+    stop("`polarisation` argument must be between 0 and 1, inclusive.", call. = F)
 
-  if(length(scale) != 1)
-    stop("`scale` argument must be of length 1.", call. = F)
+  if(length(polarisation) != 1)
+    stop("`polarisation` argument must be of length 1.", call. = F)
 
-  if(is.na(scale))
-    stop("`scale` argument cannot be NA.", call. = F)
+  if(is.na(polarisation))
+    stop("`polarisation` argument cannot be NA.", call. = F)
 
-  if(scale < 0)
-    stop("`scale` argument must be a positive integer.", call. = F)
+  if(polarisation < 0 || polarisation > 1)
+    stop("`polarisation` argument must be between 0 and 1, inclusive.", call. = F)
 
-  if(scale != as.integer(scale))
-    stop("`scale` argument must be a positive integer.", call. = F)
+  polarisation <- as.numeric(polarisation)
 
-  scale <- as.integer(scale)
 
+  # Validate `likert` argument.
+  if(is.null(likert))
+    likert <- 10
+
+  if(!is.numeric(likert))
+    stop("`likert` argument must be a positive integer.", call. = F)
+
+  if(length(likert) != 1)
+    stop("`likert` argument must be of length 1.", call. = F)
+
+  if(is.na(likert))
+    stop("`likert` argument cannot be NA.", call. = F)
+
+  if(likert < 1)
+    stop("`likert` argument must be a positive integer.", call. = F)
+
+  if(likert != as.integer(likert))
+    stop("`likert` argument must be a positive integer.", call. = F)
+
+  likert <- as.integer(likert)
+
+
+  # Validate `seed` argument.
+  seedflag <- FALSE
+  if(is.null(seed))
+    seed <- 0 
+  else
+    seedflag <- TRUE
+
+  if(!is.numeric(seed))
+    stop("`seed` argument must be an integer.", call. = F)
+
+  if(length(seed) != 1)
+    stop("`seed` argument must be of length 1.", call. = F)
+
+  if(is.na(seed))
+    stop("`seed` argument cannot be NA.", call. = F)
+
+  if(seed != as.integer(seed))
+    stop("`seed` argument must be an integer.", call. = F)
+
+  seed <- as.integer(seed)
+
+  if(seedflag) set.seed(seed)
 
   # Construct survey.
-  data <- data.frame(matrix(NA, nrow = nrow, ncol = ncol))
+  data <- data.frame(matrix(0, nrow = nrow, ncol = ncol))
 
-  # TODO: if ncol = 1, drop the `group` column.
-  # TODO: remember you're currently allowing zero for nrow and ncol...
+  if(nrow > 0){
+    for(i in 1:nrow){
+      if(ncol > 1){
+        # Group membership column, takes a binary value.
+        var <- runif(1)
+        if(var < (0.5 * (correlation + 1)))
+          data[i, 1] <- 0
+        else
+          data[i, 1] <- 1
 
-  # avgresponse is between 0 and (scale - 1) / 2
-  avgresponse <- (scale - 1) / 2 - ((scale - 1) / 2) * polarisation
+        if(i > minority * nrow + 1e-6)
+          data[i, 1] <- 1 - data[i, 1]
 
-  for(i in 1:nrow){
-    # Group membership column, takes a binary value.
-    # TODO: need to fix correlation, corr of 0 needs to be random, not anticorrelated
-    if(runif(1) < correlation)
-      data[i, 1] <- 0
-    else
-      data[i, 1] <- 1
-
-    if(i > minority * nrow + 1e-6)
-      data[i, 1] <- 1 - data[i, 1]
-
-    # Likert columns, take on values between 1 and `scale`.
-    for(j in 2:ncol){
-      repeat{
-        data[i, j] <- 1 + as.numeric(rpois(1, avgresponse))
-        if(data[i, j] >= 1 && data[i, j] <= scale)
-          break
+        # Likert columns, take on values between 1 and `likert`.
+        for(j in 2:ncol){
+          shape <- 5  # Leftover shape parameter in beta distribution.
+          mu <- 0.5 * (polarisation + 1)
+          alpha <- mu * shape 
+          beta <- (1 - mu) * shape
+          val <- 1 + (likert - 1) * rbeta(1, alpha, beta)
+          data[i, j] <- 1 + likert - round(val)
+          
+          if(i > minority * nrow + 1e-6)
+            data[i, j] <- 1 + likert - data[i, j]
+        }
       }
-      
-      if(i > minority * nrow + 1e-6)
-        data[i, j] <- scale - data[i, j] + 1
     }
   }
 
-  # colnames "group" "item_1" "item_2" ... "item_ncol"
-  cnames <- c("group")
-  for(i in 1:(ncol - 1))
-    cnames <- append(cnames, paste(c("item_", i), collapse="")) 
+  # colnames "group", "item_1", "item_2", ..., "item_ncol"
+  cnames <- character()
+  if(ncol > 0){
+    cnames <- c("group")
+    if(ncol > 1){
+      for(i in 1:(ncol - 1))
+        cnames <- append(cnames, paste(c("item_", i), collapse="")) 
+    }
+    colnames(data) <- cnames
+  }
 
-  colnames(data) <- cnames
-
-  return(data)
+  data
 }

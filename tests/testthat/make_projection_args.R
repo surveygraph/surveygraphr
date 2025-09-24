@@ -3,6 +3,7 @@
 # epsilon value for numerical thresholds
 eps <- 1e-6
 
+
 test_that("unused arguments", {
 	expect_warning(
 		make_projection(data.frame(1), argname1 = 1, argname2 = 1),

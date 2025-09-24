@@ -1,13 +1,21 @@
-#ifndef UF_H_
-#define UF_H_
+#ifndef unionfind_H_
+#define unionfind_H_
 
-class UF 
+
+// Modified union-find algorithm from here.
+// https://github.com/kartikkukreja/blog-codes/blob/master/src
+
+// TODO replace graph terminology with set language. 
+// comps to sets 
+// lcc to maximal set or similar 
+// e for edge to mergecount or similar
+// isolated with singleton
+class unionfind 
 {
-  int *id, *sz;
+  int *id, *sz;  // set id and size
 
   public:
-		// Create an empty union find data structure with N isolated sets.
-		UF(int N){
+		unionfind(int N){
 			comps = N; 
 			lcc = 1;
 			e = 0;
@@ -44,7 +52,7 @@ class UF
 			if(sz[i] == 1) isolated--;
 			if(sz[j] == 1) isolated--;
 
-			// make smaller root point to larger one
+			// Make smaller root point to larger one.
 			if(sz[i] < sz[j]){
 				id[i] = j;
 				sz[j] += sz[i]; 

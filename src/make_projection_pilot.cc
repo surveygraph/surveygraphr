@@ -12,7 +12,7 @@
 #include <Rdefines.h>   //
 
 
-// Converts and R dataframe to a nested C++ vector. We verify that rdata is a
+// Converts and R dataframe to a nested C++ vector. We verify that `rdata` is a
 // dataframe elsewhere.
 static void rdf_to_cppvector(
   const SEXP &rdata, 
@@ -43,7 +43,7 @@ static void rdf_to_cppvector(
   }
 
   // If we're computing row similarities, producing the so-called agent layer,
-  // we need to take the transpose of `data`. Otherwise, leave as is.
+  // we need to take the transpose of `data`. Otherwise leave it as is.
   if(layer == 0){
     unsigned int ncol = data.size();
     unsigned int nrow = data[0].size();
@@ -170,9 +170,9 @@ static void cppmap_to_rdf(
 SEXP rmake_projection(
   SEXP rdata,         // dataframe containing survey
   SEXP rlayer,        // layer flag, agent or symbolic
-  SEXP rmethod,       // sparsification method, lcc, average_degree, raw_similarity
+  SEXP rmethod,       // sparsification method, lcc, avgdegree, similarity
   SEXP rmethodval,    // method value, utility variable
-  SEXP rcomparisons,  // minimum comparisons
+  SEXP rcomparisons,  // minimum number of comparisons
   SEXP rmetric,       // similarity metric
   SEXP rbootreps,     // number of bootstrap repetitions
   SEXP rbootval,      // resampling probability for bootstrapping
