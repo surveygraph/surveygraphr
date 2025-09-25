@@ -22,6 +22,9 @@ data_preprocess <- function(
   data, 
   likert = NULL,
   dummycode = NULL
+  # TODO: 
+  # add ... ellipses
+  # add a verbose argument for pre normalisation
 ){
 
   # Output error if data not a dataframe, important because we assume uniform
@@ -38,6 +41,7 @@ data_preprocess <- function(
 
 
   # Set infinite value entries of numerical columns to NA.
+  # TODO: also NaN
   colsnumeric <- sapply(data, is.numeric)
   if(length(colsnumeric) > 0){
     data[colsnumeric] <- lapply(
@@ -124,14 +128,16 @@ data_preprocess <- function(
   }
 
 
-  # Verify dummycode input.
+  # Check `dummycode`.
   if(is.null(dummycode)){
+    # Default to FALSE.
 		dummycode <- logical(ncol(data))
 	}else{
     # Verify that dummycode is a vector
     if(!is.atomic(dummycode))
       stop("`dummycode` must be an atomic vector")
 
+    # TODO: only accept logical
     if(!(is.numeric(dummycode) || is.logical(dummycode)))
       stop("`dummycode` must be numeric or logical")
 

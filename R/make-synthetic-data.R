@@ -32,14 +32,12 @@ make_synthetic_data <- function(
   ...
 ){
   # TODO:
-  # rename `scale` to `likert`, deprecation warning, use ... argument for this
-  # accept both UK and US spelling, polarisation and polarization. use ... argument for this.
   # your validations errors and warnings currently don't catch Infs... use
   #     is.finite()? if Inf is passed, it's as a double, since integers can't be Inf
   dots <- list(...)
 
   if(!is.null(dots$scale)){
-    warning("`scale` argument is deprecated and will be removed in future versions; use `likert`.", call. = F)
+    warning("`scale` is deprecated and will be removed in future versions; use `likert`.", call. = F)
     likert <- dots$scale
     dots$scale <- NULL
   }
@@ -55,38 +53,38 @@ make_synthetic_data <- function(
 
   # Validate `nrow` argument.
   if(!is.numeric(nrow))
-    stop("`nrow` argument must be a non-negative integer.", call. = F)
+    stop("`nrow` must be a non-negative integer.", call. = F)
 
   if(length(nrow) != 1)
-    stop("`nrow` argument must be of length 1.", call. = F)
+    stop("`nrow` must be of length 1.", call. = F)
 
-  if(is.na(nrow))
-    stop("`nrow` argument cannot be NA.", call. = F)
+  if(!is.finite(nrow))
+    stop("`nrow` must be finite (not NA, NaN, Inf or -Inf).", call. = F)
 
   if(nrow < 0)
-    stop("`nrow` argument must be a non-negative integer.", call. = F)
+    stop("`nrow` must be a non-negative integer.", call. = F)
 
   if(nrow != as.integer(nrow))
-    stop("`nrow` argument must be a non-negative integer.", call. = F)
+    stop("`nrow` must be a non-negative integer.", call. = F)
 
   nrow <- as.integer(nrow)
 
 
   # Validate `ncol` argument.
   if(!is.numeric(ncol))
-    stop("`ncol` argument must be a non-negative integer.", call. = F)
+    stop("`ncol` must be a non-negative integer.", call. = F)
 
   if(length(ncol) != 1)
-    stop("`ncol` argument must be of length 1.", call. = F)
+    stop("`ncol` must be of length 1.", call. = F)
 
-  if(is.na(ncol))
-    stop("`ncol` argument cannot be NA.", call. = F)
+  if(!is.finite(ncol))
+    stop("`ncol` must be finite (not NA, NaN, Inf or -Inf).", call. = F)
 
   if(ncol < 0)
-    stop("`ncol` argument must be a non-negative integer.", call. = F)
+    stop("`ncol` must be a non-negative integer.", call. = F)
 
   if(ncol != as.integer(ncol))
-    stop("`ncol` argument must be a non-negative integer.", call. = F)
+    stop("`ncol` must be a non-negative integer.", call. = F)
 
   ncol <- as.integer(ncol)
 
@@ -96,19 +94,19 @@ make_synthetic_data <- function(
     minority <- 0.5
 
   if(!is.numeric(minority))
-    stop("`minority` argument must be between 0 and 0.5, inclusive.", call. = F)
+    stop("`minority` must be between 0 and 0.5, inclusive.", call. = F)
 
   if(length(minority) != 1)
-    stop("`minority` argument must be of length 1.", call. = F)
+    stop("`minority` must be of length 1.", call. = F)
 
-  if(is.na(minority))
-    stop("`minority` argument cannot be NA.", call. = F)
+  if(!is.finite(minority))
+    stop("`minority` must be finite (not NA, NaN, Inf or -Inf).", call. = F)
 
   if(minority < 0 || minority > 1)
-    stop("`minority` argument must be between 0 and 0.5, inclusive.", call. = F)
+    stop("`minority` must be between 0 and 0.5, inclusive.", call. = F)
 
   if(minority > 0.5){
-    warning("`minority` argument must be between 0 and 0.5, inclusive; taking 1 - minority.")
+    warning("`minority` must be between 0 and 0.5, inclusive; taking 1 - minority.")
     minority <- 1 - minority
   }
 
@@ -120,16 +118,16 @@ make_synthetic_data <- function(
     correlation <- 0.85
 
   if(!is.numeric(correlation))
-    stop("`correlation` argument must be between 0 and 1, inclusive.", call. = F)
+    stop("`correlation` must be between 0 and 1, inclusive.", call. = F)
 
   if(length(correlation) != 1)
-    stop("`correlation` argument must be of length 1.", call. = F)
+    stop("`correlation` must be of length 1.", call. = F)
 
-  if(is.na(correlation))
-    stop("`correlation` argument cannot be NA.", call. = F)
+  if(!is.finite(correlation))
+    stop("`correlation` must be finite (not NA, NaN, Inf or -Inf).", call. = F)
 
   if(correlation < 0 || correlation > 1)
-    stop("`correlation` argument must be between 0 and 1, inclusive.", call. = F)
+    stop("`correlation` must be between 0 and 1, inclusive.", call. = F)
 
   correlation <- as.numeric(correlation)
 
@@ -139,16 +137,16 @@ make_synthetic_data <- function(
     polarisation <- 0
 
   if(!is.numeric(polarisation))
-    stop("`polarisation` argument must be between 0 and 1, inclusive.", call. = F)
+    stop("`polarisation` must be between 0 and 1, inclusive.", call. = F)
 
   if(length(polarisation) != 1)
-    stop("`polarisation` argument must be of length 1.", call. = F)
+    stop("`polarisation` must be of length 1.", call. = F)
 
-  if(is.na(polarisation))
-    stop("`polarisation` argument cannot be NA.", call. = F)
+  if(!is.finite(polarisation))
+    stop("`polarisation` must be finite (not NA, NaN, Inf or -Inf).", call. = F)
 
   if(polarisation < 0 || polarisation > 1)
-    stop("`polarisation` argument must be between 0 and 1, inclusive.", call. = F)
+    stop("`polarisation` must be between 0 and 1, inclusive.", call. = F)
 
   polarisation <- as.numeric(polarisation)
 
@@ -158,19 +156,19 @@ make_synthetic_data <- function(
     likert <- 10
 
   if(!is.numeric(likert))
-    stop("`likert` argument must be a positive integer.", call. = F)
+    stop("`likert` must be a positive integer.", call. = F)
 
   if(length(likert) != 1)
-    stop("`likert` argument must be of length 1.", call. = F)
+    stop("`likert` must be of length 1.", call. = F)
 
-  if(is.na(likert))
-    stop("`likert` argument cannot be NA.", call. = F)
+  if(!is.finite(likert))
+    stop("`likert` must be finite (not NA, NaN, Inf or -Inf).", call. = F)
 
   if(likert < 1)
-    stop("`likert` argument must be a positive integer.", call. = F)
+    stop("`likert` must be a positive integer.", call. = F)
 
   if(likert != as.integer(likert))
-    stop("`likert` argument must be a positive integer.", call. = F)
+    stop("`likert` must be a positive integer.", call. = F)
 
   likert <- as.integer(likert)
 
@@ -183,22 +181,21 @@ make_synthetic_data <- function(
     seedflag <- TRUE
 
   if(!is.numeric(seed))
-    stop("`seed` argument must be an integer.", call. = F)
+    stop("`seed` must be an integer.", call. = F)
 
   if(length(seed) != 1)
-    stop("`seed` argument must be of length 1.", call. = F)
+    stop("`seed` must be of length 1.", call. = F)
 
-  if(is.na(seed))
-    stop("`seed` argument cannot be NA.", call. = F)
+  if(!is.finite(seed))
+    stop("`seed` must be finite (not NA, NaN, Inf or -Inf).", call. = F)
 
   if(seed != as.integer(seed))
-    stop("`seed` argument must be an integer.", call. = F)
+    stop("`seed` must be an integer.", call. = F)
 
   seed <- as.integer(seed)
 
   if(seedflag) set.seed(seed)
 
-  # Construct survey.
   data <- data.frame(matrix(0, nrow = nrow, ncol = ncol))
 
   if(nrow > 0){
@@ -230,7 +227,7 @@ make_synthetic_data <- function(
     }
   }
 
-  # colnames "group", "item_1", "item_2", ..., "item_ncol"
+  # Column names are "group", "item_1", "item_2", ..., "item_{ncol - 1}".
   cnames <- character()
   if(ncol > 0){
     cnames <- c("group")

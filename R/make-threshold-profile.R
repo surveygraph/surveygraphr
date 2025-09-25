@@ -62,98 +62,106 @@ make_threshold_profile <- function(
 
 
   # TODO: avoid the redundancy with these checks and make_projection()
-  # TODO: rename mincompare to comparisons
   # TODO: rename Euclidean and Manhattan to RMSE and MAE
 
 
-  # Check that layer is either "agent" or "symbolic", mapping to
+  # Check `layer`, whose options are "agent" or "symbolic", and map to
   # 0 for agent
   # 1 for symbolic
-  if(is.null(layer)){
+  if(is.null(layer))
+    layer <- "agent"
+
+  if(!is.character(layer))
+    stop("`layer` must be a character string.", call. = F)
+
+  if(length(layer) != 1)
+    stop("`layer` must be of length 1.", call. = F)
+
+  if(is.na(layer))
+    stop("`layer` cannot be NA.", call. = F)
+
+  if(layer %in% c("agent", "Agent", "a"))
     layer <- as.integer(0)
-  }else if(!is.character(layer)){
-    stop("`layer` argument must be a character string.", call. = F)
-  }else if(length(layer) != 1){
-    stop("`layer` argument must be of length 1.", call. = F)
-  }else if(is.na(layer)){
-    stop("`layer` argument cannot be NA.", call. = F)
-  }else if(layer %in% c("a", "Agent", "agent")){
-    layer <- as.integer(0)
-  }else if(layer %in% c("s", "Symbolic", "symbolic")){
+  else if(layer %in% c("symbolic", "Symbolic", "s"))
     layer <- as.integer(1)
-  }else{
+  else
     stop("`layer` option \"", layer, "\" unrecognised.", call. = F)
-  }
 
 
-  # Check comparisons, the minimum number of numerical pairwise comparisons for
+  # Check `comparisons`, the minimum number of numerical pairwise comparisons for
   # computing similarity.
-  bounds <- c(ncol(data), nrow(data))
   if(is.null(comparisons)){
-    defaults <- as.integer(c(ceiling(ncol(data) / 2), ceiling(nrow(data) / 2)))
-    comparisons <- defaults[layer + 1]
-  }else if(!is.numeric(comparisons)){  
-    stop("`comparisons` argument must be an integer.", call. = F)
-  }else if(length(comparisons) != 1){
-    stop("`comparisons` argument must be of length 1.", call. = F)
-  }else if(is.na(comparisons)){  
-    stop("`comparisons` argument cannot be NA.", call. = F)
-  }else if(comparisons != as.integer(comparisons)){
-    stop("`comparisons` argument must be an integer.", call. = F)
-  }else if(comparisons < 1 || comparisons > bounds[layer + 1]){
-    if(layer == 0)
-      stop("`comparisons` must be between 1 and ncol(data) for agent layer.", call. = F)
-    else if(layer == 1)
-      stop("`comparisons` must be between 1 and nrow(data) for symbolic layer.", call. = F)
-  }else{
-    comparisons <- as.integer(comparisons)
+    if(layer == 0) comparisons <- as.integer(ceiling(ncol(data) / 2))
+    if(layer == 1) comparisons <- as.integer(ceiling(nrow(data) / 2))
   }
 
+  if(!is.numeric(comparisons))
+    stop("`comparisons` must be an integer.", call. = F)
 
-  # Check the value of the similarity metric.
-  # 0 Manhattan distance
-  # 1 Euclidean distance
-  if(is.null(metric)){
+  if(length(comparisons) != 1)
+    stop("`comparisons` must be of length 1.", call. = F)
+
+  if(!is.finite(comparisons))
+    stop("`comparisons` must be finite (not NA, NaN, Inf or -Inf).", call. = F)
+
+  if(comparisons != as.integer(comparisons))
+    stop("`comparisons` must be an integer.", call. = F)
+
+  if(layer == 0 && (comparisons < 1 || comparisons > ncol(data)))
+    stop("`comparisons` must be between 1 and ncol(data) for agent layer.", call. = F)
+
+  if(layer == 1 && (comparisons < 1 || comparisons > nrow(data)))
+    stop("`comparisons` must be between 1 and nrow(data) for symbolic layer.", call. = F)
+
+  comparisons <- as.integer(comparisons)
+
+
+  # Check `metric`, whose options are 'manhattan' and 'euclidean', mapping to
+  # 0 for `manhattan`
+  # 1 for `euclidean`
+  if(is.null(metric))
+    metric <- "manhattan"
+
+  if(!is.character(metric))
+    stop("`metric` must be a character string.", call. = F)
+
+  if(length(metric) != 1)
+    stop("`metric` must be of length 1.", call. = F)
+
+  if(is.na(metric))
+    stop("`metric` cannot be NA.", call. = F)
+
+  if(metric %in% c("manhattan", "Manhattan"))
     metric <- as.integer(0)
-  }else if(!is.character(metric)){
-    stop("`metric` argument must be a character string.", call. = F)
-  }else if(length(metric) != 1){
-    stop("`metric` argument must be of length 1.", call. = F)
-  }else if(is.na(metric)){
-    stop("`metric` argument cannot be NA.", call. = F)
-  }else if(metric %in% c("manhattan", "Manhattan")){
-    metric <- as.integer(0)
-  }else if(metric %in% c("euclidean", "Euclidean")){
+  else if(metric %in% c("euclidean", "Euclidean"))
     metric <- as.integer(1)
-  }else{
+  else
     stop("`metric` option \"", metric, "\" unrecognised; expecting \"Manhattan\" or \"Euclidean\".", call. = F)
-  }
 
 
-  # Check the value of the `count` argument, the number of similarity
-  # thresholds over which we compute lcc and the average degree. `count` is
-  # set to at least 3, such that when `count` is
-  # 3, thresholds are 0, 0.5 and 1
-  # 4, thresholds are 0, 0.3..., 0.6... and 1
-  # 5, thresholds are 0, 0.25, 0.5, 0.75 and 1
-  # and so on. If supplied 0, 1 or 2, warn that we compute the profile over at
-  # least 3 values, and continue, setting count to 3.
-  if(is.null(count)){
+  # Check `count`, the number of similarity thresholds over which we compute
+  # the size of the lcc and the average degree. 
+  if(is.null(count))
     count <- as.integer(21)
-  }else if(!is.numeric(count)){  
-    stop("`count` argument must be an integer.", call. = F)
-  }else if(length(count) != 1){
-    stop("`count` argument must be of length 1.", call. = F)
-  }else if(is.na(count)){  
-    stop("`count` argument cannot be NA.", call. = F)
-  }else if(count != as.integer(count)){
-    stop("`count` argument must be an integer.", call. = F)
-  }else if(count < 3){
+
+  if(!is.numeric(count))
+    stop("`count` must be an integer.", call. = F)
+
+  if(length(count) != 1)
+    stop("`count` must be of length 1.", call. = F)
+
+  if(!is.finite(count))
+    stop("`count` must be finite (not NA, NaN, Inf or -Inf).", call. = F)
+
+  if(count != as.integer(count))
+    stop("`count` must be an integer.", call. = F)
+
+  if(count < 3){
     warning("Setting `count` to 3.", call. = F)
     count <- as.integer(3)
-  }else{
-    count <- as.integer(count)
   }
+
+  count <- as.integer(count)
 
 
   profile <- .Call(
