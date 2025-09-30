@@ -21,7 +21,6 @@
 data_preprocess <- function(
   data, 
   limits = NULL,
-  #likert = NULL,
   dummycode = NULL
   # TODO: 
   # add ... ellipses
