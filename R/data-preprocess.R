@@ -3,32 +3,29 @@
 #' users.
 #'
 #' @description
-#' **Note that a major update to the surveygraph package, as well as documentation on this page, is planned for July 2025.**
 #'
 #' `data_preprocess()` outputs the survey formatted as required.
 #' 
 #' @return
-#' A data frame corresponding to the edge list of the specified network. It
-#' contains three columns named 
+#' A cleaned version of the supplied data frame.
 #' 
 #' @param data A data frame corresponding to a survey
 #' @param limits Specifies the range of the Likert scale contained in `data`.  
 #' @param dummycode flag that indicates whether we dummycode data.
 #' 
 #' @export
-#' @examples
-#' S <- make_synthetic_data(20, 5)
 data_preprocess <- function(
   data, 
   limits = NULL,
   dummycode = NULL
-  # TODO: 
-  # add ... ellipses
-  # add a verbose argument for pre normalisation
 ){
 
   # TODO: stress in documentation that columns are handled independently.
   # TODO: put call. = F in all error and warning messages
+
+  # TODO: 
+  # add ... ellipses
+  # add a verbose argument for pre normalisation
 
   # Output error if data not a dataframe, important because we assume uniform
   # column types in the following.
