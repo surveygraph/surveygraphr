@@ -1,0 +1,17 @@
+---
+title: "Getting started"
+description: >
+  Getting started with surveygraph.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(collapse = T, comment = "#>")
+options(tibble.print_min = 4L, tibble.print_max = 4L)
+```
+
+Documentation for the surveygraph package is currently lagging behind the pacakge itself, which has just seen its first major update. Documentation will be correspondingly revised early in October 2025.

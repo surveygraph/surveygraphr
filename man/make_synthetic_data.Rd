@@ -7,10 +7,12 @@
 make_synthetic_data(
   nrow,
   ncol,
-  minority = 0.5,
-  polarisation = 0,
-  correlation = 0.85,
-  scale = 10
+  minority = NULL,
+  correlation = NULL,
+  polarisation = NULL,
+  likert = NULL,
+  seed = NULL,
+  ...
 )
 }
 \arguments{
@@ -20,11 +22,15 @@ make_synthetic_data(
 
 \item{minority}{The fraction of nodes in the smaller of the two polarised groups}
 
-\item{polarisation}{The degree of polarisation among the system's agents}
-
 \item{correlation}{Probability that group item corresponds to polarisation}
 
-\item{scale}{Range of the Likert scale}
+\item{polarisation}{The degree of polarisation among the system's agents}
+
+\item{likert}{Range of the Likert scale}
+
+\item{seed}{Seed value for random number generation.}
+
+\item{...}{Mostly used to handle arguments with alternative spellings.}
 }
 \value{
 A data frame corresponding to a survey.

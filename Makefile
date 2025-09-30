@@ -8,7 +8,8 @@ check:
 	R CMD build .
 	R CMD check surveygraph_*.tar.gz
 
-checkcran:
+cran:
+	R CMD build .
 	R CMD check --as-cran surveygraph_*.tar.gz
 
 covr:
@@ -16,9 +17,6 @@ covr:
 
 clean:
 	rm src/*.o src/*.so
-
-run:
-	@Rscript eg.R
 
 doc:
 	Rscript -e "library('roxygen2'); roxygenise()"
@@ -39,7 +37,4 @@ test:
 	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test_make_synthetic.R')"
 
 knit:
-	@Rscript -e "rmarkdown::render('vignettes/datacleaning.Rmd', params=list(args = myarg))"
-	@#Rscript -e "rmarkdown::render('vignettes/surveygraph.Rmd', params=list(args = myarg))"
-	@#Rscript -e "rmarkdown::render('vignettes/syntheticdata.Rmd', params=list(args = myarg))"
-	@#Rscript -e "rmarkdown::render('vignettes/projections.Rmd', params=list(args = myarg))"
+	Rscript -e "rmarkdown::render('vignettes/surveygraph.Rmd', params=list(args = myarg))"

@@ -16,6 +16,7 @@
 #' @param polarisation The degree of polarisation among the system's agents
 #' @param likert Range of the Likert scale
 #' @param seed Seed value for random number generation.
+#' @param ... Mostly used to handle arguments with alternative spellings.
 #' 
 #' @export
 #' @examples

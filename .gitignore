@@ -20,6 +20,12 @@ symbols.rds
 .trash/
 .results/
 
+# test directories
+tests/testthat/_snaps
+
+# statically generate Rd files
+man/*.Rd
+
 # development directories
 Meta/
 docs

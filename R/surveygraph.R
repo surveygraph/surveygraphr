@@ -14,6 +14,6 @@
 #' @docType package
 #' @name surveygraph
 #' @importFrom stats runif
-#' @importFrom stats rpois
+#' @importFrom stats rbeta
 #' @useDynLib surveygraph, .registration = TRUE
 NULL

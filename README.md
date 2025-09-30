@@ -22,7 +22,7 @@ By plotting these networks with tools such as igraph, we obtain accessible and v
 
 ## Installation
 
-The surveygraph package can be installed via [CRAN](https://cran.r-project.org/web/packages/surveygraph/index.html) as follows.
+The surveygraph package can be installed via [CRAN](https://CRAN.R-project.org/package=surveygraph) as follows.
 
 ```
 install.packages("surveygraph")

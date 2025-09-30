@@ -104,7 +104,7 @@ test_that("Behaves as expected on more general data.", {
 
   profs <- make_threshold_profile(
     data = data.frame(a = 0, b = 0.25, c = 0.25, d = 0.26, e = 0.56, f = 0.9, g = 1.0),
-    likert = data.frame(replicate(7, c(0, 1))),
+    limits = data.frame(replicate(7, c(0, 1))),
     layer = "s",
     count = 21
   ) 

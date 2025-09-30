@@ -1,6 +1,6 @@
 Package: surveygraph
 Title: Network Representations of Attitudes
-Version: 0.1.3
+Version: 1.0.0
 Authors@R: c(
     person("Samuel", "Unicomb", , "samuelunicomb@gmail.com", role = c("aut", "cre")),
     person("Ana", "Jovancevic", role = "aut"),
@@ -36,7 +36,6 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
-LazyData: true
 Suggests: 
   covr,
   ggplot2,

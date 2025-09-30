@@ -7,14 +7,17 @@
 make_projection(
   data,
   layer = NULL,
-  threshold_method = NULL,
-  method_value = NULL,
-  centre = NULL,
+  method = NULL,
+  methodval = NULL,
+  comparisons = NULL,
+  metric = NULL,
+  limits = NULL,
   dummycode = NULL,
-  likert = NULL,
-  mincomps = NULL,
-  similarity_metric = NULL,
-  verbose = NULL
+  bootreps = NULL,
+  bootval = NULL,
+  bootseed = NULL,
+  centre = NULL,
+  ...
 )
 }
 \arguments{
@@ -28,56 +31,66 @@ to be rows in \code{data}
 which we assume to be columns in \code{data}
 }}
 
-\item{threshold_method}{A string flag specifying how edges are selected in
+\item{method}{A string flag specifying how edges are thresholded in
 the network representation.
 \itemize{
-\item \code{"raw_similarity"} means we remove all edges whose weight, meaning node
-similarity, is below a specified threshold.
-\item \code{"target_lcc"} finds the value of the threshold that results in the network
+\item \code{"similarity"} means we remove all edges whose weight, meaning node
+similarity, is below a threshold specified by \code{methodval}.
+\item \code{"lcc"} finds the value of the threshold that results in the network
 whose largest connected component is as close as possible to a specified
 value. In general a range of thresholds will satisfy this condition, and we
-choose the upper limit of this range.
-\item \code{"target_ad"} finds the value of the threshold that results in the network
-whose average degree is as close as possible to a specified value.
+choose the upper limit of this range. As such, \code{"lcc"} provided is a target.
+\item \code{"avgdegree"} finds the value of the threshold that results in the network
+whose average degree is as close as possible to a specified value. Like
+\code{"lcc"}, this is a target.
 }}
 
-\item{method_value}{A utility variable that we interpret according to the
-\code{threshold_method} chosen.
+\item{methodval}{A utility variable that we interpret according to the
+\code{method} chosen.
 \itemize{
-\item If \code{threshold_method = "raw_similarity"}, then \code{method_value} is
-interpreted as the similarity threshold, and thus is in the range \verb{[-1, 1]}.
-A value of -1 means no edges are removed, and a value of 1 means all edges
+\item If \code{method = "similarity"}, then \code{methodval} is
+interpreted as the similarity threshold, and thus is in the range \verb{[0, 1]}.
+A value of 0 means no edges are removed, and a value of 1 means all edges
 are removed.
-\item If \code{threshold_method = "target_lcc"}, then \code{method_value} is interpreted as
+\item If \code{method = "lcc"}, then \code{methodval} is interpreted as
 the desired fractional size of the largest connected component, in the range
 \verb{[0, 1]}. E.g., when set to 0, no nodes are connected, and if set to 1, the
 network is as sparse as possible while remaining fully connected.
-\item If \code{threshold_method = "target_ad"}, then \code{method_value} is interpreted as
-the desired average degree. We assume that \code{method_value} is normalised to
+\item If \code{method = "avgdegree"}, then \code{methodval} is interpreted as
+the desired average degree. We assume that \code{methodval} is normalised to
 the range \verb{[0, 1]} When \code{method_value = 0}, then no nodes are connected, and
 if \code{method_value = 1}, the network is complete, meaning it contains every
 possible edge.
 }}
 
-\item{centre}{If \code{TRUE}, we shift edge weights from \verb{[0, 1]} to \verb{[-1, 1]}.
-Defaults to FALSE, as most network analysis applications require positive
-edge weights.}
-
-\item{dummycode}{flag that indicates whether we dummycode data.}
-
-\item{likert}{Specifies the range of the Likert scale contained in \code{data}.}
-
-\item{mincomps}{The minimum number of valid comparisons that must be
+\item{comparisons}{The minimum number of valid comparisons that must be
 made when computing the similarity between rows or columns in the \code{data}. If at
 least one of the entries in the fields being compared is NA, then the
 comparison is invalid.}
 
-\item{similarity_metric}{This currently has just one allowed value, namely the
+\item{metric}{This currently has just one allowed value, namely the
 Manhattan distance, which is the default.}
 
-\item{verbose}{This is a debugging flag that prints out survey data after a
-pre-processing step, but before being supplied to the C++ routines that compute
-the network representation.}
+\item{limits}{Specifies the limits of the Likert scale contained in \code{data}.}
+
+\item{dummycode}{flag that indicates whether we dummycode data.}
+
+\item{bootreps}{The number of bootstrap realisations to perform. If not
+specified, bootstrapping is not carried out.}
+
+\item{bootval}{A sampling probability used when bootstraping. In particular,
+it provides the probability of sampling a given survey entry in a given
+bootstrapping step. With probability 1 - bootval, that entry is set to NA.}
+
+\item{bootseed}{A random number generator seed used when bootstrapping.
+Mainly used for testing, but maybe useful for reproducibility in general.}
+
+\item{centre}{If \code{TRUE}, we shift edge weights from \verb{[0, 1]} to \verb{[-1, 1]}.
+Defaults to FALSE, as most network analysis applications require positive
+edge weights.}
+
+\item{...}{Mostly used to handle deprecated arguments, and arguments with
+alternative spellings.}
 }
 \value{
 A data frame corresponding to the edge list of the specified network. It

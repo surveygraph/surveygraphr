@@ -58,21 +58,35 @@
 #'   the range `[0, 1]` When `method_value = 0`, then no nodes are connected, and
 #'   if `method_value = 1`, the network is complete, meaning it contains every
 #'   possible edge.
-#' @param centre If `TRUE`, we shift edge weights from `[0, 1]` to `[-1, 1]`.
-#'   Defaults to FALSE, as most network analysis applications require positive
-#'   edge weights.
-#' @param dummycode flag that indicates whether we dummycode data.
-#' @param range Specifies the range of the Likert scale contained in `data`.
+#'
 #' @param comparisons The minimum number of valid comparisons that must be
 #' made when computing the similarity between rows or columns in the `data`. If at
 #' least one of the entries in the fields being compared is NA, then the
 #' comparison is invalid.
+#'
 #' @param metric This currently has just one allowed value, namely the
 #'   Manhattan distance, which is the default.
-#' @param verbose This is a debugging flag that prints out survey data after a
-#' pre-processing step, but before being supplied to the C++ routines that compute
-#' the network representation.
 #'
+#' @param limits Specifies the limits of the Likert scale contained in `data`.
+#'
+#' @param dummycode flag that indicates whether we dummycode data.
+#'
+#' @param bootreps The number of bootstrap realisations to perform. If not
+#'   specified, bootstrapping is not carried out.
+#'
+#' @param bootval A sampling probability used when bootstraping. In particular,
+#' it provides the probability of sampling a given survey entry in a given
+#' bootstrapping step. With probability 1 - bootval, that entry is set to NA.
+#'
+#' @param bootseed A random number generator seed used when bootstrapping.
+#'   Mainly used for testing, but maybe useful for reproducibility in general.
+#'
+#' @param centre If `TRUE`, we shift edge weights from `[0, 1]` to `[-1, 1]`.
+#'   Defaults to FALSE, as most network analysis applications require positive
+#'   edge weights.
+#'
+#' @param ... Mostly used to handle deprecated arguments, and arguments with
+#'   alternative spellings.
 #' @export
 #' @examples
 #' S <- make_synthetic_data(20, 5)

@@ -4,7 +4,16 @@
 \alias{make_threshold_profile}
 \title{Illustrates how network properties vary with the similarity threshold}
 \usage{
-make_threshold_profile(data, layer)
+make_threshold_profile(
+  data,
+  layer = NULL,
+  comparisons = NULL,
+  metric = NULL,
+  count = NULL,
+  limits = NULL,
+  dummycode = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{A data frame corresponding to the attitudes held by agents with
@@ -17,6 +26,18 @@ to be rows in \code{data}
 \item \code{"symbolic"} produces the network corresponding to the symbols, or items,
 which we assume to be columns in \code{data}
 }}
+
+\item{comparisons}{An integer, minimum number of comparisons for valid distance.}
+
+\item{metric}{A string option describing the similarity metric to be used.}
+
+\item{count}{The number of threshold values to include in the description.}
+
+\item{limits}{Specify the limits of the Likert range in during a data preprocessing step.}
+
+\item{dummycode}{Specify whether to apply dummycoding during a data preprocessing step.}
+
+\item{...}{Used to handle alternative argument spellings.}
 }
 \value{
 A data frame containing properties of the \code{agent} or \code{symbolic} network as a

@@ -20,6 +20,7 @@
 #' 
 #' @param data A data frame corresponding to the attitudes held by agents with
 #'   respect to a number of items
+#'
 #' @param layer A string flag specifying the type of network to be extracted,
 #'   
 #'   - `"agent"` produces the network corresponding to the agents, which we assume
@@ -29,7 +30,17 @@
 #'   which we assume to be columns in `data`
 #' 
 #' @param comparisons An integer, minimum number of comparisons for valid distance.
-#' @param metric A string option describing similarity metric used.
+#'
+#' @param metric A string option describing the similarity metric to be used.
+#'
+#' @param count The number of threshold values to include in the description. 
+#'
+#' @param limits Specify the limits of the Likert range in during a data preprocessing step. 
+#'
+#' @param dummycode Specify whether to apply dummycoding during a data preprocessing step. 
+#'
+#' @param ... Used to handle alternative argument spellings.
+#'
 #' @details
 #' Note that this routine is expensive on large graphs. We study networks over the
 #' full range of similarity thresholds `[-1, 1]`, and as a result, produce
@@ -46,7 +57,7 @@ make_threshold_profile <- function(
   comparisons = NULL,
   metric = NULL,
   count = NULL,
-  likert = NULL,
+  limits = NULL,
   dummycode = NULL,
   ...
 ){
@@ -57,8 +68,8 @@ make_threshold_profile <- function(
   }
 
 
-  # Checking of data, likert and dummycode is done in data_preprocess()
-  data <- data_preprocess(data, likert, dummycode)
+  # Checking of data, limits and dummycode is done in data_preprocess()
+  data <- data_preprocess(data, limits, dummycode)
 
 
   # TODO: avoid the redundancy with these checks and make_projection()
