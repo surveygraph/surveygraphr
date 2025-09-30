@@ -12,7 +12,7 @@
 #' contains three columns named 
 #' 
 #' @param data A data frame corresponding to a survey
-#' @param likert Specifies the range of the Likert scale contained in `data`.  
+#' @param limits Specifies the range of the Likert scale contained in `data`.  
 #' @param dummycode flag that indicates whether we dummycode data.
 #' 
 #' @export
@@ -20,12 +20,16 @@
 #' S <- make_synthetic_data(20, 5)
 data_preprocess <- function(
   data, 
-  likert = NULL,
+  limits = NULL,
+  #likert = NULL,
   dummycode = NULL
   # TODO: 
   # add ... ellipses
   # add a verbose argument for pre normalisation
 ){
+
+  # TODO: stress in documentation that columns are handled independently.
+  # TODO: put call. = F in all error and warning messages
 
   # Output error if data not a dataframe, important because we assume uniform
   # column types in the following.
@@ -42,53 +46,53 @@ data_preprocess <- function(
 
   # Set infinite value entries of numerical columns to NA.
   # TODO: also NaN
-  colsnumeric <- sapply(data, is.numeric)
-  if(length(colsnumeric) > 0){
-    data[colsnumeric] <- lapply(
-      data[colsnumeric], 
-      function(col){
-        col[is.infinite(col)] <- NA
-        col
-      }
-    )
-  }
+  #colsnumeric <- sapply(data, is.numeric)
+  #if(length(colsnumeric) > 0){
+  #  data[colsnumeric] <- lapply(
+  #    data[colsnumeric], 
+  #    function(col){
+  #      col[is.infinite(col)] <- NA
+  #      col
+  #    }
+  #  )
+  #}
 
 
-  # Verify `likert` argument.
-  if(is.null(likert)){
-		likert <- as.data.frame(matrix(NA_real_, nrow = 2, ncol = ncol(data)))
+  # Verify `limits` argument.
+  if(is.null(limits)){
+		limits <- as.data.frame(matrix(NA_real_, nrow = 2, ncol = ncol(data)))
 	}else{
-    # Must be a dataframe
-    if(!is.data.frame(likert))
-      stop("likert must be a dataframe")
+    # Must be a dataframe.
+    if(!is.data.frame(limits))
+      stop("limits must be a dataframe")
 
-    # Dimensions must match dataframe
-    if(nrow(likert) != 2)
-      stop("likert must have two rows, the min and max value of each column")
+    # Dimensions must match `data` dataframe.
+    if(nrow(limits) != 2)
+      stop("limits must have two rows, the min and max value of each column")
 
-    if(ncol(likert) != ncol(data))
-      stop("likert must have as many columns as the survey dataframe")
+    if(ncol(limits) != ncol(data))
+      stop("limits must have as many columns as the survey dataframe")
 
-    # Columns must be numerical or logical
-    if(!all(sapply(likert, function(col) is.numeric(col) || is.logical(col)))){
-      warning("setting likert columns that aren't numeric or logical to logical NA")
+    # Columns must be numerical or logical.
+    if(!all(sapply(limits, function(col) is.numeric(col) || is.logical(col)))){
+      warning("setting limits columns that aren't numeric or logical to logical NA")
 
-      likert[] <- lapply(likert, function(col){
+      limits[] <- lapply(limits, function(col){
         if(is.numeric(col) || is.logical(col)) 
           col 
         else 
-          rep(NA, nrow(likert))
+          rep(NA, nrow(limits))
       })
     }
 
     # Numeric columns must be finite, i.e. no NA, NaN or Inf
-    if(any(sapply(likert, function(col) is.numeric(col) && any(!is.finite(col))))){
-      warning("at least one numerical likert column invalid, setting to logical NA")
+    if(any(sapply(limits, function(col) is.numeric(col) && any(!is.finite(col))))){
+      warning("at least one numerical limits column invalid, setting to logical NA")
 
-      likert[] <- lapply(likert, function(col){
+      limits[] <- lapply(limits, function(col){
         if(is.numeric(col)){
           if(any(!is.finite(col))) 
-            rep(NA, nrow(likert))
+            rep(NA, nrow(limits))
           else 
             col
         }else{
@@ -98,26 +102,26 @@ data_preprocess <- function(
     }
 
     # Logical columns must be c(NA, NA)
-    if(any(sapply(likert, function(col) is.logical(col) && any(!is.na(col))))){
-      warning("at least one logical likert column contains non NA entries, setting to NA")
+    if(any(sapply(limits, function(col) is.logical(col) && any(!is.na(col))))){
+      warning("at least one logical limits column contains non NA entries, setting to NA")
 
-      likert[] <- lapply(likert, function(col){
+      limits[] <- lapply(limits, function(col){
         if(is.logical(col)){
-          rep(NA, nrow(likert))
+          rep(NA, nrow(limits))
         }else{
           col
         }
       })
     }
 
-    if(any(sapply(likert, function(col) if(is.numeric(col)){col[1] > col[2]}else{FALSE}))){
-      warning("each numerical column in likert should be non-decreasing, setting to NA")
+    if(any(sapply(limits, function(col) if(is.numeric(col)){col[1] > col[2]}else{FALSE}))){
+      warning("each numerical column in limits should be non-decreasing, setting to NA")
       # TODO just reverse instead of making NA?
 
-      likert[] <- lapply(likert, function(col){
+      limits[] <- lapply(limits, function(col){
         if(is.numeric(col)){
           if(col[1] > col[2])
-            rep(NA, nrow(likert))
+            rep(NA, nrow(limits))
           else
             col
         }else{
@@ -163,18 +167,18 @@ data_preprocess <- function(
 
 
   # Now we can process each column in `data` according to its type, and the
-  # `likert` and `dummycode` arguments provided.
+  # `limits` and `dummycode` arguments provided.
 	datacopy <- do.call(
 		cbind,
 		lapply(seq_along(data), function(i){
 			if(is.numeric(data[[i]])){
-				numeric_handling(data[i], likert[[i]], dummycode[[i]])
+				processing_numeric(data[i], limits[[i]], dummycode[[i]])
 			}else if(is.character(data[[i]])){
-				character_handling(data[i], likert[[i]], dummycode[[i]])
+				processing_character(data[i], limits[[i]], dummycode[[i]])
 			}else if(is.logical(data[[i]])){
-				logical_handling(data[i], likert[[i]], dummycode[[i]])
+				processing_logical(data[i], limits[[i]], dummycode[[i]])
 			}else{
-				other_handling(data[i], likert[[i]], dummycode[[i]])
+				processing_other(data[i], limits[[i]], dummycode[[i]])
 			}
 		})
 	)
@@ -182,9 +186,10 @@ data_preprocess <- function(
 }
 
 
-# Dummy-coding utility function, used in numeric_handling() and character_handling().
+# Dummy-coding utility function. `c` is a character vector of length one, and 
+# `vals` is a character vector of 
 dummycoding <- function(c, vals){
-	uniquevals <- unique(vals)
+	uniquevals <- sort(unique(vals))
 	dcode <- as.data.frame(matrix(nrow = length(vals), ncol = 0))
 	dcodenames <- character(0)
 	for(i in uniquevals){
@@ -201,21 +206,21 @@ dummycoding <- function(c, vals){
 }
 
 
-# Normalising utility function, used in numeric_handling(). Maps data to the
+# Normalising utility function, used in processing_numeric(). Maps data to the
 # interval [0, 1], depending on whether a Likert range is supplied. If there's only 
 # a single finite value, set it to 0.5.
 #
-# Recall that either both values in a column of `likert` are finite, or neither
+# Recall that either both values in a column of `limits` are finite, or neither
 # are.
-normalise <- function(data, likert){
+normalise <- function(data, limits){
   dmin <- NA
   dmax <- NA
 
-  # Get upper and lower bounds of column, depends on whether finite `likert`
+  # Get upper and lower bounds of column, depends on whether finite `limits`
   # values are provided.
-  if(!is.na(likert[[1]])){
-    dmin <- likert[[1]]
-    dmax <- likert[[2]]
+  if(!is.na(limits[[1]])){
+    dmin <- limits[[1]]
+    dmax <- limits[[2]]
   }else{
     foundfinite <- FALSE
     for(i in seq_along(data[[1]])){
@@ -236,8 +241,9 @@ normalise <- function(data, likert){
   if(!is.na(dmin)){
     if(dmin < dmax){
       for(i in seq_along(data[[1]])){
-        if(!is.na(data[[1]][[i]]))
+        if(!is.na(data[[1]][[i]])){
           data[[1]][[i]] <- (data[[1]][[i]] - dmin) / abs(dmax - dmin)
+        }
       }
     }else{
       for(i in seq_along(data[[1]])){
@@ -250,37 +256,50 @@ normalise <- function(data, likert){
 }
 
 
-# Pre-processing of numeric dataframe columns. data, likert and dummycode are
-# single-columns. Recall data is a dataframe, likert and dummycode are atomic
+# Pre-processing of numeric dataframe columns. `data`, `limits` and `dummycode`
+# are single-columns. Here was assume that `data` is a one-column dataframe,
+# and therefore has a column name, and that `limits` and `dummycode` are atomic
 # vectors.
-numeric_handling <- function(data, likert, dummycode){
+#
+# Dummycodes non-finite numerical values; NA, NaN and Inf, or sets them to NA.
+processing_numeric <- function(data, limits, dummycode){
   datacopy <- data
   dummyvals <- character(nrow(data))
-	dummyvals[] <- NA
+	dummyvals[] <- NA_character_
 
 	if(dummycode){
 		if(any(data[[1]] != floor(data[[1]]), na.rm = TRUE))
-			warning("dummycoding a numeric column that contains non-integer values")
+			warning("Dummycoding a numeric column that contains non-integer values.", call. = F)
   }
 
   for(i in seq_along(data[[1]])){
-    if(!is.na(data[[1]][[i]])){
-      if(!is.na(likert[[1]])){
-        if(data[[1]][[i]] < likert[[1]] || data[[1]][[i]] > likert[[2]]){
-          datacopy[[1]][[i]] <- NA
+    if(is.finite(data[[1]][[i]])){
+      if(!is.na(limits[[1]])){
+        if(data[[1]][[i]] < limits[[1]] || data[[1]][[i]] > limits[[2]]){
+          datacopy[[1]][[i]] <- NA_real_
           if(dummycode) dummyvals[i] <- as.character(data[[1]][[i]])
         }
       }else{
         if(dummycode) dummyvals[i] <- as.character(data[[1]][[i]])
       }
+    }else{
+      if(dummycode){
+        if(is.nan(data[[1]][[i]]))
+          dummyvals[i] <- "NaN"
+        else if(is.na(data[[1]][[i]]))
+          dummyvals[i] <- "NA"
+        else
+          dummyvals[i] <- as.character(data[[1]][[i]])
+      }
+      datacopy[[1]][[i]] <- NA_real_
     }
   }
 
-  datacopy <- normalise(datacopy, likert)
+  datacopy <- normalise(datacopy, limits)
 	dcode <- dummycoding(colnames(data[1]), dummyvals)
 
 	datareturn <- as.data.frame(matrix(nrow = nrow(data), ncol = 0))
-	if(is.na(likert[[1]]) && dummycode)
+	if(is.na(limits[[1]]) && dummycode)
   	datareturn <- data.frame(dcode)
 	else
   	datareturn <- data.frame(datacopy, dcode)
@@ -289,23 +308,28 @@ numeric_handling <- function(data, likert, dummycode){
 }
 
 
-# Pre-processing of character dataframe columns. data, likert and dummycode are
+# Pre-processing of character dataframe columns. data, limits and dummycode are
 # single-columns.
-character_handling <- function(data, likert, dummycode){
+processing_character <- function(data, limits, dummycode){
   datacopy <- data
   dummyvals <- character(nrow(data))
 	dummyvals[] <- NA
 
-	if(!is.na(likert[[1]]))
-		warning("ignoring likert flag for character vector")
+	if(!is.na(limits[[1]]))
+		warning("Ignoring `limits` flag for character vector.", call. = F)
+
+	if(!dummycode)
+		warning("Dummycode flag not set for character vector; coercing to numeric.", call. = F)
 
 	if(!dummycode){
-		warning("dummycode flag not set for character vector, coercing to numeric")
-		datacopy[[1]] <- as.numeric(datacopy[[1]])
+		datacopy[[1]] <- suppressWarnings(as.numeric(datacopy[[1]]))
+    datacopy <- normalise(datacopy, limits)
 	}else{
 		for(i in seq_along(data[[1]])){
 			if(!is.na(data[[1]][[i]]))
 				dummyvals[i] <- as.character(data[[1]][[i]])
+      else
+				dummyvals[i] <- "NA"
 		}
 	}
 
@@ -323,11 +347,11 @@ character_handling <- function(data, likert, dummycode){
 
 
 # Pre-processing of logical dataframe columns.
-logical_handling <- function(data, likert, dummycode){
+processing_logical <- function(data, limits, dummycode){
   datacopy <- data
 
-	if(!is.na(likert[[1]]))
-		warning("ignoring likert flag for logical vector")
+	if(!is.na(limits[[1]]))
+		warning("ignoring limits flag for logical vector")
 
 	if(dummycode)
 		warning("ignoring dummycode flag for logical vector")
@@ -338,7 +362,7 @@ logical_handling <- function(data, likert, dummycode){
 
 
 # Pre-processing of dataframe columns of miscellaneous types.
-other_handling <- function(data, likert, dummycode){
+processing_other <- function(data, limits, dummycode){
   datacopy <- data
 
 	warning("package doesn't specifically handly this type, simply coercing to numeric")

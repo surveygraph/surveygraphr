@@ -1,10 +1,8 @@
 # TODO: errors and warnings should point to relevant documentation
-
-# epsilon value for numerical thresholds
 eps <- 1e-6
 
 
-test_that("unused arguments", {
+test_that("Unused arguments.", {
 	expect_warning(
 		make_projection(data.frame(1), argname1 = 1, argname2 = 1),
 		regexp = "Unused arguments in ...: argname1, argname2"
@@ -13,8 +11,6 @@ test_that("unused arguments", {
 
 
 # Test for deprecation messages for old argument names in make_projection().
-# TODO: also need to output deprecation warnings for old option names
-# target_lcc # target_ad # raw_similarity
 test_that("Deprecated argument names for make_projection()", {
 	expect_warning(
     make_projection(data.frame(1), threshold_method = "raw_similarity"),
@@ -31,10 +27,11 @@ test_that("Deprecated argument names for make_projection()", {
 		regexp = "`similarity_metric` is deprecated and will be removed in future versions; use `metric`."
 	)
 
-	expect_warning(
-    make_projection(data.frame(1), centre = 1),
-		regexp = "`centre` is deprecated; outputting edge weights in range 0 to 1."
-	)
+  # TODO: add this back in
+	#expect_warning(
+  #  make_projection(data.frame(1), centre = 1),
+	#	regexp = "`likert` is deprecated and will be removed future versions; use `range`."
+	#)
 })
 
 
@@ -381,5 +378,58 @@ test_that("`bootseed` argument is correctly supplied.", {
 	expect_error(
 		make_projection(data.frame(1), bootval = 0.5, bootseed = c(0, 1, 2.1)),
 		regexp = "`bootseed` must only contain integers."
+	)
+})
+
+
+test_that("`centre` argument is correctly supplied.", {
+	expect_error(
+		make_projection(data.frame(1), centre = logical()),
+		regexp = "`centre` must be of length 1."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), centre = c(TRUE, FALSE)),
+		regexp = "`centre` must be of length 1."
+	)
+
+	expect_error(
+		make_projection(data.frame(1), centre = as.logical(NA)),
+		regexp = "`centre` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
+	)
+
+	expect_error(
+		make_projection(data.frame(1), centre = NaN),
+		regexp = "`centre` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
+	)
+
+	expect_error(
+		make_projection(data.frame(1), centre = Inf),
+		regexp = "`centre` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
+	)
+
+	expect_error(
+		make_projection(data.frame(1), centre = "hello"),
+		regexp = "`centre` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
+	)
+
+	expect_warning(
+		make_projection(data.frame(1), centre = 0),
+		regexp = "`centre` will be coerced to logical; setting 0 to FALSE."
+	)
+
+	expect_warning(
+		make_projection(data.frame(1), centre = -1),
+		regexp = "`centre` will be coerced to logical; setting -1 to TRUE."
+	)
+
+	expect_warning(
+		make_projection(data.frame(1), centre = 1),
+		regexp = "`centre` will be coerced to logical; setting 1 to TRUE."
+	)
+
+	expect_warning(
+		make_projection(data.frame(1), centre = 2),
+		regexp = "`centre` will be coerced to logical; setting 2 to TRUE."
 	)
 })

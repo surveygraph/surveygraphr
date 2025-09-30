@@ -62,7 +62,7 @@
 #'   Defaults to FALSE, as most network analysis applications require positive
 #'   edge weights.
 #' @param dummycode flag that indicates whether we dummycode data.
-#' @param likert Specifies the range of the Likert scale contained in `data`.
+#' @param range Specifies the range of the Likert scale contained in `data`.
 #' @param comparisons The minimum number of valid comparisons that must be
 #' made when computing the similarity between rows or columns in the `data`. If at
 #' least one of the entries in the fields being compared is NA, then the
@@ -83,11 +83,12 @@ make_projection <- function(
   methodval = NULL,
   comparisons = NULL,
   metric = NULL,
-  likert = NULL,
+  limits = NULL,
   dummycode = NULL,
   bootreps = NULL,
   bootval = NULL,
   bootseed = NULL,
+  centre = NULL,
   ...
 ){
   dots <- list(...)
@@ -110,9 +111,15 @@ make_projection <- function(
     dots$similarity_metric <- NULL
   }
 
-  if(!is.null(dots$centre)){
-    warning("`centre` is deprecated; outputting edge weights in range 0 to 1.", call. = F)
-    dots$centre <- NULL
+  if(!is.null(dots$likert)){
+    warning("`likert` is deprecated and will be removed in future versions; use `limits`.", call. = F)
+    limits <- dots$likert
+    dots$likert <- NULL
+  }
+
+  if(!is.null(dots$center)){
+    centre <- dots$center
+    dots$center <- NULL
   }
 
   if(length(dots) > 0){
@@ -120,14 +127,8 @@ make_projection <- function(
   }
 
 
-  # TODO: need to check Inf values for double arguments. use is.finite()
-  # TODO: just use if loops, don't need ifelse
-  # TODO: explain default values in documentation. choices are conservative
-  # TODO: deprecate "target_lcc", "target_ad", "raw_similarity"?
-
-
-  # Checking of data, likert and dummycode is done in data_preprocess()
-  data <- data_preprocess(data, likert, dummycode)
+  # Checking of data, limits and dummycode is done in data_preprocess()
+  data <- data_preprocess(data, limits, dummycode)
 
 
   # Check that layer is either "agent" or "symbolic", mapping to
@@ -239,7 +240,6 @@ make_projection <- function(
   # Check the value of the similarity metric.
   # 0 Manhattan distance
   # 1 Euclidean distance
-  # TODO: rename RMSE and MAE, since that is what they actually are
   if(is.null(metric))
     metric <- "manhattan"
 
@@ -252,9 +252,9 @@ make_projection <- function(
   if(is.na(metric))
     stop("`metric` cannot be NA.", call. = F)
 
-  if(metric %in% c("manhattan", "Manhattan"))
+  if(metric %in% c("manhattan", "Manhattan", "mae", "MAE"))
     metric <- as.integer(0)
-  else if(metric %in% c("euclidean", "Euclidean"))
+  else if(metric %in% c("euclidean", "Euclidean", "rmse", "RMSE"))
     metric <- as.integer(1)
   else
     stop("`metric` option \"", metric, "\" unrecognised; expecting \"Manhattan\" or \"Euclidean\".", call. = F)
@@ -342,6 +342,29 @@ make_projection <- function(
   }
 
 
+  # Check the `centre` agrument, a flag that determines whether weights are in
+  # the range [0, 1] or [-1, 1]. We allow numeric and logical types, e.g. 0, 1 or
+  # FALSE, TRUE, and coerce to logical otherwise.
+  if(is.null(centre))
+    centre <- FALSE
+
+  if(length(centre) != 1)
+    stop("`centre` must be of length 1.", call. = F)
+
+  if(!is.finite(centre))
+    stop("`centre` must be finite (not NA, NaN, Inf or -Inf).", call. = F)
+
+  if(as.logical(centre) != TRUE && as.logical(centre) != FALSE)
+    stop("`centre` must coerce to TRUE or FALSE.", call. = F)
+
+  if(!is.logical(centre))
+    warning("`centre` will be coerced to logical; setting ", centre, " to ", as.logical(centre), ".", call. = F)
+
+  centre <- as.logical(centre)
+
+
+  # Calls the C++ method rmake_projection, see the files init.cc and
+  # make_projection_pilot.cc.
   e <- .Call(
     "rmake_projection",
     data,
@@ -354,4 +377,14 @@ make_projection <- function(
     bootval,
     bootseed 
   )
+
+
+  # Centre edge weights around 0; shift and scale from [0, 1] to [-1, 1].
+  if(length(e$weight) > 0){
+    if(centre){
+      e$weight <- e$weight - 0.5
+      e$weight <- e$weight * 2
+    }
+  }
+  e
 }

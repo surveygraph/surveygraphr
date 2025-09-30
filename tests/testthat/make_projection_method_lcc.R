@@ -3,7 +3,8 @@ eps = 1e-6
 projs <- function(s, x){
   make_projection(
     data.frame(t(s)), 
-    likert = data.frame(replicate(length(s), c(0, 1))), 
+    limits = data.frame(replicate(length(s), c(0, 1))), 
+    #likert = data.frame(replicate(length(s), c(0, 1))), 
     layer = "symbolic", 
     method = "lcc",
     methodval = x

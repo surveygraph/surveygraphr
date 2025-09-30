@@ -14,58 +14,58 @@ test_that("Output an error if `data` dataframe is empty", {
 })
 
 
-test_that("`likert` must be a dataframe if it's not null", {
+test_that("`limits` must be a dataframe if it's not null", {
 	expect_error(
-		data_preprocess(data.frame(1), likert = list()),
-		regexp = "likert must be a dataframe"
+		data_preprocess(data.frame(1), limits = list()),
+		regexp = "limits must be a dataframe"
 	)
 })
 
 
-test_that("likert must have two rows", {
+test_that("limits must have two rows", {
 	expect_error(
-		data_preprocess(data.frame(1), likert = data.frame(1)),
-		regexp = "likert must have two rows, the min and max value of each column"
+		data_preprocess(data.frame(1), limits = data.frame(1)),
+		regexp = "limits must have two rows, the min and max value of each column"
 	)
 })
 
 
-test_that("likert must have as many columns as the survey dataframe", {
+test_that("limits must have as many columns as the survey dataframe", {
 	expect_error(
-		data_preprocess(data.frame(1, 2), likert = data.frame(c(1, 2))),
-		regexp = "likert must have as many columns as the survey dataframe"
+		data_preprocess(data.frame(1, 2), limits = data.frame(c(1, 2))),
+		regexp = "limits must have as many columns as the survey dataframe"
 	)
 })
 
 
-test_that("likert should be numeric or logical, set to c(NA, NA) otherwise", {
+test_that("limits should be numeric or logical, set to c(NA, NA) otherwise", {
 	expect_warning(
-		data_preprocess(data.frame(1), likert = data.frame(c("a", "b"))),
-	  regexp = "setting likert columns that aren't numeric or logical to logical NA"
+		data_preprocess(data.frame(1), limits = data.frame(c("a", "b"))),
+	  regexp = "setting limits columns that aren't numeric or logical to logical NA"
 	)
 })
 
 
-test_that("if a likert column is numeric, both values must be finite", {
+test_that("if a limits column is numeric, both values must be finite", {
 	expect_warning(
-		data_preprocess(data.frame(1), likert = data.frame(c(1, NA))),
-		regexp = "at least one numerical likert column invalid, setting to logical NA"
+		data_preprocess(data.frame(1), limits = data.frame(c(1, NA))),
+		regexp = "at least one numerical limits column invalid, setting to logical NA"
 	)
 })
 
 
-test_that("if a likert column is logical, both values must be NA", {
+test_that("if a limits column is logical, both values must be NA", {
 	expect_warning(
-		data_preprocess(data.frame(1), likert = data.frame(c(T, F))),
-		regexp = "at least one logical likert column contains non NA entries, setting to NA"
+		data_preprocess(data.frame(1), limits = data.frame(c(T, F))),
+		regexp = "at least one logical limits column contains non NA entries, setting to NA"
 	)
 })
 
 
-test_that("numerical columns of likert should be non-decreasing", {
+test_that("numerical columns of limits should be non-decreasing", {
 	expect_warning(
-		data_preprocess(data.frame(1), likert = data.frame(c(2, 1))),
-		regexp = "each numerical column in likert should be non-decreasing, setting to NA"
+		data_preprocess(data.frame(1), limits = data.frame(c(2, 1))),
+		regexp = "each numerical column in limits should be non-decreasing, setting to NA"
 	)
 })
 
@@ -113,23 +113,23 @@ test_that("If `dummycode` is numeric, setting entries that aren't 1 or 0 to 0", 
 test_that("Numeric with `dummycode` and non-integers", {
 	expect_warning(
 	  data_preprocess(data.frame(a = c(1.1)), dummycode = c(1)),
-		regexp = "dummycoding a numeric column that contains non-integer values"
+		regexp = "Dummycoding a numeric column that contains non-integer values."
 	)
 })
 
 
-test_that("ignore likert scaling for character vectors", {
+test_that("ignore limits scaling for character vectors", {
 	expect_warning(
-		data_preprocess(data.frame(a = c("a")), likert = data.frame(c(1, 3))),
-		regexp = "ignoring likert flag for character vector"
+		data_preprocess(data.frame(a = "a"), limits = data.frame(c(1, 3))),
+		regexp = "Ignoring `limits` flag for character vector."
 	)
 })
 
 
-test_that("ignore likert flag for logical vectors", {
+test_that("ignore limits flag for logical vectors", {
 	expect_warning(
-		data_preprocess(data.frame(a = c(T)), likert = data.frame(c(1, 3))),
-		regexp = "ignoring likert flag for logical vector"
+		data_preprocess(data.frame(a = c(T)), limits = data.frame(c(1, 3))),
+		regexp = "ignoring limits flag for logical vector"
 	)
 })
 
