@@ -61,13 +61,13 @@ static void rint_to_cppint(const SEXP &rval, int &cval)
 }
 
 // Converts an R double vector of length one to a C++ double.
-static void rdouble_to_cppdouble(const SEXP &rval, double &cval)
-{
-  if(TYPEOF(rval) != REALSXP || Rf_length(rval) != 1){
-    Rf_error("Expected a single double.");
-  }
-  cval = REAL(rval)[0];
-}
+//static void rdouble_to_cppdouble(const SEXP &rval, double &cval)
+//{
+//  if(TYPEOF(rval) != REALSXP || Rf_length(rval) != 1){
+//    Rf_error("Expected a single double.");
+//  }
+//  cval = REAL(rval)[0];
+//}
 
 
 // Converts a nested C++ vector to an R dataframe.
@@ -81,7 +81,7 @@ static void cppvector_to_rdf(
   SEXP s_vector = PROTECT(Rf_allocVector(INTSXP,  profile.size()));  // singleton count
   SEXP c_vector = PROTECT(Rf_allocVector(INTSXP,  profile.size()));  // component count
 
-  for(int i = 0; i < profile.size(); ++i){
+  for(unsigned int i = 0; i < profile.size(); ++i){
     int idash = profile.size() - 1 - i;
     REAL(t_vector)[i] = i / double(profile.size() - 1);
     INTEGER(l_vector)[i] = profile[idash][0];

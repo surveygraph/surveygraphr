@@ -5,8 +5,6 @@
 #include <R.h>         // with Rprint.
 #include <Rdefines.h>  //
 
-using namespace std;
-
 // Computes the largest connected component, average degree, number of
 // connected components, and isolated nodes as a function of the similarity
 // threshold. It stores these in the array `profile`.

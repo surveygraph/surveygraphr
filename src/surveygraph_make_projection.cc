@@ -5,8 +5,6 @@
 #include <R.h>         // with Rprint.
 #include <Rdefines.h>  //
 
-using namespace std;
-
 // Find the largest threshold for which the resulting LCC is greater than or
 // equal to the target LCC. Of course, the set of LCCs is degenerate; there can be
 // many thresholds that produce identical graphs with LCCs of the same size. We

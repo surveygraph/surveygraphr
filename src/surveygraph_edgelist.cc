@@ -12,8 +12,8 @@
 void surveygraph::edgelist_thresholded(const double &threshold)
 {
   edgelist = std::set<edge>{};
-  for(int i = 0; i < survey.size(); ++i){
-    for(int j = i + 1; j < survey.size(); ++j){
+  for(unsigned int i = 0; i < survey.size(); ++i){
+    for(unsigned int j = i + 1; j < survey.size(); ++j){
       double w = 0.0;
       if(metric == 0)
         dist_manhattan(int(i), int(j), w);
@@ -23,7 +23,7 @@ void surveygraph::edgelist_thresholded(const double &threshold)
       // TODO make a decision on this
       //if(w >= threshold){
       if(w > threshold - 1e-9 && w != -1){
-        edgelist.insert(edge{std::set<int>{i, j}, w});
+        edgelist.insert(edge{std::set<int>{int(i), int(j)}, w});
       }
     }
   }
@@ -34,15 +34,15 @@ void surveygraph::edgelist_complete()
 {
   edgelist = std::set<edge>{};
 
-  for(int i = 0; i < survey.size(); ++i){
-    for(int j = i + 1; j < survey.size(); ++j){
+  for(unsigned int i = 0; i < survey.size(); ++i){
+    for(unsigned int j = i + 1; j < survey.size(); ++j){
       double w = 0.0;
       if(metric == 0)
         dist_manhattan(int(i), int(j), w);
       else if(metric == 1)
         dist_euclidean(int(i), int(j), w);
 
-        edgelist.insert(edge{std::set<int>{i, j}, w});
+        edgelist.insert(edge{std::set<int>{int(i), int(j)}, w});
     }
   }
 }
@@ -55,8 +55,8 @@ void surveygraph::dist_manhattan(const int &u, const int &v, double &w)
   int count = 0;  
 
   w = 0;
-  for(int j = 0; j < survey[0].size(); ++j){
-    if(!isnan(survey[u][j]) && !isnan(survey[v][j])){
+  for(unsigned int j = 0; j < survey[0].size(); ++j){
+    if(!std::isnan(survey[u][j]) && !std::isnan(survey[v][j])){
       w += abs(survey[u][j] - survey[v][j]);
       ++count;
     }
@@ -78,8 +78,8 @@ void surveygraph::dist_euclidean(const int &u, const int &v, double &w)
   int count = 0;  
 
   w = 0;
-  for(int j = 0; j < survey[0].size(); ++j){
-    if(!isnan(survey[u][j]) && !isnan(survey[v][j])){
+  for(unsigned int j = 0; j < survey[0].size(); ++j){
+    if(!std::isnan(survey[u][j]) && !std::isnan(survey[v][j])){
       w += (survey[u][j] - survey[v][j]) * (survey[u][j] - survey[v][j]);
       ++count;
     }

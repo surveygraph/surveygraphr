@@ -104,8 +104,8 @@ static void sample(std::vector<std::vector<double>> &d, const double &p, const i
   std::mt19937 gen(seed);
   std::uniform_real_distribution<double> unif(0, 1);
 
-  for(int i = 0; i < d.size(); ++i)
-    for(int j = 0; j < d[i].size(); ++j)
+  for(unsigned int i = 0; i < d.size(); ++i)
+    for(unsigned int j = 0; j < d[i].size(); ++j)
       if(unif(gen) > p) d[i][j] = NAN;
 }
 
@@ -116,8 +116,8 @@ static void sample(std::vector<std::vector<double>> &d, const double &p)
   std::mt19937 gen(std::random_device{}());
   std::uniform_real_distribution<double> unif(0, 1);
 
-  for(int i = 0; i < d.size(); ++i)
-    for(int j = 0; j < d[i].size(); ++j)
+  for(unsigned int i = 0; i < d.size(); ++i)
+    for(unsigned int j = 0; j < d[i].size(); ++j)
       if(unif(gen) > p) d[i][j] = NAN;
 }
 
@@ -179,7 +179,7 @@ SEXP rmake_projection(
   SEXP rbootseed      // resampling seed, used when testing
 ){
 
-  int layer, method, dummycode, comparisons, metric, bootreps;
+  int layer, method, comparisons, metric, bootreps;
   rint_to_cppint(rlayer, layer);
   rint_to_cppint(rmethod, method);
   rint_to_cppint(rcomparisons, comparisons);
