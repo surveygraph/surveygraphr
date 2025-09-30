@@ -11,7 +11,7 @@ to a survey, i.e. the row or column projection."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">surveygraph</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,7 +19,8 @@ to a survey, i.e. the row or column projection."></head><body>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/surveygraph.html">Get started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -48,14 +49,17 @@ to a survey, i.e. the row or column projection.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">make_projection</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
 <span>  layer <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  threshold_method <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  method_value <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  centre <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  method <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  methodval <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  comparisons <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  metric <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  limits <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dummycode <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  likert <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  mincomps <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  similarity_metric <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  bootreps <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  bootval <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  bootseed <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  centre <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -75,35 +79,72 @@ which we assume to be columns in <code>data</code></p></li>
 </ul></dd>
 
 
-<dt id="arg-threshold-method">threshold_method<a class="anchor" aria-label="anchor" href="#arg-threshold-method"></a></dt>
-<dd><p>A string flag specifying how edges are selected in
-the network representation.</p><ul><li><p><code>"raw_similarity"</code> means we remove all edges whose weight, meaning node
-similarity, is below a specified threshold.</p></li>
-<li><p><code>"target_lcc"</code> finds the value of the threshold that results in the network
+<dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
+<dd><p>A string flag specifying how edges are thresholded in
+the network representation.</p><ul><li><p><code>"similarity"</code> means we remove all edges whose weight, meaning node
+similarity, is below a threshold specified by <code>methodval</code>.</p></li>
+<li><p><code>"lcc"</code> finds the value of the threshold that results in the network
 whose largest connected component is as close as possible to a specified
 value. In general a range of thresholds will satisfy this condition, and we
-choose the upper limit of this range.</p></li>
-<li><p><code>"target_ad"</code> finds the value of the threshold that results in the network
-whose average degree is as close as possible to a specified value.</p></li>
+choose the upper limit of this range. As such, <code>"lcc"</code> provided is a target.</p></li>
+<li><p><code>"avgdegree"</code> finds the value of the threshold that results in the network
+whose average degree is as close as possible to a specified value. Like
+<code>"lcc"</code>, this is a target.</p></li>
 </ul></dd>
 
 
-<dt id="arg-method-value">method_value<a class="anchor" aria-label="anchor" href="#arg-method-value"></a></dt>
+<dt id="arg-methodval">methodval<a class="anchor" aria-label="anchor" href="#arg-methodval"></a></dt>
 <dd><p>A utility variable that we interpret according to the
-<code>threshold_method</code> chosen.</p><ul><li><p>If <code>threshold_method = "raw_similarity"</code>, then <code>method_value</code> is
-interpreted as the similarity threshold, and thus is in the range <code>[-1, 1]</code>.
-A value of -1 means no edges are removed, and a value of 1 means all edges
+<code>method</code> chosen.</p><ul><li><p>If <code>method = "similarity"</code>, then <code>methodval</code> is
+interpreted as the similarity threshold, and thus is in the range <code>[0, 1]</code>.
+A value of 0 means no edges are removed, and a value of 1 means all edges
 are removed.</p></li>
-<li><p>If <code>threshold_method = "target_lcc"</code>, then <code>method_value</code> is interpreted as
+<li><p>If <code>method = "lcc"</code>, then <code>methodval</code> is interpreted as
 the desired fractional size of the largest connected component, in the range
 <code>[0, 1]</code>. E.g., when set to 0, no nodes are connected, and if set to 1, the
 network is as sparse as possible while remaining fully connected.</p></li>
-<li><p>If <code>threshold_method = "target_ad"</code>, then <code>method_value</code> is interpreted as
-the desired average degree. We assume that <code>method_value</code> is normalised to
+<li><p>If <code>method = "avgdegree"</code>, then <code>methodval</code> is interpreted as
+the desired average degree. We assume that <code>methodval</code> is normalised to
 the range <code>[0, 1]</code> When <code>method_value = 0</code>, then no nodes are connected, and
 if <code>method_value = 1</code>, the network is complete, meaning it contains every
 possible edge.</p></li>
 </ul></dd>
+
+
+<dt id="arg-comparisons">comparisons<a class="anchor" aria-label="anchor" href="#arg-comparisons"></a></dt>
+<dd><p>The minimum number of valid comparisons that must be
+made when computing the similarity between rows or columns in the <code>data</code>. If at
+least one of the entries in the fields being compared is NA, then the
+comparison is invalid.</p></dd>
+
+
+<dt id="arg-metric">metric<a class="anchor" aria-label="anchor" href="#arg-metric"></a></dt>
+<dd><p>This currently has just one allowed value, namely the
+Manhattan distance, which is the default.</p></dd>
+
+
+<dt id="arg-limits">limits<a class="anchor" aria-label="anchor" href="#arg-limits"></a></dt>
+<dd><p>Specifies the limits of the Likert scale contained in <code>data</code>.</p></dd>
+
+
+<dt id="arg-dummycode">dummycode<a class="anchor" aria-label="anchor" href="#arg-dummycode"></a></dt>
+<dd><p>flag that indicates whether we dummycode data.</p></dd>
+
+
+<dt id="arg-bootreps">bootreps<a class="anchor" aria-label="anchor" href="#arg-bootreps"></a></dt>
+<dd><p>The number of bootstrap realisations to perform. If not
+specified, bootstrapping is not carried out.</p></dd>
+
+
+<dt id="arg-bootval">bootval<a class="anchor" aria-label="anchor" href="#arg-bootval"></a></dt>
+<dd><p>A sampling probability used when bootstraping. In particular,
+it provides the probability of sampling a given survey entry in a given
+bootstrapping step. With probability 1 - bootval, that entry is set to NA.</p></dd>
+
+
+<dt id="arg-bootseed">bootseed<a class="anchor" aria-label="anchor" href="#arg-bootseed"></a></dt>
+<dd><p>A random number generator seed used when bootstrapping.
+Mainly used for testing, but maybe useful for reproducibility in general.</p></dd>
 
 
 <dt id="arg-centre">centre<a class="anchor" aria-label="anchor" href="#arg-centre"></a></dt>
@@ -112,30 +153,9 @@ Defaults to FALSE, as most network analysis applications require positive
 edge weights.</p></dd>
 
 
-<dt id="arg-dummycode">dummycode<a class="anchor" aria-label="anchor" href="#arg-dummycode"></a></dt>
-<dd><p>flag that indicates whether we dummycode data.</p></dd>
-
-
-<dt id="arg-likert">likert<a class="anchor" aria-label="anchor" href="#arg-likert"></a></dt>
-<dd><p>Specifies the range of the Likert scale contained in <code>data</code>.</p></dd>
-
-
-<dt id="arg-mincomps">mincomps<a class="anchor" aria-label="anchor" href="#arg-mincomps"></a></dt>
-<dd><p>The minimum number of valid comparisons that must be
-made when computing the similarity between rows or columns in the <code>data</code>. If at
-least one of the entries in the fields being compared is NA, then the
-comparison is invalid.</p></dd>
-
-
-<dt id="arg-similarity-metric">similarity_metric<a class="anchor" aria-label="anchor" href="#arg-similarity-metric"></a></dt>
-<dd><p>This currently has just one allowed value, namely the
-Manhattan distance, which is the default.</p></dd>
-
-
-<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p>This is a debugging flag that prints out survey data after a
-pre-processing step, but before being supplied to the C++ routines that compute
-the network representation.</p></dd>
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Mostly used to handle deprecated arguments, and arguments with
+alternative spellings.</p></dd>
 
 </dl></div>
     <div class="section level2">
