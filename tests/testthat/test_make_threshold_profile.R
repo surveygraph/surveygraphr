@@ -1,75 +1,74 @@
-# passes tests locally but not on github
-#test_that("Correct when survey consists of a single row, default `count`.", {
-#  proj <- make_threshold_profile(data = data.frame(1))
-#
-#  txt <- "
-#  threshold lcc edges components isolated
-#  0.00      1   0     1          1
-#  0.05      1   0     1          1
-#  0.10      1   0     1          1
-#  0.15      1   0     1          1
-#  0.20      1   0     1          1
-#  0.25      1   0     1          1
-#  0.30      1   0     1          1
-#  0.35      1   0     1          1
-#  0.40      1   0     1          1
-#  0.45      1   0     1          1
-#  0.50      1   0     1          1
-#  0.55      1   0     1          1
-#  0.60      1   0     1          1
-#  0.65      1   0     1          1
-#  0.70      1   0     1          1
-#  0.75      1   0     1          1
-#  0.80      1   0     1          1
-#  0.85      1   0     1          1
-#  0.90      1   0     1          1
-#  0.95      1   0     1          1
-#  1.00      1   0     1          1"
-#  profile <- read.table(text = txt, header = TRUE)
-#
-#  expect_equal(proj, profile)
-#})
+test_that("Correct when survey consists of a single row, default `count`.", {
+  proj <- make_threshold_profile(data = data.frame(1))
+
+  txt <- "
+  threshold lcc edges components isolated
+  0.00      1   0     1          1
+  0.05      1   0     1          1
+  0.10      1   0     1          1
+  0.15      1   0     1          1
+  0.20      1   0     1          1
+  0.25      1   0     1          1
+  0.30      1   0     1          1
+  0.35      1   0     1          1
+  0.40      1   0     1          1
+  0.45      1   0     1          1
+  0.50      1   0     1          1
+  0.55      1   0     1          1
+  0.60      1   0     1          1
+  0.65      1   0     1          1
+  0.70      1   0     1          1
+  0.75      1   0     1          1
+  0.80      1   0     1          1
+  0.85      1   0     1          1
+  0.90      1   0     1          1
+  0.95      1   0     1          1
+  1.00      1   0     1          1"
+  profile <- read.table(text = txt, header = TRUE)
+
+  expect_equal(proj, profile)
+})
 
 
-#test_that("Correct when survey consists of a single row, varying `count`.", {
-#  proj <- function(n) make_threshold_profile(data = data.frame(1), count = n) 
-#
-#  txt <- "
-#  threshold lcc edges components isolated
-#  0.0       1   0     1          1
-#  0.5       1   0     1          1
-#  1.0       1   0     1          1"
-#  profile <- read.table(text = txt, header = TRUE)
-#
-#  expect_warning(expect_equal(proj(-1), profile))
-#  expect_warning(expect_equal(proj( 0), profile))
-#  expect_warning(expect_equal(proj( 1), profile))
-#  expect_warning(expect_equal(proj( 2), profile))
-#})
+test_that("Correct when survey consists of a single row, varying `count`.", {
+  proj <- function(n) make_threshold_profile(data = data.frame(1), count = n) 
+
+  txt <- "
+  threshold lcc edges components isolated
+  0.0       1   0     1          1
+  0.5       1   0     1          1
+  1.0       1   0     1          1"
+  profile <- read.table(text = txt, header = TRUE)
+
+  expect_warning(expect_equal(proj(-1), profile))
+  expect_warning(expect_equal(proj( 0), profile))
+  expect_warning(expect_equal(proj( 1), profile))
+  expect_warning(expect_equal(proj( 2), profile))
+})
 
 
-#test_that("Correct when survey consists of a single row, varying `count`.", {
-#  proj <- function(n) make_threshold_profile(data = data.frame(1), count = n) 
-#
-#  df <- function(n){
-#    data.frame(
-#      threshold = seq(0, 1, by = 1 / (n - 1)),
-#      lcc = rep(1, n), 
-#      edges = rep(0, n), 
-#      components = rep(1, n), 
-#      isolated = rep(1, n)
-#    )
-#  }
-#
-#  expect_equal(proj(3),  df(3))
-#  expect_equal(proj(4),  df(4))
-#  expect_equal(proj(5),  df(5))
-#  expect_equal(proj(6),  df(6))
-#  expect_equal(proj(7),  df(7))
-#  expect_equal(proj(8),  df(8))
-#  expect_equal(proj(9),  df(9))
-#  expect_equal(proj(10), df(10))
-#})
+test_that("Correct when survey consists of a single row, varying `count`.", {
+  proj <- function(n) make_threshold_profile(data = data.frame(1), count = n) 
+
+  df <- function(n){
+    data.frame(
+      threshold = seq(0, 1, by = 1 / (n - 1)),
+      lcc = rep(1, n), 
+      edges = rep(0, n), 
+      components = rep(1, n), 
+      isolated = rep(1, n)
+    )
+  }
+
+  expect_equal(proj(3),  df(3))
+  expect_equal(proj(4),  df(4))
+  expect_equal(proj(5),  df(5))
+  expect_equal(proj(6),  df(6))
+  expect_equal(proj(7),  df(7))
+  expect_equal(proj(8),  df(8))
+  expect_equal(proj(9),  df(9))
+  expect_equal(proj(10), df(10))
+})
 
 
 test_that("Behaves as expected on more general data.", {

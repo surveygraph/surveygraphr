@@ -1,6 +1,6 @@
 #include "surveygraph.h"
 
-#include <cmath>  // sqrt, abs
+#include <cmath>  // sqrt, fabs FIXME abs() can cast to integer depending on system!
 
 #define R_NO_REMAP     // TODO comment out for CRAN, only used for debugging
 #include <R.h>         // with Rprint.
@@ -42,6 +42,7 @@ void surveygraph::edgelist_complete()
       else if(metric == 1)
         dist_euclidean(int(i), int(j), w);
 
+      	//Rprintf("you're inserting weight %zu %zu %f\n", i, j, w);
         edgelist.insert(edge{std::set<int>{int(i), int(j)}, w});
     }
   }
@@ -57,10 +58,15 @@ void surveygraph::dist_manhattan(const int &u, const int &v, double &w)
   w = 0;
   for(unsigned int j = 0; j < survey[0].size(); ++j){
     if(!std::isnan(survey[u][j]) && !std::isnan(survey[v][j])){
-      w += abs(survey[u][j] - survey[v][j]);
+	    //Rprintf("w before is %f\n", w);
+      w += fabs(survey[u][j] - survey[v][j]);
+	    //Rprintf("w after is %f\n", w);
+      //Rprintf("wtf |%f - %f| = |%f| = %f\n", survey[u][j], survey[v][j], survey[u][j] - survey[v][j], fabs(survey[u][j] - survey[v][j]));
+      //Rprintf("%d %d %f difference was between %f %f\n", u, v, w, survey[u][j], survey[v][j]);
       ++count;
     }
   }
+  //Rprintf("so...... w finally is %f\n", w);
 
   // Normalise by the number of valid comparisons.
   if(count > 0)

@@ -1,14 +1,23 @@
 test_that("Limiting one dimension to zero.", {
   synth <- function(n, m) make_synthetic_data(n, m)
+  mat <- function(n){
+	  df <- as.data.frame(matrix(nrow = n, ncol = 0))
+	  names(df) <- character()
+	  df
+  }
 
   expect_equal(synth(0, 0), data.frame())
   expect_equal(synth(0, 1), data.frame(group = numeric()))
   expect_equal(synth(0, 2), data.frame(group = numeric(), item_1 = numeric()))
   expect_equal(synth(0, 3), data.frame(group = numeric(), item_1 = numeric(), item_2 = numeric()))
 
-  expect_equal(synth(1, 0), as.data.frame(matrix(nrow = 1, ncol = 0)))
-  expect_equal(synth(2, 0), as.data.frame(matrix(nrow = 2, ncol = 0)))
-  expect_equal(synth(3, 0), as.data.frame(matrix(nrow = 3, ncol = 0)))
+  #expect_equal(synth(1, 0), as.data.frame(matrix(nrow = 1, ncol = 0)))
+  #expect_equal(synth(2, 0), as.data.frame(matrix(nrow = 2, ncol = 0)))
+  #expect_equal(synth(3, 0), as.data.frame(matrix(nrow = 3, ncol = 0)))
+
+  expect_equal(synth(1, 0), mat(1))
+  expect_equal(synth(2, 0), mat(2))
+  expect_equal(synth(3, 0), mat(3))
 })
 
 
