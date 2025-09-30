@@ -36,8 +36,6 @@ make_synthetic_data(
 A data frame corresponding to a survey.
 }
 \description{
-\strong{Note that a major update to the surveygraph package, as well as documentation on this page, is planned for July 2025.}
-
 \code{make_synthetic_data()} outputs a synthetic survey, generated using a simple, stochastic
 model of polarisation.
 }

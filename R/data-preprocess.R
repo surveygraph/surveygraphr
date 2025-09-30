@@ -1,19 +1,19 @@
-#' Implements simple pre-processing of survey data. These routines are for
-#' convenience, as everything here can be easily implemented even by beginner R
-#' users.
+#' Outputs a synthetic survey using a simple model
 #'
 #' @description
-#'
-#' `data_preprocess()` outputs the survey formatted as required.
+#' `data_preprocess()` outputs a synthetic survey, generated using a simple, stochastic
+#'   model of polarisation.
 #' 
 #' @return
-#' A cleaned version of the supplied data frame.
+#' A data frame corresponding to a survey.
 #' 
-#' @param data A data frame corresponding to a survey
-#' @param limits Specifies the range of the Likert scale contained in `data`.  
-#' @param dummycode flag that indicates whether we dummycode data.
+#' @param data The number of rows in the survey
+#' @param limits The number of columns in the survey
+#' @param dummycode The fraction of nodes in the smaller of the two polarised groups
 #' 
 #' @export
+#' @examples
+#' S <- make_synthetic_data(200, 8)
 data_preprocess <- function(
   data, 
   limits = NULL,

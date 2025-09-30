@@ -102,8 +102,6 @@ contains three columns named
 }
 }
 \description{
-\strong{Note that a major update to the surveygraph package, as well as documentation on this page, is planned for July 2025.}
-
 \code{make_projection()} outputs the agent or symbolic network corresponding
 to a survey, i.e. the row or column projection.
 }

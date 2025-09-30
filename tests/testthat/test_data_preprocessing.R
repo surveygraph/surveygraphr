@@ -187,7 +187,8 @@ test_that("Character vector without `dummycode` is coerced to numeric", {
 })
 
 
-# TODO: this is failing tests on github
+# Need to sort for testing on different systems. Different systems will sort
+# differently based on locale and collation variables.
 test_that("Character vector with `dummycode` is coerced to numeric", {
   df1 <- data_preprocess(data.frame(a = c("m", NA, "f", "m", "f", "f")), dummycode = T)
   df2 <- data.frame(data.frame(a_f = c(0, 0, 1, 0, 1, 1)), a_m = c(1, 0, 0, 1, 0, 0), a_NA = c(0, 1, 0, 0, 0, 0))
