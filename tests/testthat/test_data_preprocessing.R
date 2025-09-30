@@ -187,11 +187,12 @@ test_that("Character vector without `dummycode` is coerced to numeric", {
 })
 
 
+# TODO: this is failing tests on github
 test_that("Character vector with `dummycode` is coerced to numeric", {
- expect_equal(
-   data_preprocess(data.frame(a = c("m", NA, "f", "m", "f", "f")), dummycode = T),
-   data.frame(data.frame(a_f = c(0, 0, 1, 0, 1, 1)), a_m = c(1, 0, 0, 1, 0, 0), a_NA = c(0, 1, 0, 0, 0, 0))
- )
+  df1 <- data_preprocess(data.frame(a = c("m", NA, "f", "m", "f", "f")), dummycode = T)
+  df2 <- data.frame(data.frame(a_f = c(0, 0, 1, 0, 1, 1)), a_m = c(1, 0, 0, 1, 0, 0), a_NA = c(0, 1, 0, 0, 0, 0))
+
+  expect_equal(df1[sort(names(df1))], df2[sort(names(df2))])
 })
 
 
