@@ -12,16 +12,16 @@ void surveygraph::make_threshold_profile()
 {
   profile = std::vector<std::vector<int>>{};
 
-	edgelist_complete();
+  edgelist_complete();
 
-	unionfind uf(survey.size());  
+  unionfind uf(survey.size());  
 
   auto it = edgelist.rbegin();
   for(int i = 0; i < count; ++i){
     double threshold = 1 - i / double(count - 1);
-    
-    while(it->weight >= threshold && it != edgelist.rend()){
-			uf.merge(*it->nodes.begin(), *it->nodes.rbegin());
+
+    while(it != edgelist.rend() && it->weight >= threshold){
+      uf.merge(*it->nodes.begin(), *it->nodes.rbegin());
       ++it;
     }
 
