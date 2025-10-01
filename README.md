@@ -7,9 +7,6 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10887909.svg)](https://doi.org/10.5281/zenodo.10887909)
 <!-- badges: end -->
 
-
-**Note that a major update to the surveygraph package, as well as documentation on this page, is planned for ~~July~~ August 2025.**
-
 ## Overview
 surveygraph is a lightweight library used to produce network representations of attitudes, as they emerge in tabular sociological data such as surveys.
 

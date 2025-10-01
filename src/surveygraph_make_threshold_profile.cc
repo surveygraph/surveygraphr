@@ -1,8 +1,10 @@
 #include "surveygraph.h"
 #include "unionfind.h"
 
-#define R_NO_REMAP
-#include <R.h>  // TODO comment out for CRAN, only used for Rprint.
+//#ifndef R_NO_REMAP
+//#define R_NO_REMAP
+//#endif
+//#include <R.h>  // TODO comment out for CRAN, only used for Rprint.
 
 
 // Computes the largest connected component, average degree, number of

@@ -3,7 +3,9 @@
 #include <map>
 #include <random>
 
+#ifndef R_NO_REMAP
 #define R_NO_REMAP
+#endif
 #include <Rinternals.h>  // SEXP
 #include <R.h>           // TODO comment out for CRAN, only used for Rprintf.
 

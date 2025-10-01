@@ -3,8 +3,10 @@
 
 #include <set>
 
-#define R_NO_REMAP
-#include <R.h>  // TODO comment out for CRAN, only used for Rprint.
+//#ifndef R_NO_REMAP
+//#define R_NO_REMAP
+//#endif
+//#include <R.h>  // TODO comment out for CRAN, only used for Rprint.
 
 
 // TODO you could be using uint16_t, if survey.size() \leq 65535. should be a

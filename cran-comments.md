@@ -1,3 +1,7 @@
+## submission 1/10/2025
+
+First submission attempt for this major release. Passes R CMD check --as-cran locally, and strict tidyverse build workflows on github. Documentation is correct, though lacking depth, and will be updated in a subsequent minor release.
+
 ## submission 4/6/2024
 
 Previous submission failed due to the WARNING 'Insufficient package version'.

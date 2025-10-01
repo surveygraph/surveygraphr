@@ -1,8 +1,10 @@
 #include "surveygraph.h"
 #include "unionfind.h"
 
-#define R_NO_REMAP
-#include <R.h>  // TODO comment out for CRAN, only used for Rprintf.
+//#ifndef R_NO_REMAP
+//#define R_NO_REMAP
+//#endif
+//#include <R.h>  // TODO comment out for CRAN, only used for Rprintf.
 
 
 // Find the largest threshold for which the resulting LCC is greater than or

@@ -1,6 +1,11 @@
 #ifndef unionfind_H_
 #define unionfind_H_
 
+//#ifndef R_NO_REMAP
+//#define R_NO_REMAP
+//#endif
+//#include <R.h>  // TODO comment out for CRAN, only used for Rprint.
+
 // Modified union-find algorithm from here.
 // https://github.com/kartikkukreja/blog-codes/blob/master/src
 

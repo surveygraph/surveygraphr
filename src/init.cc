@@ -1,8 +1,11 @@
 #include <stdlib.h>          // NULL
 
-#define R_NO_REMAP
+//#ifndef R_NO_REMAP
+//#define R_NO_REMAP
+//#endif
 #include <Rinternals.h>      // SEXP
 #include <R_ext/Rdynload.h>  // R_CallMethodDef, DllInfo etc
+
 
 extern SEXP rmake_projection(
   SEXP rdata,         // dataframe containing survey

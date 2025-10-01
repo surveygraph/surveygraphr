@@ -2,8 +2,10 @@
 
 #include <cmath>       // sqrt, fabs (abs casts to integer on some systems, need fabs)
 
-#define R_NO_REMAP
-#include <R.h>         // TODO comment out for CRAN, only used for Rprint.
+//#ifndef R_NO_REMAP
+//#define R_NO_REMAP
+//#endif
+//#include <R.h>  // TODO comment out for CRAN, only used for Rprint.
 
 
 // TODO simpler version of this, simply keep edges in `edgelist` with weights

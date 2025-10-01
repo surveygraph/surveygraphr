@@ -1,12 +1,14 @@
 #ifndef SURVEYGRAPH_H_
 #define SURVEYGRAPH_H_
 
-#define R_NO_REMAP
-#include <R.h>  // TODO comment out for CRAN, only used for Rprint.
+#include <vector>
+
+//#ifndef R_NO_REMAP
+//#define R_NO_REMAP
+//#endif
+//#include <R.h>  // TODO comment out for CRAN, only used for Rprint.
 
 #include "edge.h"
-
-#include <vector>
 
 
 class surveygraph

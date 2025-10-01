@@ -21,6 +21,9 @@ clean:
 doc:
 	Rscript -e "library('roxygen2'); roxygenise()"
 
+knit:
+	Rscript -e "rmarkdown::render('vignettes/surveygraph.Rmd', params=list(args = myarg))"
+
 test:
 	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test_make_threshold_profile_args.R')"
 	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test_make_threshold_profile.R')"
@@ -35,6 +38,3 @@ test:
 	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test_data_preprocessing.R')"
 	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test_make_synthetic_args.R')"
 	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test_make_synthetic.R')"
-
-knit:
-	Rscript -e "rmarkdown::render('vignettes/surveygraph.Rmd', params=list(args = myarg))"
