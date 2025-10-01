@@ -1,8 +1,8 @@
 #include "surveygraph.h"
 
-#define R_NO_REMAP     // TODO comment out for CRAN, only used for debugging 
-#include <R.h>         // with Rprint.
-#include <Rdefines.h>  //
+#define R_NO_REMAP
+#include <Rinternals.h>  // SEXP
+#include <R.h>           // TODO comment out for CRAN, only used for Rprint.
 
 
 // Converts and R dataframe to a nested C++ vector. We verify that rdata is a
@@ -30,9 +30,10 @@ static void rdf_to_cppvector(
         coltmp.push_back(value);
       }
       data.push_back(coltmp);
-    }else{
-      Rf_error("Non-double type at column %d of input dataframe.\n", i);
     }
+    //else{
+    //  Rf_error("Non-double type at column %d of input dataframe.\n", i);
+    //}
   }
 
   // If we're computing row similarities, producing the so-called agent layer,
@@ -51,23 +52,16 @@ static void rdf_to_cppvector(
   UNPROTECT(1);
 }
 
+
 // Converts an R integer vector of length one to a C++ integer.
 static void rint_to_cppint(const SEXP &rval, int &cval)
 {
-  if(TYPEOF(rval) != INTSXP || Rf_length(rval) != 1){
-    Rf_error("Expected a single integer.");
-  }
+  //if(TYPEOF(rval) != INTSXP || Rf_length(rval) != 1){
+  //  Rf_error("Expected a single integer.");
+  //}
+
   cval = INTEGER(rval)[0];
 }
-
-// Converts an R double vector of length one to a C++ double.
-//static void rdouble_to_cppdouble(const SEXP &rval, double &cval)
-//{
-//  if(TYPEOF(rval) != REALSXP || Rf_length(rval) != 1){
-//    Rf_error("Expected a single double.");
-//  }
-//  cval = REAL(rval)[0];
-//}
 
 
 // Converts a nested C++ vector to an R dataframe.
@@ -88,7 +82,7 @@ static void cppvector_to_rdf(
     INTEGER(e_vector)[i] = profile[idash][1]; 
     INTEGER(c_vector)[i] = profile[idash][2]; 
     INTEGER(s_vector)[i] = profile[idash][3]; 
-	}
+  }
 
   SET_VECTOR_ELT(df, 0, t_vector);
   SET_VECTOR_ELT(df, 1, l_vector);

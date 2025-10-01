@@ -1,9 +1,9 @@
 #include "surveygraph.h"
 #include "unionfind.h"
 
-#define R_NO_REMAP     // TODO comment out for CRAN, only used for debugging
-#include <R.h>         // with Rprint.
-#include <Rdefines.h>  //
+#define R_NO_REMAP
+#include <R.h>  // TODO comment out for CRAN, only used for Rprintf.
+
 
 // Find the largest threshold for which the resulting LCC is greater than or
 // equal to the target LCC. Of course, the set of LCCs is degenerate; there can be
@@ -35,7 +35,7 @@ void surveygraph::make_projection_lcc()
   int lcc = 1;
   while(lcc < target && it != edgelist.rend()){
     while(it != edgelist.rend() && it->weight == weight){
-  	  uf.merge(*it->nodes.begin(), *it->nodes.rbegin());
+      uf.merge(*it->nodes.begin(), *it->nodes.rbegin());
       ++it;
     }
 

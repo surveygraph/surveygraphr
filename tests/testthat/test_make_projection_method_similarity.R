@@ -33,7 +33,7 @@ test_that("`similarity` method on a 1-clique.", {
   survey <- 1
 
   weights <- "u  v  e0"
-	df <- read.table(text = weights, header = TRUE, colClasses = "numeric")
+  df <- read.table(text = weights, header = TRUE, colClasses = "numeric")
 
   expect_equal(proja(survey, 0),           fn(df$u, df$v, df$e0))
   expect_equal(proja(survey, 1),           fn(df$u, df$v, df$e0))
@@ -49,7 +49,7 @@ test_that("`similarity` method on a 2-clique.", {
   weights <- "
   u  v  e0  e1
   1  2  NA  0.0"
-	df <- read.table(text = weights, header = TRUE, na.strings = "NA")
+  df <- read.table(text = weights, header = TRUE, na.strings = "NA")
 
   expect_equal(proja(survey, -eps),      fn(df$u, df$v, df$e1))
   expect_equal(proja(survey, 0),         fn(df$u, df$v, df$e1))
@@ -69,7 +69,7 @@ test_that("`similarity` method on a 3-clique.", {
   1  2  NA  0.6  0.6  0.6
   1  3  NA  NA   NA   0.0
   2  3  NA  NA   0.4  0.4"
-	df <- read.table(text = weights, header = TRUE, na.strings = "NA")
+  df <- read.table(text = weights, header = TRUE, na.strings = "NA")
 
   expect_equal(proja(survey, -eps),      fn(df$u, df$v, df$e3))
   expect_equal(proja(survey, 0),         fn(df$u, df$v, df$e3))
@@ -105,7 +105,7 @@ test_that("`similarity` method on a 4-clique.", {
   2  3  NA  NA   0.7  0.7  0.7  0.7  0.7     
   2  4  NA  NA   NA   0.6  0.6  0.6  0.6     
   3  4  NA  0.9  0.9  0.9  0.9  0.9  0.9"
-	df <- read.table(text = weights, header = TRUE, na.strings = "NA")
+  df <- read.table(text = weights, header = TRUE, na.strings = "NA")
 
   expect_equal(proja(survey, -eps),      fn(df$u, df$v, df$e6))
   expect_equal(proja(survey, 0),         fn(df$u, df$v, df$e6))

@@ -1,15 +1,11 @@
 #include "surveygraph.h"
 
-#include <cctype>
 #include <map>
-#include <set>
 #include <random>
-#include <algorithm>
-#include <cmath>
 
-#define R_NO_REMAP      // TODO comment out for CRAN, only used for debugging
-#include <R.h>          // with Rprint.
-#include <Rdefines.h>   //
+#define R_NO_REMAP
+#include <Rinternals.h>  // SEXP
+#include <R.h>           // TODO comment out for CRAN, only used for Rprintf.
 
 
 // Converts and R dataframe to a nested C++ vector. We verify that `rdata` is a
@@ -37,9 +33,10 @@ static void rdf_to_cppvector(
         coltmp.push_back(value);
       }
       data.push_back(coltmp);
-    }else{
-      Rf_error("Non-double type at column %d of input dataframe.\n", i);
     }
+    //else{
+    //  Rf_error("Non-double type at column %d of input dataframe.\n", i);
+    //}
   }
 
   // If we're computing row similarities, producing the so-called agent layer,
@@ -62,11 +59,11 @@ static void rdf_to_cppvector(
 // Converts an R integer vector of length one to a C++ integer.
 static void rint_to_cppint(const SEXP &rint, int &cint)
 {
-  if(TYPEOF(rint) != INTSXP)
-    Rf_error("Expected an R integer.");
+  //if(TYPEOF(rint) != INTSXP)
+  //  Rf_error("Expected an R integer.");
 
-  if(Rf_length(rint) != 1)
-    Rf_error("Expected an R integer vector of length 1.");
+  //if(Rf_length(rint) != 1)
+  //  Rf_error("Expected an R integer vector of length 1.");
 
   cint = INTEGER(rint)[0];
 }
@@ -75,8 +72,8 @@ static void rint_to_cppint(const SEXP &rint, int &cint)
 // Converts an R integer vector of length one to a C++ integer of arbitrary length.
 static void rint_to_cppint(const SEXP &rint, std::vector<int> &cvectorint)
 {
-  if(TYPEOF(rint) != INTSXP)
-    Rf_error("Expected an R integer.");
+  //if(TYPEOF(rint) != INTSXP)
+  //  Rf_error("Expected an R integer.");
 
   cvectorint = std::vector<int>(Rf_length(rint));
 
@@ -88,11 +85,11 @@ static void rint_to_cppint(const SEXP &rint, std::vector<int> &cvectorint)
 // Converts an R double vector of length one to a C++ double.
 static void rdouble_to_cppdouble(const SEXP &rdouble, double &cdouble)
 {
-  if(TYPEOF(rdouble) != REALSXP)
-    Rf_error("Expected an R double.");
+  //if(TYPEOF(rdouble) != REALSXP)
+  //  Rf_error("Expected an R double.");
 
-  if(Rf_length(rdouble) != 1)
-    Rf_error("Expected an R double vector of length 1.");
+  //if(Rf_length(rdouble) != 1)
+  //  Rf_error("Expected an R double vector of length 1.");
 
   cdouble = REAL(rdouble)[0];
 }
@@ -210,8 +207,8 @@ SEXP rmake_projection(
     surveygraph S{datasample, method, methodval, comparisons, metric};
 
     for(auto &it : S.edgelist){
-			eweights[it.nodes] += it.weight;
-			ecounts[it.nodes] += 1;
+      eweights[it.nodes] += it.weight;
+      ecounts[it.nodes] += 1;
     }
   }
 

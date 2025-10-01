@@ -1,9 +1,9 @@
 test_that("Limiting one dimension to zero.", {
   synth <- function(n, m) make_synthetic_data(n, m)
   mat <- function(n){
-	  df <- as.data.frame(matrix(nrow = n, ncol = 0))
-	  names(df) <- character()
-	  df
+    df <- as.data.frame(matrix(nrow = n, ncol = 0))
+    names(df) <- character()
+    df
   }
 
   expect_equal(synth(0, 0), data.frame())
@@ -33,7 +33,7 @@ test_that("`minority` argument behaves as expected.", {
   1  4  1  4  1  4  1  4  1  4  1  4  0  4  0  4  0  4  0  4  0  4
   1  4  1  4  1  4  1  4  1  4  1  4  1  4  1  4  1  4  1  4  1  4
   1  5  1  5  1  5  1  5  1  5  1  5  1  5  1  5  1  5  1  5  1  5"
-	data <- read.table(text = txt, header = FALSE)
+  data <- read.table(text = txt, header = FALSE)
   data <- lapply(data, as.numeric)
 
   synth <- function(x, y)
@@ -69,7 +69,7 @@ test_that("`polarisation` argument behaves as expected.", {
   1  4  8  7  7  8  8  9   9   10  10  10
   1  4  7  4  7  7  8  10  10  10  10  10
   1  5  7  6  9  9  9  8   8   8   10  10"
-	data <- read.table(text = txt, header = FALSE)
+  data <- read.table(text = txt, header = FALSE)
   data <- lapply(data, as.numeric)
 
   expect_equal(synth(1.0, 0.0), data.frame(group = data[[1]],  item_1 = data[[2]]))
@@ -95,7 +95,7 @@ test_that("`polarisation` argument behaves as expected.", {
   10  0  0  0  0  0  1
   10  0  0  1  1  1  1
   10  0  0  1  1  1  1"
-	data <- read.table(text = txt, header = FALSE)
+  data <- read.table(text = txt, header = FALSE)
   data <- lapply(data, as.numeric)
 
   expect_equal(synth(0.0, 1.0), data.frame(group = data[[2]], item_1 = data[[1]]))

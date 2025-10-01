@@ -3,9 +3,9 @@
 
 #include <set>
 
-#define R_NO_REMAP            // TODO comment out for CRAN, only used for debugging
-#include <Rinternals.h>       // with Rprint.
-#include <R_ext/Rdynload.h>   // 
+#define R_NO_REMAP
+#include <R.h>  // TODO comment out for CRAN, only used for Rprint.
+
 
 // TODO you could be using uint16_t, if survey.size() \leq 65535. should be a
 // template that assigns type at runtime.

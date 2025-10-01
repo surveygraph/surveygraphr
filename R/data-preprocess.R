@@ -56,8 +56,8 @@ data_preprocess <- function(
 
   # Verify `limits` argument.
   if(is.null(limits)){
-		limits <- as.data.frame(matrix(NA_real_, nrow = 2, ncol = ncol(data)))
-	}else{
+    limits <- as.data.frame(matrix(NA_real_, nrow = 2, ncol = ncol(data)))
+  }else{
     # Must be a dataframe.
     if(!is.data.frame(limits))
       stop("limits must be a dataframe")
@@ -131,8 +131,8 @@ data_preprocess <- function(
   # Check `dummycode`.
   if(is.null(dummycode)){
     # Default to FALSE.
-		dummycode <- logical(ncol(data))
-	}else{
+    dummycode <- logical(ncol(data))
+  }else{
     # Verify that dummycode is a vector
     if(!is.atomic(dummycode))
       stop("`dummycode` must be an atomic vector")
@@ -159,46 +159,46 @@ data_preprocess <- function(
       # Coerce to logical vector.
       dummycode <- as.logical(dummycode)
     }
-	}
+  }
 
 
   # Now we can process each column in `data` according to its type, and the
   # `limits` and `dummycode` arguments provided.
-	datacopy <- do.call(
-		cbind,
-		lapply(seq_along(data), function(i){
-			if(is.numeric(data[[i]])){
-				processing_numeric(data[i], limits[[i]], dummycode[[i]])
-			}else if(is.character(data[[i]])){
-				processing_character(data[i], limits[[i]], dummycode[[i]])
-			}else if(is.logical(data[[i]])){
-				processing_logical(data[i], limits[[i]], dummycode[[i]])
-			}else{
-				processing_other(data[i], limits[[i]], dummycode[[i]])
-			}
-		})
-	)
-	datacopy
+  datacopy <- do.call(
+    cbind,
+    lapply(seq_along(data), function(i){
+      if(is.numeric(data[[i]])){
+        processing_numeric(data[i], limits[[i]], dummycode[[i]])
+      }else if(is.character(data[[i]])){
+        processing_character(data[i], limits[[i]], dummycode[[i]])
+      }else if(is.logical(data[[i]])){
+        processing_logical(data[i], limits[[i]], dummycode[[i]])
+      }else{
+        processing_other(data[i], limits[[i]], dummycode[[i]])
+      }
+    })
+  )
+  datacopy
 }
 
 
 # Dummy-coding utility function. `c` is a character vector of length one, and 
 # `vals` is a character vector of 
 dummycoding <- function(c, vals){
-	uniquevals <- sort(unique(vals))
-	dcode <- as.data.frame(matrix(nrow = length(vals), ncol = 0))
-	dcodenames <- character(0)
-	for(i in uniquevals){
-		if(!is.na(i)){
-			m <- match(vals, i)
-			m[is.na(m)] <- 0
+  uniquevals <- sort(unique(vals))
+  dcode <- as.data.frame(matrix(nrow = length(vals), ncol = 0))
+  dcodenames <- character(0)
+  for(i in uniquevals){
+    if(!is.na(i)){
+      m <- match(vals, i)
+      m[is.na(m)] <- 0
 
-			dcode <- data.frame(dcode, m)
-			dcodenames <- c(dcodenames, paste(paste(c, "_", sep = ""), i, sep = ""))
-		}
-	}
-	colnames(dcode) <- dcodenames
-	dcode
+      dcode <- data.frame(dcode, m)
+      dcodenames <- c(dcodenames, paste(paste(c, "_", sep = ""), i, sep = ""))
+    }
+  }
+  colnames(dcode) <- dcodenames
+  dcode
 }
 
 
@@ -261,11 +261,11 @@ normalise <- function(data, limits){
 processing_numeric <- function(data, limits, dummycode){
   datacopy <- data
   dummyvals <- character(nrow(data))
-	dummyvals[] <- NA_character_
+  dummyvals[] <- NA_character_
 
-	if(dummycode){
-		if(any(data[[1]] != floor(data[[1]]), na.rm = TRUE))
-			warning("Dummycoding a numeric column that contains non-integer values.", call. = F)
+  if(dummycode){
+    if(any(data[[1]] != floor(data[[1]]), na.rm = TRUE))
+      warning("Dummycoding a numeric column that contains non-integer values.", call. = F)
   }
 
   for(i in seq_along(data[[1]])){
@@ -292,13 +292,13 @@ processing_numeric <- function(data, limits, dummycode){
   }
 
   datacopy <- normalise(datacopy, limits)
-	dcode <- dummycoding(colnames(data[1]), dummyvals)
+  dcode <- dummycoding(colnames(data[1]), dummyvals)
 
-	datareturn <- as.data.frame(matrix(nrow = nrow(data), ncol = 0))
-	if(is.na(limits[[1]]) && dummycode)
-  	datareturn <- data.frame(dcode)
-	else
-  	datareturn <- data.frame(datacopy, dcode)
+  datareturn <- as.data.frame(matrix(nrow = nrow(data), ncol = 0))
+  if(is.na(limits[[1]]) && dummycode)
+    datareturn <- data.frame(dcode)
+  else
+    datareturn <- data.frame(datacopy, dcode)
 
   datareturn
 }
@@ -309,34 +309,34 @@ processing_numeric <- function(data, limits, dummycode){
 processing_character <- function(data, limits, dummycode){
   datacopy <- data
   dummyvals <- character(nrow(data))
-	dummyvals[] <- NA
+  dummyvals[] <- NA
 
-	if(!is.na(limits[[1]]))
-		warning("Ignoring `limits` flag for character vector.", call. = F)
+  if(!is.na(limits[[1]]))
+    warning("Ignoring `limits` flag for character vector.", call. = F)
 
-	if(!dummycode)
-		warning("Dummycode flag not set for character vector; coercing to numeric.", call. = F)
+  if(!dummycode)
+    warning("Dummycode flag not set for character vector; coercing to numeric.", call. = F)
 
-	if(!dummycode){
-		datacopy[[1]] <- suppressWarnings(as.numeric(datacopy[[1]]))
+  if(!dummycode){
+    datacopy[[1]] <- suppressWarnings(as.numeric(datacopy[[1]]))
     datacopy <- normalise(datacopy, limits)
-	}else{
-		for(i in seq_along(data[[1]])){
-			if(!is.na(data[[1]][[i]]))
-				dummyvals[i] <- as.character(data[[1]][[i]])
+  }else{
+    for(i in seq_along(data[[1]])){
+      if(!is.na(data[[1]][[i]]))
+        dummyvals[i] <- as.character(data[[1]][[i]])
       else
-				dummyvals[i] <- "NA"
-		}
-	}
+        dummyvals[i] <- "NA"
+    }
+  }
 
-	dcode <- dummycoding(colnames(data[1]), dummyvals)
+  dcode <- dummycoding(colnames(data[1]), dummyvals)
 
-	datareturn <- as.data.frame(matrix(nrow = nrow(data), ncol = 0))
-	if(dummycode){
-  	datareturn <- dcode
-	}else{
-  	datareturn <- datacopy
-	}
+  datareturn <- as.data.frame(matrix(nrow = nrow(data), ncol = 0))
+  if(dummycode){
+    datareturn <- dcode
+  }else{
+    datareturn <- datacopy
+  }
 
   datareturn
 }
@@ -346,14 +346,14 @@ processing_character <- function(data, limits, dummycode){
 processing_logical <- function(data, limits, dummycode){
   datacopy <- data
 
-	if(!is.na(limits[[1]]))
-		warning("ignoring limits flag for logical vector")
+  if(!is.na(limits[[1]]))
+    warning("ignoring limits flag for logical vector")
 
-	if(dummycode)
-		warning("ignoring dummycode flag for logical vector")
+  if(dummycode)
+    warning("ignoring dummycode flag for logical vector")
 
-	datacopy[[1]] <- as.numeric(datacopy[[1]])
-	datacopy
+  datacopy[[1]] <- as.numeric(datacopy[[1]])
+  datacopy
 }
 
 
@@ -361,8 +361,8 @@ processing_logical <- function(data, limits, dummycode){
 processing_other <- function(data, limits, dummycode){
   datacopy <- data
 
-	warning("package doesn't specifically handly this type, simply coercing to numeric")
+  warning("package doesn't specifically handly this type, simply coercing to numeric")
 
-	datacopy[[1]] <- as.numeric(datacopy[[1]])
-	datacopy
+  datacopy[[1]] <- as.numeric(datacopy[[1]])
+  datacopy
 }

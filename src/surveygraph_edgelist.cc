@@ -1,10 +1,9 @@
 #include "surveygraph.h"
 
-#include <cmath>  // sqrt, fabs FIXME abs() can cast to integer depending on system!
+#include <cmath>       // sqrt, fabs (abs casts to integer on some systems, need fabs)
 
-#define R_NO_REMAP     // TODO comment out for CRAN, only used for debugging
-#include <R.h>         // with Rprint.
-#include <Rdefines.h>  //
+#define R_NO_REMAP
+#include <R.h>         // TODO comment out for CRAN, only used for Rprint.
 
 
 // TODO simpler version of this, simply keep edges in `edgelist` with weights
@@ -57,7 +56,7 @@ void surveygraph::dist_manhattan(const int &u, const int &v, double &w)
   w = 0;
   for(unsigned int j = 0; j < survey[0].size(); ++j){
     if(!std::isnan(survey[u][j]) && !std::isnan(survey[v][j])){
-	    // Note that on many systems, abs() casts to int; need fabs() for floats.
+      // Note that on many systems, abs() casts to int; need fabs() for floats.
       w += fabs(survey[u][j] - survey[v][j]);
       ++count;
     }
