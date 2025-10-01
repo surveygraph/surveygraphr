@@ -1,6 +1,6 @@
 #include "surveygraph.h"
 
-#include <cmath>       // sqrt, fabs (abs casts to integer on some systems, need fabs)
+#include <cmath>  // sqrt, fabs (abs casts to integer on some systems, need fabs)
 
 //#ifndef R_NO_REMAP
 //#define R_NO_REMAP
@@ -43,7 +43,7 @@ void surveygraph::edgelist_complete()
       else if(metric == 1)
         dist_euclidean(int(i), int(j), w);
 
-        edgelist.insert(edge{std::set<int>{int(i), int(j)}, w});
+      edgelist.insert(edge{std::set<int>{int(i), int(j)}, w});
     }
   }
 }
