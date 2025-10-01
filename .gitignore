@@ -24,7 +24,7 @@ symbols.rds
 tests/testthat/_snaps
 
 # statically generate Rd files
-man/*.Rd
+#man/*.Rd
 
 # development directories
 Meta/
