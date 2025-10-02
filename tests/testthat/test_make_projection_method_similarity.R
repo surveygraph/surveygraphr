@@ -2,8 +2,8 @@ eps = 1e-6
 
 proja <- function(s, x){
   make_projection(
-    data.frame(s), 
-    layer = "agent", 
+    data.frame(s),
+    layer = "agent",
     method = "similarity",
     methodval = x
   )
@@ -11,10 +11,10 @@ proja <- function(s, x){
 
 projs <- function(s, x){
   make_projection(
-    data.frame(t(s)), 
-    limits = data.frame(replicate(length(s), c(0, 1))), 
-    #likert = data.frame(replicate(length(s), c(0, 1))), 
-    layer = "symbolic", 
+    data.frame(t(s)),
+    limits = data.frame(replicate(length(s), c(0, 1))),
+    #likert = data.frame(replicate(length(s), c(0, 1))),
+    layer = "symbolic",
     method = "similarity",
     methodval = x
   )
@@ -23,7 +23,7 @@ projs <- function(s, x){
 fn <- function(x, y, z){
   df <- data.frame(u = x, v = y, weight = as.numeric(z))
   df <- df[!is.na(df$weight),]
-  if(nrow(df) > 0) 
+  if(nrow(df) > 0)
     rownames(df) <- 1:nrow(df)
   df
 }
@@ -65,7 +65,7 @@ test_that("`similarity` method on a 3-clique.", {
   survey <- c(0, 0.4, 1)
 
   weights <- "
-  u  v  e0  e1   e2   e3 
+  u  v  e0  e1   e2   e3
   1  2  NA  0.6  0.6  0.6
   1  3  NA  NA   NA   0.0
   2  3  NA  NA   0.4  0.4"
@@ -99,11 +99,11 @@ test_that("`similarity` method on a 4-clique.", {
 
   weights <- "
   u  v  e0  e1   e2   e3   e4   e5   e6
-  1  2  NA  NA   NA   NA   0.4  0.4  0.4     
-  1  3  NA  NA   NA   NA   NA   0.1  0.1     
+  1  2  NA  NA   NA   NA   0.4  0.4  0.4
+  1  3  NA  NA   NA   NA   NA   0.1  0.1
   1  4  NA  NA   NA   NA   NA   NA   0.0
-  2  3  NA  NA   0.7  0.7  0.7  0.7  0.7     
-  2  4  NA  NA   NA   0.6  0.6  0.6  0.6     
+  2  3  NA  NA   0.7  0.7  0.7  0.7  0.7
+  2  4  NA  NA   NA   0.6  0.6  0.6  0.6
   3  4  NA  0.9  0.9  0.9  0.9  0.9  0.9"
   df <- read.table(text = weights, header = TRUE, na.strings = "NA")
 

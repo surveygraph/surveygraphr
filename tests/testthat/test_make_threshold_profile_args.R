@@ -41,61 +41,61 @@ test_that("`comparisons` argument is correctly supplied.", {
   expect_error(
     make_threshold_profile(data.frame(1), comparisons = TRUE),
     regexp = "`comparisons` must be an integer."
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), comparisons = integer()),
     regexp = "`comparisons` must be of length 1."
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), comparisons = c(3, 4)),
     regexp = "`comparisons` must be of length 1."
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), comparisons = as.integer(NA)),
     regexp = "`comparisons` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), comparisons = NaN),
     regexp = "`comparisons` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), comparisons = Inf),
     regexp = "`comparisons` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), comparisons = 1.2),
     regexp = "`comparisons` must be an integer."
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), comparisons = 0),
     regexp = "`comparisons` must be between 1 and ncol(data) for agent layer.",
     fixed = T
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), comparisons = 2),
     regexp = "`comparisons` must be between 1 and ncol(data) for agent layer.",
     fixed = T
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), layer = "symbolic", comparisons = 0),
     regexp = "`comparisons` must be between 1 and nrow(data) for symbolic layer.",
     fixed = T
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), layer = "symbolic", comparisons = 3),
     regexp = "`comparisons` must be between 1 and nrow(data) for symbolic layer.",
     fixed = T
-  )  
+  )
 })
 
 
@@ -131,40 +131,40 @@ test_that("`count` argument is correctly supplied.", {
   expect_error(
     make_threshold_profile(data.frame(1), count = TRUE),
     regexp = "`count` must be an integer."
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), count = integer()),
     regexp = "`count` must be of length 1."
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), count = c(3, 4)),
     regexp = "`count` must be of length 1."
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), count = as.integer(NA)),
     regexp = "`count` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), count = NaN),
     regexp = "`count` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), count = Inf),
     regexp = "`count` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
-  )  
+  )
 
   expect_error(
     make_threshold_profile(data.frame(1), count = 1.2),
     regexp = "`count` must be an integer."
-  )  
+  )
 
   expect_warning(
     make_threshold_profile(data.frame(1), count = 2),
     regexp = "Setting `count` to 3."
-  )  
+  )
 })

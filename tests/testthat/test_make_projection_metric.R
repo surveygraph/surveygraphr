@@ -1,9 +1,9 @@
 test_that("`metric` gives expected behaviour", {
   proj <- function(x, y, s){
     make_projection(
-      data.frame(a = c(0, x), b = c(0, y)), 
-      limits = data.frame(c(0, 1), c(0, 1)), 
-      #likert = data.frame(c(0, 1), c(0, 1)), 
+      data.frame(a = c(0, x), b = c(0, y)),
+      limits = data.frame(c(0, 1), c(0, 1)),
+      #likert = data.frame(c(0, 1), c(0, 1)),
       metric = s
     )
   }

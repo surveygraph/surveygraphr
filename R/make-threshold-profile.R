@@ -3,39 +3,39 @@
 #' @description
 #' `make_threshold_profile()` outputs properties of the agent or symbolic network
 #' as a function of similarity threshold.
-#' 
+#'
 #' @return
 #' A data frame containing properties of the `agent` or `symbolic` network as a
 #' function of the similarity threshold. In particular, it contains three columns
 #' named
-#' 
+#'
 #'   - `threshold`, the value of the similarity threshold
-#' 
-#'   - `ad`, the average degree resulting from `threshold`, and 
-#' 
+#'
+#'   - `ad`, the average degree resulting from `threshold`, and
+#'
 #'   - `lcc`, the size of the largest connected component resulting from
 #'   `threshold`
-#' 
+#'
 #' @param data A data frame corresponding to the attitudes held by agents with
 #'   respect to a number of items
 #'
 #' @param layer A string flag specifying the type of network to be extracted,
-#'   
+#'
 #'   - `"agent"` produces the network corresponding to the agents, which we assume
 #'   to be rows in `data`
-#' 
+#'
 #'   - `"symbolic"` produces the network corresponding to the symbols, or items,
 #'   which we assume to be columns in `data`
-#' 
+#'
 #' @param comparisons An integer, minimum number of comparisons for valid distance.
 #'
 #' @param metric A string option describing the similarity metric to be used.
 #'
-#' @param count The number of threshold values to include in the description. 
+#' @param count The number of threshold values to include in the description.
 #'
-#' @param limits Specify the limits of the Likert range in during a data preprocessing step. 
+#' @param limits Specify the limits of the Likert range in during a data preprocessing step.
 #'
-#' @param dummycode Specify whether to apply dummycoding during a data preprocessing step. 
+#' @param dummycode Specify whether to apply dummycoding during a data preprocessing step.
 #'
 #' @param ... Used to handle alternative argument spellings.
 #'
@@ -149,7 +149,7 @@ make_threshold_profile <- function(
 
 
   # Check `count`, the number of similarity thresholds over which we compute
-  # the size of the lcc and the average degree. 
+  # the size of the lcc and the average degree.
   if(is.null(count))
     count <- as.integer(21)
 

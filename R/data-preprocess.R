@@ -3,19 +3,19 @@
 #' @description
 #' `data_preprocess()` outputs a synthetic survey, generated using a simple, stochastic
 #'   model of polarisation.
-#' 
+#'
 #' @return
 #' A data frame corresponding to a survey.
-#' 
+#'
 #' @param data The number of rows in the survey
 #' @param limits The number of columns in the survey
 #' @param dummycode The fraction of nodes in the smaller of the two polarised groups
-#' 
+#'
 #' @export
 #' @examples
 #' S <- make_synthetic_data(200, 8)
 data_preprocess <- function(
-  data, 
+  data,
   limits = NULL,
   dummycode = NULL
 ){
@@ -23,7 +23,7 @@ data_preprocess <- function(
   # TODO: stress in documentation that columns are handled independently.
   # TODO: put call. = F in all error and warning messages
 
-  # TODO: 
+  # TODO:
   # add ... ellipses
   # add a verbose argument for pre normalisation
 
@@ -33,7 +33,7 @@ data_preprocess <- function(
     stop("Input data must be a dataframe.")
   }
 
-  
+
   # Output warning if dataframe is empty, and proceed.
   if(ncol(data) == 0 || nrow(data) == 0){
     stop("Input dataframe cannot be empty.")
@@ -45,7 +45,7 @@ data_preprocess <- function(
   #colsnumeric <- sapply(data, is.numeric)
   #if(length(colsnumeric) > 0){
   #  data[colsnumeric] <- lapply(
-  #    data[colsnumeric], 
+  #    data[colsnumeric],
   #    function(col){
   #      col[is.infinite(col)] <- NA
   #      col
@@ -74,9 +74,9 @@ data_preprocess <- function(
       warning("setting limits columns that aren't numeric or logical to logical NA")
 
       limits[] <- lapply(limits, function(col){
-        if(is.numeric(col) || is.logical(col)) 
-          col 
-        else 
+        if(is.numeric(col) || is.logical(col))
+          col
+        else
           rep(NA, nrow(limits))
       })
     }
@@ -87,9 +87,9 @@ data_preprocess <- function(
 
       limits[] <- lapply(limits, function(col){
         if(is.numeric(col)){
-          if(any(!is.finite(col))) 
+          if(any(!is.finite(col)))
             rep(NA, nrow(limits))
-          else 
+          else
             col
         }else{
           col
@@ -144,7 +144,7 @@ data_preprocess <- function(
     # Verify that dimensions match survey
     if(length(dummycode) != ncol(data))
       stop("`dummycode` length must equal number of columns in survey dataframe")
-  
+
     # If dummycode is logical and NA entries present, set them to false
     if(is.logical(dummycode) && anyNA(dummycode)){
       warning("Setting NA entries of `dummycode` to FALSE")
@@ -182,8 +182,8 @@ data_preprocess <- function(
 }
 
 
-# Dummy-coding utility function. `c` is a character vector of length one, and 
-# `vals` is a character vector of 
+# Dummy-coding utility function. `c` is a character vector of length one, and
+# `vals` is a character vector of
 dummycoding <- function(c, vals){
   uniquevals <- sort(unique(vals))
   dcode <- as.data.frame(matrix(nrow = length(vals), ncol = 0))
@@ -203,7 +203,7 @@ dummycoding <- function(c, vals){
 
 
 # Normalising utility function, used in processing_numeric(). Maps data to the
-# interval [0, 1], depending on whether a Likert range is supplied. If there's only 
+# interval [0, 1], depending on whether a Likert range is supplied. If there's only
 # a single finite value, set it to 0.5.
 #
 # Recall that either both values in a column of `limits` are finite, or neither

@@ -1,10 +1,10 @@
 test_that("`comparisons` gives expected behaviour", {
-  proj <- function(n){ 
+  proj <- function(n){
     make_projection(
       data.frame(
-        c(0,  1), 
-        c(0,  1), 
-        c(0,  1), 
+        c(0,  1),
+        c(0,  1),
+        c(0,  1),
         c(0,  1),
         c(0,  1),
         c(0,  NA),

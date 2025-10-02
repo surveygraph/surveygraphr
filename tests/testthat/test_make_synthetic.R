@@ -55,7 +55,7 @@ test_that("`minority` argument behaves as expected.", {
 
 
 test_that("`polarisation` argument behaves as expected.", {
-  synth <- function(x, y) 
+  synth <- function(x, y)
     make_synthetic_data(10, 2, seed = 0, correlation = x, polarisation = y)
 
   txt <- "
@@ -116,17 +116,17 @@ test_that("Accept US spelling of `polarisation`.", {
 
 
 test_that("`likert` argument behaves as expected.", {
-  synth <- function(n) 
+  synth <- function(n)
     make_synthetic_data(2, 2, correlation = 1, polarisation = 1, likert = n)
 
-  expect_equal(synth(1), data.frame(group = c(0, 1), item_1 = c(1, 1))) 
-  expect_equal(synth(2), data.frame(group = c(0, 1), item_1 = c(1, 2))) 
-  expect_equal(synth(3), data.frame(group = c(0, 1), item_1 = c(1, 3))) 
-  expect_equal(synth(4), data.frame(group = c(0, 1), item_1 = c(1, 4))) 
-  expect_equal(synth(5), data.frame(group = c(0, 1), item_1 = c(1, 5))) 
-  expect_equal(synth(6), data.frame(group = c(0, 1), item_1 = c(1, 6))) 
-  expect_equal(synth(7), data.frame(group = c(0, 1), item_1 = c(1, 7))) 
-  expect_equal(synth(8), data.frame(group = c(0, 1), item_1 = c(1, 8))) 
-  expect_equal(synth(9), data.frame(group = c(0, 1), item_1 = c(1, 9))) 
-  expect_equal(synth(10), data.frame(group = c(0, 1), item_1 = c(1, 10))) 
+  expect_equal(synth(1), data.frame(group = c(0, 1), item_1 = c(1, 1)))
+  expect_equal(synth(2), data.frame(group = c(0, 1), item_1 = c(1, 2)))
+  expect_equal(synth(3), data.frame(group = c(0, 1), item_1 = c(1, 3)))
+  expect_equal(synth(4), data.frame(group = c(0, 1), item_1 = c(1, 4)))
+  expect_equal(synth(5), data.frame(group = c(0, 1), item_1 = c(1, 5)))
+  expect_equal(synth(6), data.frame(group = c(0, 1), item_1 = c(1, 6)))
+  expect_equal(synth(7), data.frame(group = c(0, 1), item_1 = c(1, 7)))
+  expect_equal(synth(8), data.frame(group = c(0, 1), item_1 = c(1, 8)))
+  expect_equal(synth(9), data.frame(group = c(0, 1), item_1 = c(1, 9)))
+  expect_equal(synth(10), data.frame(group = c(0, 1), item_1 = c(1, 10)))
 })

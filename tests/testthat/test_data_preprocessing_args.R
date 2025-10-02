@@ -1,6 +1,6 @@
 test_that("Output an error if `data` is not a dataframe", {
   expect_error(
-    data_preprocess(list()), 
+    data_preprocess(list()),
     regexp = "Input data must be a dataframe."
   )
 })
@@ -8,7 +8,7 @@ test_that("Output an error if `data` is not a dataframe", {
 
 test_that("Output an error if `data` dataframe is empty", {
   expect_error(
-    data_preprocess(data.frame()), 
+    data_preprocess(data.frame()),
     regexp = "Input dataframe cannot be empty."
   )
 })

@@ -13,8 +13,8 @@
 // Converts and R dataframe to a nested C++ vector. We verify that `rdata` is a
 // dataframe elsewhere.
 static void rdf_to_cppvector(
-  const SEXP &rdata, 
-  const int &layer, 
+  const SEXP &rdata,
+  const int &layer,
   std::vector<std::vector<double>> &data
 ){
   data = std::vector<std::vector<double>>{};
@@ -122,8 +122,8 @@ static void sample(std::vector<std::vector<double>> &d, const double &p)
 
 
 static void cppmap_to_rdf(
-  std::map<std::set<int>, double> &e, 
-  std::map<std::set<int>, int> &c, 
+  std::map<std::set<int>, double> &e,
+  std::map<std::set<int>, int> &c,
   const int &ctotal,
   SEXP &df)
 {

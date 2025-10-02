@@ -53,7 +53,7 @@ void surveygraph::edgelist_complete()
 void surveygraph::dist_manhattan(const int &u, const int &v, double &w)
 {
   // Enumerates pairs of entries in which neither are NaN.
-  int count = 0;  
+  int count = 0;
 
   w = 0;
   for(unsigned int j = 0; j < survey[0].size(); ++j){
@@ -77,7 +77,7 @@ void surveygraph::dist_manhattan(const int &u, const int &v, double &w)
 // Manhattan distance between rows or columns u and v
 void surveygraph::dist_euclidean(const int &u, const int &v, double &w)
 {
-  int count = 0;  
+  int count = 0;
 
   w = 0;
   for(unsigned int j = 0; j < survey[0].size(); ++j){

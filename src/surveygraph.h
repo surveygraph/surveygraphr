@@ -67,6 +67,6 @@ class surveygraph
     void make_projection_lcc();                // builds graph with target largest component size
     void make_projection_avgdegree();          // builds graph with target average degree
     void make_projection_similarity();         // builds graph with desired threshold
-    void make_threshold_profile();             // sweeps through a range of radii and studies 
+    void make_threshold_profile();             // sweeps through a range of radii and studies
 };
 #endif

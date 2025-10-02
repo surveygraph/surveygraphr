@@ -15,15 +15,16 @@
 // choose the largest possible threshold so that the network is as sparse as
 // possible.
 //
-// To do this, simply add edges to the graph, starting with the strongest similarities, 
-// until the LCC is greater than or equal to the target. Note that we have to 
+// To do this, simply add edges to the graph, starting with the strongest similarities,
+// until the LCC is greater than or equal to the target. Note that we have to
 // add all edges of a given similarity. As such, we add all edges of a given weight
 // at a time. This is in the inner while loop below.
 void surveygraph::make_projection_lcc()
 {
   // Defines target to be between 1 and survey.size(), inclusive.
-  int target = int(ceil(methodval * (survey.size() - 1))) + 1; 
+  int target = int(ceil(methodval * (survey.size() - 1))) + 1;
 
+  // FIXME can target ever equal 0?
   if(target == 0 || target == 1 || survey.size() == 1){
     edgelist = std::set<edge>{};
     return;
@@ -45,7 +46,7 @@ void surveygraph::make_projection_lcc()
 
     oldweight = weight;
     // FIXME without this check, segfaul occurs if we reach rend()
-    if(it != edgelist.rend()) weight = it->weight;  
+    if(it != edgelist.rend()) weight = it->weight;
     lcc = uf.lcc;
   }
 
@@ -58,7 +59,7 @@ void surveygraph::make_projection_avgdegree()
   int ecomplete = survey.size() * (survey.size() - 1) / 2;
 
   // Defines target to be between 0 and ecomplete, inclusive.
-  int target = int(ceil(methodval * ecomplete)); 
+  int target = int(ceil(methodval * ecomplete));
 
   if(target == 0 || survey.size() == 1){
     edgelist = std::set<edge>{};
@@ -68,7 +69,7 @@ void surveygraph::make_projection_avgdegree()
   edgelist_complete();
 
   auto it = edgelist.rbegin();
-    
+
   int e = 0;
   double threshold = it->weight;
   while(e < target && it != edgelist.rend()){

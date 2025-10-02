@@ -4,8 +4,8 @@
 # itself. In particular, all it should do is check that all data provided by
 # R are doubles, or NAs. If not, it should throw an error.
 #
-# Note to self, there's room for improvement in how we're approaching tests. That is, 
-# there is a sensitivity to the order in which these tests are carried out, and 
+# Note to self, there's room for improvement in how we're approaching tests. That is,
+# there is a sensitivity to the order in which these tests are carried out, and
 # the order of the implementation in R/data-preprocess.R. It feels like this
 # shouldn't be the case. That is, if we rearrange the tests, the errors might
 # not match up with what's wrong... (is that right?) need to think about logic.

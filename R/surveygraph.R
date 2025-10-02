@@ -5,7 +5,7 @@
 #' The surveygraph package functions can be summarised as follows.
 #'
 #' @section reading functions:
-#' The reading functions import survey datasets to R so they can be 
+#' The reading functions import survey datasets to R so they can be
 #' passed to C++ routines. A bunch of file formats need to be accounted for.
 #'
 #' @section network generating functions:

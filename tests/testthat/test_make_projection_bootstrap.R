@@ -6,7 +6,7 @@
 # 0.250000 0.000000 0.250000 0.250000 1.000000
 # 0.750000 0.500000 0.500000 0.000000 0.750000
 #
-# With probability p = 0.6, we retain a given entry of the survey, and with 
+# With probability p = 0.6, we retain a given entry of the survey, and with
 # probability 1 - p, we set it to NA. To do this, we generate pseudo-random
 # variables using the Mersenne twister mt19937, and sample from
 # uniform_real_distribution<double>(0, 1). In order to do so reproducibly, we
@@ -34,26 +34,26 @@
 # Applying the threshold p = 0.6 to the original array, we produce the
 # following data.
 #
-# 1.000000 NA       NA       NA       NA 
+# 1.000000 NA       NA       NA       NA
 # 0.000000 0.500000 0.750000 0.250000 0.000000
 # NA       1.000000 1.000000 NA       1.000000
-# NA       0.000000 NA       0.250000 NA 
-# 0.750000 NA       0.500000 NA       NA 
-# 
+# NA       0.000000 NA       0.250000 NA
+# 0.750000 NA       0.500000 NA       NA
+#
 # NA       NA       0.000000 NA       0.500000
-# 0.000000 0.500000 NA       NA       NA 
+# 0.000000 0.500000 NA       NA       NA
 # 0.500000 1.000000 1.000000 0.500000 1.000000
-# NA       0.000000 0.250000 NA       NA 
-# NA       NA       0.500000 0.000000 NA 
-# 
+# NA       0.000000 0.250000 NA       NA
+# NA       NA       0.500000 0.000000 NA
+#
 # 1.000000 NA       NA       1.000000 0.500000
-# 0.000000 NA       0.750000 0.250000 NA 
-# NA       NA       1.000000 0.500000 NA 
-# 0.250000 0.000000 0.250000 0.250000 NA 
+# 0.000000 NA       0.750000 0.250000 NA
+# NA       NA       1.000000 0.500000 NA
+# 0.250000 0.000000 0.250000 0.250000 NA
 # 0.750000 0.500000 0.500000 0.000000 0.750000
 #
-# Computing similarity weights on these arrays, requiring at least one valid 
-# comparison yields the following weights, with the corresponding number of 
+# Computing similarity weights on these arrays, requiring at least one valid
+# comparison yields the following weights, with the corresponding number of
 # valid comparisons.
 #
 # u v w        w0       c0 w1       c1 w2       c2
@@ -116,7 +116,7 @@ test_that("`bootseed` behaves as expected", {
       comparisons = 1,
       bootval = 0.6,
       bootseed = x
-    ) 
+    )
   }
 
   weights <- "
@@ -152,11 +152,11 @@ test_that("`bootval` behaving as expected", {
       comparisons = 1,
       bootval = x,
       bootseed = 0
-    ) 
+    )
   }
 
   weights <- "
-  w0       w1       w2       w3       w4       w5       w6       w7       w8       w9       w10     
+  w0       w1       w2       w3       w4       w5       w6       w7       w8       w9       w10
   NA       NA       NA       NA       NA       NA       0.000000 0.250000 0.250000 0.350000 0.350000
   NA       NA       NA       NA       NA       NA       NA       0.500000 0.500000 0.450000 0.450000
   NA       NA       NA       NA       NA       NA       NA       0.250000 0.250000 0.312500 0.400000
@@ -192,7 +192,7 @@ test_that("`comparisons` working as expected when data is bootstrapped", {
       comparisons = y,
       bootval = 0.75,
       bootseed = x
-    ) 
+    )
   }
 
   weights <- "
@@ -236,11 +236,11 @@ test_that("A couple of bootstrapping sanity checks.", {
       comparisons = 1,
       bootreps = 100,
       bootval = x
-    ) 
+    )
   }
 
   weights <- "
-  w0       f0       w1       f1 
+  w0       f0       w1       f1
   NA       NA       0.350000 1.000000
   NA       NA       0.450000 1.000000
   NA       NA       0.400000 1.000000

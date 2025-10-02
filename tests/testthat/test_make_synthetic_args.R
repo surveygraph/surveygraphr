@@ -128,17 +128,17 @@ test_that("`minority` argument is correctly supplied.", {
     make_synthetic_data(1, 1, minority = Inf),
     regexp = "`minority` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
   )
-  
+
   expect_error(
     make_synthetic_data(1, 1, minority = -eps),
     regexp = "`minority` must be between 0 and 0.5, inclusive."
   )
-  
+
   expect_error(
     make_synthetic_data(1, 1, minority = 1 + eps),
     regexp = "`minority` must be between 0 and 0.5, inclusive."
   )
-  
+
   expect_warning(
     make_synthetic_data(1, 1, minority = 0.5 + eps),
     regexp = "`minority` must be between 0 and 0.5, inclusive; taking 1 - minority."
@@ -166,22 +166,22 @@ test_that("`correlation` argument is correctly supplied.", {
     make_synthetic_data(1, 1, correlation = as.numeric(NA)),
     regexp = "`correlation` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
   )
-  
+
   expect_error(
     make_synthetic_data(1, 1, correlation = NaN),
     regexp = "`correlation` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
   )
-  
+
   expect_error(
     make_synthetic_data(1, 1, correlation = Inf),
     regexp = "`correlation` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
   )
-  
+
   expect_error(
     make_synthetic_data(1, 1, correlation = -eps),
     regexp = "`correlation` must be between 0 and 1, inclusive."
   )
-  
+
   expect_error(
     make_synthetic_data(1, 1, correlation = 1 + eps),
     regexp = "`correlation` must be between 0 and 1, inclusive."
@@ -219,12 +219,12 @@ test_that("`polarisation` argument is correctly supplied.", {
     make_synthetic_data(1, 1, polarisation = Inf),
     regexp = "`polarisation` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
   )
-  
+
   expect_error(
     make_synthetic_data(1, 1, polarisation = -eps),
     regexp = "`polarisation` must be between 0 and 1, inclusive."
   )
-  
+
   expect_error(
     make_synthetic_data(1, 1, polarisation = 1 + eps),
     regexp = "`polarisation` must be between 0 and 1, inclusive."

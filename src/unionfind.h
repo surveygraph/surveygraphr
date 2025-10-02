@@ -9,18 +9,18 @@
 // Modified union-find algorithm from here.
 // https://github.com/kartikkukreja/blog-codes/blob/master/src
 
-// TODO replace graph terminology with set language. 
-// comps to sets 
-// lcc to maximal set or similar 
+// TODO replace graph terminology with set language.
+// comps to sets
+// lcc to maximal set or similar
 // e for edge to mergecount or similar
 // isolated with singleton
-class unionfind 
+class unionfind
 {
   int *id, *sz;  // set id and size
 
   public:
     unionfind(int N){
-      comps = N; 
+      comps = N;
       lcc = 1;
       e = 0;
       isolated = N;
@@ -28,7 +28,7 @@ class unionfind
       sz = new int[N];
       for(int i = 0; i < N; i++){
         id[i] = i;
-        sz[i] = 1; 
+        sz[i] = 1;
       }
     }
 
@@ -39,8 +39,8 @@ class unionfind
       int root = p;
       while(root != id[root]) root = id[root];
       while(p != root){
-        int newp = id[p]; 
-        id[p] = root; 
+        int newp = id[p];
+        id[p] = root;
         p = newp;
       }
       return root;
@@ -48,8 +48,8 @@ class unionfind
 
     // Replace sets containing x and y with their union.
     void merge(int x, int y){
-      int i = find(x); 
-      int j = find(y); 
+      int i = find(x);
+      int j = find(y);
       ++e;
       if(i == j) return;
 
@@ -59,7 +59,7 @@ class unionfind
       // Make smaller root point to larger one.
       if(sz[i] < sz[j]){
         id[i] = j;
-        sz[j] += sz[i]; 
+        sz[j] += sz[i];
         if(sz[j] > lcc) lcc = sz[j];
       }else{
         id[j] = i;

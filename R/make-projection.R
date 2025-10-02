@@ -279,7 +279,7 @@ make_projection <- function(
 
     if(!is.null(bootreps) && is.null(bootval))
       stop("`bootval` must be set if `bootreps` is set.", call. = F)
-  }else{ 
+  }else{
     if(is.null(bootreps) && is.null(bootval))
       stop("`bootval` must be set if `bootseed` is set.", call. = F)
 
@@ -309,11 +309,11 @@ make_projection <- function(
 
   if(bootreps != as.integer(bootreps))
     stop("`bootreps` must be a positive integer.", call. = F)
-    
+
   bootreps <- as.integer(bootreps)
 
 
-  # Check bootval, a utility bootstrapping parameter, used as a probability. 
+  # Check bootval, a utility bootstrapping parameter, used as a probability.
   if(is.null(bootval))
     bootval <- as.double(1)
 
@@ -387,7 +387,7 @@ make_projection <- function(
     metric,
     bootreps,
     bootval,
-    bootseed 
+    bootseed
   )
 
 

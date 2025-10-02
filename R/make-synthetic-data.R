@@ -3,10 +3,10 @@
 #' @description
 #' `make_synthetic_data()` outputs a synthetic survey, generated using a simple, stochastic
 #'   model of polarisation.
-#' 
+#'
 #' @return
 #' A data frame corresponding to a survey.
-#' 
+#'
 #' @param nrow The number of rows in the survey
 #' @param ncol The number of columns in the survey
 #' @param minority The fraction of nodes in the smaller of the two polarised groups
@@ -15,13 +15,13 @@
 #' @param likert Range of the Likert scale
 #' @param seed Seed value for random number generation.
 #' @param ... Mostly used to handle arguments with alternative spellings.
-#' 
+#'
 #' @export
 #' @examples
 #' S <- make_synthetic_data(200, 8)
 #' @export
 make_synthetic_data <- function(
-  nrow, 
+  nrow,
   ncol,
   minority = NULL,
   correlation = NULL,
@@ -175,7 +175,7 @@ make_synthetic_data <- function(
   # Validate `seed` argument.
   seedflag <- FALSE
   if(is.null(seed))
-    seed <- 0 
+    seed <- 0
   else
     seedflag <- TRUE
 
@@ -214,11 +214,11 @@ make_synthetic_data <- function(
         for(j in 2:ncol){
           shape <- 5  # Leftover shape parameter in beta distribution.
           mu <- 0.5 * (polarisation + 1)
-          alpha <- mu * shape 
+          alpha <- mu * shape
           beta <- (1 - mu) * shape
           val <- 1 + (likert - 1) * rbeta(1, alpha, beta)
           data[i, j] <- 1 + likert - round(val)
-          
+
           if(i > minority * nrow + 1e-6)
             data[i, j] <- 1 + likert - data[i, j]
         }
@@ -232,7 +232,7 @@ make_synthetic_data <- function(
     cnames <- c("group")
     if(ncol > 1){
       for(i in 1:(ncol - 1))
-        cnames <- append(cnames, paste(c("item_", i), collapse="")) 
+        cnames <- append(cnames, paste(c("item_", i), collapse=""))
     }
     colnames(data) <- cnames
   }

@@ -31,7 +31,7 @@ test_that("Correct when survey consists of a single row, default `count`.", {
 
 
 test_that("Correct when survey consists of a single row, varying `count`.", {
-  proj <- function(n) make_threshold_profile(data = data.frame(1), count = n) 
+  proj <- function(n) make_threshold_profile(data = data.frame(1), count = n)
 
   txt <- "
   threshold lcc edges components isolated
@@ -48,14 +48,14 @@ test_that("Correct when survey consists of a single row, varying `count`.", {
 
 
 test_that("Correct when survey consists of a single row, varying `count`.", {
-  proj <- function(n) make_threshold_profile(data = data.frame(1), count = n) 
+  proj <- function(n) make_threshold_profile(data = data.frame(1), count = n)
 
   df <- function(n){
     data.frame(
       threshold = seq(0, 1, by = 1 / (n - 1)),
-      lcc = rep(1, n), 
-      edges = rep(0, n), 
-      components = rep(1, n), 
+      lcc = rep(1, n),
+      edges = rep(0, n),
+      components = rep(1, n),
       isolated = rep(1, n)
     )
   }
@@ -100,14 +100,14 @@ test_that("Behaves as expected on more general data.", {
   profa <- make_threshold_profile(
     data = data.frame(c(0, 0.25, 0.25, 0.26, 0.56, 0.9, 1.0)),
     count = 21
-  ) 
+  )
 
   profs <- make_threshold_profile(
     data = data.frame(a = 0, b = 0.25, c = 0.25, d = 0.26, e = 0.56, f = 0.9, g = 1.0),
     limits = data.frame(replicate(7, c(0, 1))),
     layer = "s",
     count = 21
-  ) 
+  )
 
   expect_equal(profa, profile)
   expect_equal(profs, profile)

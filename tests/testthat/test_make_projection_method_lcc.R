@@ -2,10 +2,10 @@ eps = 1e-6
 
 projs <- function(s, x){
   make_projection(
-    data.frame(t(s)), 
-    limits = data.frame(replicate(length(s), c(0, 1))), 
-    #likert = data.frame(replicate(length(s), c(0, 1))), 
-    layer = "symbolic", 
+    data.frame(t(s)),
+    limits = data.frame(replicate(length(s), c(0, 1))),
+    #likert = data.frame(replicate(length(s), c(0, 1))),
+    layer = "symbolic",
     method = "lcc",
     methodval = x
   )
@@ -13,8 +13,8 @@ projs <- function(s, x){
 
 proja <- function(s, x){
   make_projection(
-    data.frame(s), 
-    layer = "agent", 
+    data.frame(s),
+    layer = "agent",
     method = "lcc",
     methodval = x
   )
@@ -23,7 +23,7 @@ proja <- function(s, x){
 fn <- function(x, y, z){
   df <- data.frame(u = x, v = y, weight = as.numeric(z))
   df <- df[!is.na(df$weight),]
-  if(nrow(df) > 0) 
+  if(nrow(df) > 0)
     rownames(df) <- 1:nrow(df)
   df
 }
@@ -69,8 +69,8 @@ test_that("`lcc` method on a 3-clique.", {
 
   weights <- "
   u  v  lcc1  lcc2  lcc3  complete
-  1  2  NA    0.6   0.6   0.6      
-  1  3  NA    NA    NA    0.0     
+  1  2  NA    0.6   0.6   0.6
+  1  3  NA    NA    NA    0.0
   2  3  NA    NA    0.4   0.4"
   df <- read.table(text = weights, header = TRUE, na.strings = "NA")
 
@@ -97,11 +97,11 @@ test_that("`lcc` method on a 4-clique.", {
 
   weights <- "
   u  v  lcc1  lcc2  lcc3  lcc4  complete
-  1  2  NA    NA    NA    0.4   0.4     
-  1  3  NA    NA    NA    NA    0.1     
-  1  4  NA    NA    NA    NA    0       
-  2  3  NA    NA    0.7   0.7   0.7     
-  2  4  NA    NA    NA    0.6   0.6     
+  1  2  NA    NA    NA    0.4   0.4
+  1  3  NA    NA    NA    NA    0.1
+  1  4  NA    NA    NA    NA    0
+  2  3  NA    NA    0.7   0.7   0.7
+  2  4  NA    NA    NA    0.6   0.6
   3  4  NA    0.9   0.9   0.9   0.9"
   df <- read.table(text = weights, header = TRUE, na.strings = "NA")
 

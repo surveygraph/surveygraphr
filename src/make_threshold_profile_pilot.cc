@@ -10,8 +10,8 @@
 // Converts and R dataframe to a nested C++ vector. We verify that rdata is a
 // dataframe elsewhere.
 static void rdf_to_cppvector(
-  const SEXP &rdata, 
-  const int &layer, 
+  const SEXP &rdata,
+  const int &layer,
   std::vector<std::vector<double>> &data
 ){
   data = std::vector<std::vector<double>>{};
@@ -71,7 +71,7 @@ static void cppvector_to_rdf(
   const std::vector<std::vector<int>> &profile,
   SEXP &df
 ){
-  SEXP t_vector = PROTECT(Rf_allocVector(REALSXP, profile.size()));  // threshold 
+  SEXP t_vector = PROTECT(Rf_allocVector(REALSXP, profile.size()));  // threshold
   SEXP e_vector = PROTECT(Rf_allocVector(INTSXP,  profile.size()));  // edge count
   SEXP l_vector = PROTECT(Rf_allocVector(INTSXP,  profile.size()));  // largest connected component
   SEXP s_vector = PROTECT(Rf_allocVector(INTSXP,  profile.size()));  // singleton count
@@ -81,9 +81,9 @@ static void cppvector_to_rdf(
     int idash = profile.size() - 1 - i;
     REAL(t_vector)[i] = i / double(profile.size() - 1);
     INTEGER(l_vector)[i] = profile[idash][0];
-    INTEGER(e_vector)[i] = profile[idash][1]; 
-    INTEGER(c_vector)[i] = profile[idash][2]; 
-    INTEGER(s_vector)[i] = profile[idash][3]; 
+    INTEGER(e_vector)[i] = profile[idash][1];
+    INTEGER(c_vector)[i] = profile[idash][2];
+    INTEGER(s_vector)[i] = profile[idash][3];
   }
 
   SET_VECTOR_ELT(df, 0, t_vector);
@@ -94,7 +94,7 @@ static void cppvector_to_rdf(
 
   SEXP names = PROTECT(Rf_allocVector(STRSXP, 5));
   SET_STRING_ELT(names, 0, Rf_mkChar("threshold"));
-  SET_STRING_ELT(names, 1, Rf_mkChar("lcc")); 
+  SET_STRING_ELT(names, 1, Rf_mkChar("lcc"));
   SET_STRING_ELT(names, 2, Rf_mkChar("edges"));
   SET_STRING_ELT(names, 3, Rf_mkChar("components"));
   SET_STRING_ELT(names, 4, Rf_mkChar("isolated"));
