@@ -4,6 +4,12 @@ install:
 build:
 	R CMD build .
 
+clean:
+	rm src/*.o src/*.so
+
+doc:
+	Rscript -e "library('roxygen2'); roxygenise()"
+
 check:
 	R CMD build .
 	R CMD check surveygraph_*.tar.gz
@@ -12,17 +18,11 @@ cran:
 	R CMD build .
 	R CMD check --as-cran surveygraph_*.tar.gz
 
-covr:
-	Rscript -e "library('covr'); package_coverage()"
-
-clean:
-	rm src/*.o src/*.so
-
-doc:
-	Rscript -e "library('roxygen2'); roxygenise()"
-
 knit:
 	Rscript -e "rmarkdown::render('vignettes/surveygraph.Rmd', params=list(args = myarg))"
+
+covr:
+	Rscript -e "library('covr'); package_coverage()"
 
 test:
 	Rscript -e "library('surveygraph'); library('testthat'); test_file('tests/testthat/test_make_threshold_profile_args.R')"

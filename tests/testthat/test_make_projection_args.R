@@ -28,10 +28,10 @@ test_that("Deprecated argument names for make_projection()", {
   )
 
   # TODO: add this back in
-  #expect_warning(
-  #  make_projection(data.frame(1), centre = 1),
-  #  regexp = "`likert` is deprecated and will be removed future versions; use `range`."
-  #)
+  expect_warning(
+    make_projection(data.frame(1), likert = data.frame(c(1, 2))),
+    regexp = "`likert` is deprecated and will be removed in future versions; use `limits`."
+  )
 })
 
 
