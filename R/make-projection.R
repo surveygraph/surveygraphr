@@ -364,7 +364,7 @@ make_projection <- function(
     stop("`centre` must be of length 1.", call. = F)
 
   if(!is.finite(centre))
-    stop("`centre` must be finite (not NA, NaN, Inf or -Inf).", call. = F)
+    stop("`centre` must be finite after coercion (not NA, NaN, Inf or -Inf).", call. = F)
 
   if(as.logical(centre) != TRUE && as.logical(centre) != FALSE)
     stop("`centre` must coerce to TRUE or FALSE.", call. = F)

@@ -1,4 +1,3 @@
-# TODO: errors and warnings should point to relevant documentation
 eps <- 1e-6
 
 
@@ -27,7 +26,6 @@ test_that("Deprecated argument names for make_projection()", {
     regexp = "`similarity_metric` is deprecated and will be removed in future versions; use `metric`."
   )
 
-  # TODO: add this back in
   expect_warning(
     make_projection(data.frame(1), likert = data.frame(c(1, 2))),
     regexp = "`likert` is deprecated and will be removed in future versions; use `limits`."
@@ -395,22 +393,22 @@ test_that("`centre` argument is correctly supplied.", {
 
   expect_error(
     make_projection(data.frame(1), centre = as.logical(NA)),
-    regexp = "`centre` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
+    regexp = "`centre` must be finite after coercion (not NA, NaN, Inf or -Inf).", fixed = T
   )
 
   expect_error(
     make_projection(data.frame(1), centre = NaN),
-    regexp = "`centre` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
+    regexp = "`centre` must be finite after coercion (not NA, NaN, Inf or -Inf).", fixed = T
   )
 
   expect_error(
     make_projection(data.frame(1), centre = Inf),
-    regexp = "`centre` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
+    regexp = "`centre` must be finite after coercion (not NA, NaN, Inf or -Inf).", fixed = T
   )
 
   expect_error(
     make_projection(data.frame(1), centre = "hello"),
-    regexp = "`centre` must be finite (not NA, NaN, Inf or -Inf).", fixed = T
+    regexp = "`centre` must be finite after coercion (not NA, NaN, Inf or -Inf).", fixed = T
   )
 
   expect_warning(
